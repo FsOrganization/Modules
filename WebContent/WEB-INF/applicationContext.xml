@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd"
+	default-lazy-init="false">
+
+	<context:annotation-config />
+	<context:component-scan base-package="com.fla.common.service">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+
+	<context:annotation-config />
+	<context:component-scan base-package="com.fla.common.dao">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+	
+	<context:annotation-config />
+	<context:component-scan base-package="com.fla.common.util.connection">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+	
+	<context:annotation-config />
+	<context:component-scan base-package="com.fla.common.util">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+
+	<context:property-placeholder location="classpath:com/fla/common/dao/jdbc.properties" />
+	
+	<context:property-placeholder location="classpath:com/fla/common/util/application.properties" />
+	
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+  		<property name="driverClassName" value="${jdbc.driverClassName}" />
+  		<property name="url" value="${jdbc.url}"/>
+  		<property name="username" value="${jdbc.username}"/>
+  		<property name="password" value="${jdbc.password}"/>
+	</bean>
+
+	<!-- 使用Spring提供的数据源的事务管理器DataSourceTransactionManager -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+ 			<property name="dataSource" ref="dataSource" /> <!-- 注入我们定义的数据源 -->
+	</bean>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource">
+        	<ref bean="dataSource"/>
+        </property>
+ 	</bean>
+
+	<bean id="connectionManager" class="com.fla.common.util.connection.ConnectionManager">
+          <property name="jdbcTemplate" ref="jdbcTemplate"></property>
+ 	</bean>
+
+ 	<bean id="loginDao" class="com.fla.common.dao.LoginDao">
+          <property name="jdbcTemplate" ref="jdbcTemplate"></property>
+ 	</bean>
+ 	
+ 	<bean id="expressDao" class="com.fla.common.dao.ExpressDao">
+          <property name="jdbcTemplate" ref="jdbcTemplate"></property>
+ 	</bean>
+ 	
+ 	<bean id="systemDao" class="com.fla.common.dao.SystemDao">
+          <property name="jdbcTemplate" ref="jdbcTemplate"></property>
+ 	</bean>
+ 	
+ 	<bean id="systemUser" class="com.fla.common.entity.SystemUser" scope="session">
+		<aop:scoped-proxy />
+	</bean>
+	
+	<bean id="customerDao" class="com.fla.common.dao.CustomerDao">
+          <property name="jdbcTemplate" ref="jdbcTemplate"></property>
+ 	</bean>
+ 	 
+ 	<!-- 声明采用@Transactional注解方式使用事务 -->
+ 	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+</beans>

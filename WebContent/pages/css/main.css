@@ -1,0 +1,19 @@
+
+
+@charset "utf-8";
+
+*{
+	margin:0;
+	padding:0;
+	outline:0;
+}
+img {
+	border: 0; 
+}
+
+
+/* typography and links */
+a { 
+	text-decoration: none;
+	color: #333;
+}

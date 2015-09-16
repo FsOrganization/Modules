@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans 
+	xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.2.xsd" default-lazy-init="true">
+	<!-- 设置不需要权限验证的资源 -->
+	<http security="none" pattern="/pages/index.jsp" />
+	<http security="none" pattern="/pages/images/**" />
+	<http security="none" pattern="/page/js/**" />
+	<http security="none" pattern="/pages/css/**" />
+	<http security="none" pattern="/pages/css.css" />
+	<http security="none" pattern="/page/swf/**" />
+	
+	<!-- 下面的的连接不用默认的拦截器处理，有专们的拦截器进行处理 -->
+	<http security="none" pattern="/pages/*.light" />
+	
+
+
+	<global-method-security pre-post-annotations="enabled" />
+	<!-- 开启注解 进行方法保护 如: @Secured("ROLE_TELLER") <global-method-security secured-annotations="enabled" 
+		pre-post-annotations="enabled" access-decision-manager-ref="aclAccessDecisionManager"> 
+		<after-invocation-provider ref="afterAclCollectionRead" /> </global-method-security> -->
+</beans:beans>

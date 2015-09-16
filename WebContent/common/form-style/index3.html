@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+        <title>Enhance Required Form Fields with CSS3</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <meta name="description" content="Enhance Required Form Fields with CSS3" />
+        <meta name="keywords" content="form, html5, css3, animated, transition, required, filter" />
+        <meta name="author" content="Codrops" />
+        <link rel="shortcut icon" href="../favicon.ico"> 
+        <link rel="stylesheet" type="text/css" href="css/demo.css" />
+        <link rel="stylesheet" type="text/css" href="css/style3.css" />
+		<script type="text/javascript" src="js/modernizr.custom.04022.js"></script>
+		<!--[if lt IE 8]>
+			<style>
+				.af-wrapper{display:none;}
+				.ie-note{display:block;}
+			</style>
+		<![endif]-->
+    </head>
+    <body>
+        <div class="container">
+			<section class="af-wrapper">
+	            <h3>Random Form</h3>
+		        
+				<input id="af-showreq" class="af-show-input" type="checkbox" name="showreq" />
+				<label for="af-showreq" class="af-show">Pop out required fields</label>
+				
+				<form class="af-form" id="af-form" novalidate>
+				
+					<div class="af-outer">
+						<div class="af-inner">
+							<label for="input-title">快件运单号</label>
+							<input type="text" name="logistics" id="logistics">
+						</div>
+					</div>
+				
+					<div class="af-outer af-required">
+						<div class="af-inner">
+							<label for="input-name">收件人手机号码</label>
+							<input type="text" name="phoneNumber" id="phoneNumber" required>
+						</div>
+					</div>
+					
+					<div class="af-outer af-required">
+						<div class="af-inner">
+						  <label for="input-email">快递服务商</label>
+						  <input id="expressServiceId" class="easyui-combobox" name="expressServiceId" data-options="
+								                url: '<%=contextPath%>/pages/system/getExpressServiceProviderInfo.light',
+								                method: 'get',
+								                valueField: 'id',
+								                textField: 'text',
+								                panelWitdh: 380,
+								                panelHeight: 260,
+								                width:280,
+								                height: 30,
+								                formatter: formatItem" />
+						</div>
+					</div>
+					
+					<div class="af-outer">
+						<div class="af-inner">
+							<label for="input-bdate">货位</label>
+							<input type="date" name="expressLocation" id="expressLocation" placeholder="MM/DD/YYYY">
+						</div>
+					</div>
+					
+					<div class="af-outer af-required">
+						<div class="af-inner">
+						  <label for="input-country">地址</label>
+						  <input type="email" name="address" id="address" required>
+						</div>
+					</div>
+					
+					<div class="af-outer">
+						<div class="af-inner">
+						  <label for="input-catname">批次号</label>
+						  <input type="email" name="batchNumber" id="batchNumber">
+						</div>
+					</div>
+					
+					<div class="af-outer">
+						<div class="af-inner">
+						  <label for="input-phone">Phone Number</label>
+						  <input type="email" name="phonenumber" id="input-phone">
+						</div>
+					</div>
+					
+					<input type="submit" value="Send it over!" /> 
+					
+				</form>
+			</section>
+        </div>
+    </body>
+</html>
