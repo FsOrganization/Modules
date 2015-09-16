@@ -6,7 +6,6 @@
 <%
 	String contextPath = request.getContextPath();
 %>
-<%-- <link rel="stylesheet" type="text/css" href="<%=contextPath%>/common/prettyCheck/stylesheet-pure-css.css" /> --%>
 <link rel="stylesheet" type="text/css" href="<%=contextPath%>/pages/css/jquery-tooltip/css/global.css" />
 <link rel="stylesheet" type="text/css" href="<%=contextPath%>/css/base.css" />
 
