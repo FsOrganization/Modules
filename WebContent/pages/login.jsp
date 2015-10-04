@@ -17,14 +17,14 @@
 <meta name="robots" content="noindex,follow">
 <script src="<%=contextPath%>/pages/js/login.js" type="text/javascript"></script>
 <script type="text/javascript">
-	var msgType = '${msgType}';
-	var msg = '${msg}';
+var msgType = '${msgType}';
+var msg = '${msg}';
 </script>
 </head>
-<body>
+<body style="height: 90%;">
   <div class="container">
     <div class="login">
-      <h1><%=contextPath%></h1>
+      <h1>源信幸福快递</h1>
       <form id="loginForm" method="post" action="<%=contextPath%>/pages/system/login.light">
         <p><input type="text" id="name" name="name" value="${name}" placeholder="用户名"> </p>
         <p><input type="password" id="password" name="password" value="" placeholder="密码"> </p>
@@ -34,6 +34,7 @@
         		<iputt type="hidden" id="hiddenCode" />
         	</p>
             <img id="VerificationCode" src=""></img>
+            
         </div>
         <div id="useruname-error" style="display: none"><span id="msg" class="msg">${msg}</span></div>
         <p class="remember_me">
@@ -43,13 +44,13 @@
           </label>
         </p>
         <p class="submit">
-			<input type="submit" id="commit" name="commit" value="登 陆">
+			<input type="button" id="loginFormCommit" name="loginFormCommit" value="登 陆">
 		</p>
       </form>
     </div>
 
     <div class="login-help">
-      <p>我忘记了密码? <a href="#">点击找回密码</a>.</p>
+      <p>我忘记了密码? <a href="#">申请重置密码</a>.</p>
     </div>
   </div>
 </body></html>

@@ -1,4 +1,8 @@
 var operatingTag=null;
+var genderMap = {};
+var whetherHaveCarMap = {};
+var ageSectionMap = {};
+var shopNameMap = {};
 $(document).ready(function() {
 		$('#id').prop('readonly', true);
 		$("#name").bind("keydown",function(e){
@@ -13,7 +17,10 @@ $(document).ready(function() {
 		$("#submitBtn").click(function() {
 			submitForm();
 		});
-		
+		initShopNameMap();
+		initGender();
+		initWhetherHaveCar();
+		initAgeSection();
 		//输入框按回车
 		$("#queryParams").bind("keydown",function(e){
 			var keycode = e.which;
@@ -39,11 +46,7 @@ $(document).ready(function() {
 			$('#addUser').window('close');
 		});
 		$("#saveBtn").click(function() {
-			if (operatingTag) {
 				modifyForm();
-			} else {
-				saveForm();
-			}
 		});
 		
 		$('#customerGrid').datagrid({
@@ -60,74 +63,88 @@ $(document).ready(function() {
 			queryParams: {
 				batchNumber: ''
 			},
-			toolbar: [
-//			{
-//	            text: 
-//	            	'&nbsp;&nbsp;开始日期：<input id="startDateId" name="startDateId" style="width: 100px;height:25px;" onclick="WdatePicker()" >&nbsp;&nbsp;'+
-//	            	'&nbsp;&nbsp;截止日期:<input id="endDateId" name="endDateId"  style="width: 100px;height:25px;" onclick="WdatePicker()" >'+
-//	            	'&nbsp;&nbsp;客户信息：<input id="queryParams" name="queryParams" style="width: 150px;height:25px;" placeholder="手机后四位、客户姓名">'+
-//	            	'&nbsp;&nbsp;快递服务商：<input id="expressServiceId" name="expressServiceId" style="width: 150px;" class="easyui-combobox" value=2> '
-//	        },
-	        {
-				text:'新增客户',
-				iconCls: 'icon-search',
-				handler: function(){
-					addUser();
-					operatingTag = false;
-				}
-			}],
+//			toolbar: [
+//	        {
+//				text:'新增客户',
+//				iconCls: 'icon-search',
+//				handler: function(){
+//					addUser();
+//					operatingTag = false;
+//				}
+//			}],
 			columns : [ [ {
 				field : 'NAME',
-				title : '登录名',
+				title : '姓名',
 				width : 120,
 				align : 'center',
 				hidden : false
 			},{
 				field : 'GENDER',
 				title : '性别',
-				width : 120,
+				width : 60,
 				align : 'center',
-				hidden : false
+				hidden : false,
+				formatter : function(value, row, index){
+					return formatGenderColumnTitle(value);
+				}
 			},{
-				field : 'AGE',
-				title : '年龄',
-				width : 120,
+				field : 'AGE_SECTION',
+				title : '年龄段',
+				width : 100,
 				align : 'center',
-				hidden : false
+				hidden : false,
+				formatter : function(value, row, index){
+					return formatAgeSectionColumnTitle(value);
+				}
 			},{
-				field : 'CAR',
+				field : 'WHETHER_HAVE_CAR',
 				title : '是否有车',
-				width : 120,
+				width : 60,
 				align : 'center',
-				hidden : false
+				hidden : false,
+				formatter : function(value, row, index){
+					return formatWhetherHaveCarColumnTitle(value);
+				}
 			},{
 				field : 'PHONE_NUMBER',
 				title : '联系电话',
 				width : 120,
 				align : 'center',
-				hidden : false
+				hidden : false,
+				formatter : function(value, row, index){
+					return formatPhoneNumber(value);
+				}
 			},{
-				field : 'AREA_CODE',
-				title : '区域编号',
+				field : 'SERVICE_SHOP_CODE',
+				title : '服务网点',
 				width : 120,
 				align : 'center',
-				hidden : true
+				hidden : false,
+				formatter : function(value, row, index){
+					return formatShopCodeColumnTitle(value);
+				}
 			},{
 				field : 'eCount',
 				title : '收件数',
-				width : 120,
+				width : 100,
 				align : 'center',
 				hidden : false
 			},{
 				field : 'sCount',
 				title : '寄件数',
-				width : 120,
+				width : 100,
+				align : 'center',
+				hidden : false
+			},{
+				field : 'WEIXIN_ID',
+				title : '微信号',
+				width : 240,
 				align : 'center',
 				hidden : false
 			},{
 				field : 'ADDRESS',
 				title : '地址',
-				width : 120,
+				width : 220,
 				align : 'center',
 				hidden : false
 			}] ],
@@ -139,50 +156,110 @@ $(document).ready(function() {
 			},
 			loadFilter : pagerFilter
 		});
-		 $('#loginName').keydown(function(e){
-		        if(e.keyCode != 13 && e.keyCode != 9){
-		        	var endChar = String.fromCharCode(e.keyCode);
-					var loginName = $("#loginName").val();
-					var name = loginName+endChar.toLowerCase();
-					checkLoginNameUniqueness(name);
-		        }
-		 });
+//		 $('#loginName').keydown(function(e){
+//		        if(e.keyCode != 13 && e.keyCode != 9){
+//		        	var endChar = String.fromCharCode(e.keyCode);
+//					var loginName = $("#loginName").val();
+//					var name = loginName+endChar.toLowerCase();
+//					checkLoginNameUniqueness(name);
+//		        }
+//		 });
 });
 
-function formatColumnTitle(value){
-	if (value===2){
-		return '顺丰';
-	} else if (value===3){
-		return '京东';
-	}else if (value===4){
-		return '圆通';
-	}else if (value===5){
-		return 'EMS';
-	}else if (value===6){
-		return '天天快递';
-	}else if (value===7){
-		return '申通';
-	}else if (value===8){
-		return '中通';
-	}else if (value===9){
-		return '韵达';
-	}else if (value===10){
-		return '中铁物流';
-	}else if (value===11){
-		return '宅急送';
-	}else if (value===12){
-		return '汇通';
-	}else if (value===13){
-		return '邮政';
-	}else if (value===14){
-		return '快捷';
-	}else if (value===15){
-		return '优速';
-	}else if (value===16){
-		return '其他';
-	}else{
-		return '未知';
-	}
+function formatPhoneNumber(value){
+	var t=value.substring(0,3);
+	var firstTemp = value.substring(3,7);
+	var lastTemp = value.substring(7,11);
+	var allTemp = t+"-"+firstTemp+'-'+'<span style="font-weight: bolder;">'+lastTemp+'</span>';
+	return '<span style="font-size:1.1em;">'+allTemp+'</span>';
+}
+
+function initShopNameMap() {
+	$.ajax({
+		url : contextPath + "/pages/system/pageconfig/getServiceShopName.light",
+		type : "POST",
+		dataType : 'json',
+		data : {
+			"shop_code" : ""
+		},
+		success : function(data) {
+			$.each(data, function(i) {    
+				shopNameMap[data[i].SHOP_CODE] = data[i].NAME;
+		     });
+		},
+		error : function(data) {
+		}
+	});
+}
+
+function initGender() {
+	$.ajax({
+		url : contextPath + "/pages/system/pageconfig/getPageGender.light",
+		type : "POST",
+		dataType : 'json',
+		data : {
+			"shop_code" : ""
+		},
+		success : function(data) {
+			$.each(data, function(i) {    
+				genderMap[data[i].value] = data[i].text;
+		     });
+		},
+		error : function(data) {
+		}
+	});
+}
+
+function initWhetherHaveCar() {
+	$.ajax({
+		url : contextPath + "/pages/system/pageconfig/getWhetherHaveCar.light",
+		type : "POST",
+		dataType : 'json',
+		data : {
+			"shop_code" : ""
+		},
+		success : function(data) {
+			$.each(data, function(i) {    
+				whetherHaveCarMap[data[i].value] = data[i].text;
+		     });
+		},
+		error : function(data) {
+		}
+	});
+}
+
+function initAgeSection() {
+	$.ajax({
+		url : contextPath + "/pages/system/pageconfig/getAgeSection.light",
+		type : "POST",
+		dataType : 'json',
+		data : {
+			"shop_code" : ""
+		},
+		success : function(data) {
+			$.each(data, function(i) {    
+				ageSectionMap[data[i].value] = data[i].text;
+		     });
+		},
+		error : function(data) {
+		}
+	});
+}
+
+function formatShopCodeColumnTitle(value){
+	return shopNameMap[value];
+}
+
+function formatGenderColumnTitle(value){
+	return genderMap[value];
+}
+
+function formatWhetherHaveCarColumnTitle(value){
+	return whetherHaveCarMap[value];
+}
+
+function formatAgeSectionColumnTitle(value){
+	return ageSectionMap[value];
 }
 
 function getBarCode(LOGISTICS, RECIPIENT_NAME) {
@@ -211,30 +288,30 @@ function getBarCode(LOGISTICS, RECIPIENT_NAME) {
 	});
 }
 
-function checkLoginNameUniqueness(loginName) {
-	if (checkAdminLoginName(loginName)) {
-		return;
-	}
-	$.ajax({
-		url : contextPath + "/pages/system/checkLoginNameUniqueness.light",
-		type : "POST",
-		dataType : 'json',
-		sync:false,
-		data : {
-			"loginName" : loginName
-		},
-		success : function(data) {
-			if (data.UNIQUE === 'false') {
-//				alert('已存在登录名');
-				$('#saveBtn').hide();
-			} else  {
-				$('#saveBtn').show();
-			}
-		},
-		error : function(data) {
-		}
-	});
-}
+//function checkLoginNameUniqueness(loginName) {
+//	if (checkAdminLoginName(loginName)) {
+//		return;
+//	}
+//	$.ajax({
+//		url : contextPath + "/pages/system/checkLoginNameUniqueness.light",
+//		type : "POST",
+//		dataType : 'json',
+//		sync:false,
+//		data : {
+//			"loginName" : loginName
+//		},
+//		success : function(data) {
+//			if (data.UNIQUE === 'false') {
+////				alert('已存在登录名');
+//				$('#saveBtn').hide();
+//			} else  {
+//				$('#saveBtn').show();
+//			}
+//		},
+//		error : function(data) {
+//		}
+//	});
+//}
 
 function getSignatureCode(batchNumber, type) {
 	$.ajax({
@@ -295,34 +372,36 @@ function getSelections() {
 function openWindow(rowIndex, rowData) {
 	clearFormData();
 	var id = rowData.ID;
-	var serviceShopCode = rowData.SERVICE_SHOP_CODE;
-	var loginName = rowData.LOGIN_NAME;
-	var nickName = rowData.NICK_NAME;
-	var password = rowData.PASSWORD;
+	var name = rowData.NAME;
+	var gender = rowData.GENDER;
+	var ageSection = rowData.AGE_SECTION;
+	var whetherHaveCar = rowData.WHETHER_HAVE_CAR;
+//	var isCheck = rowData.TYPE;
 	var phoneNumber = rowData.PHONE_NUMBER;
-	var isCheck = rowData.TYPE;
+	$('#customerId').val(id);
+	$('#gender').combobox('setValue', gender);
+	$('#ageSection').combobox('setValue', ageSection);
+	$('#whetherHaveCar').combobox('setValue', whetherHaveCar);
 	
-	$('#userId').val(id);
-	$('#loginName').val(loginName);
-	$('#nickName').val(nickName);
-//	$('#password').val(password);
+	$('#name').val(name);
 	$('#phoneNumber').val(phoneNumber);
-	if (isCheck === '1') {
-		$("input[id='isCheck']").prop("checked",true);
-	}
-	$('#shopCodeList').combobox('setValue', serviceShopCode);
+//	if (isCheck === '1') {
+//		$("input[id='isCheck']").prop("checked",true);
+//	}
+//	$('#shopCodeList').combobox('setValue', serviceShopCode);
 	$('#addUser').window('open');
 	
 }
 
 function clearFormData() {
-	$('#loginName').val('');
-	$('#userId').val('');
-	$('#nickName').val('');
-	$('#password').val('');
+	$('#name').val('');
+	$('#gender').combobox('setValue', '');
+	$('#ageSection').combobox('setValue', '');
+	$('#whetherHaveCar').combobox('setValue', '');
 	$('#phoneNumber').val('');
-	$('#shopCodeList').combobox('setValue', '');
-	$("input[id='isCheck']").prop("checked",false);
+	$('#address').val('');
+	
+//	$("input[id='isCheck']").prop("checked",false);
 }
 
 //查询患者信息
@@ -346,20 +425,20 @@ function searchExpressInfo() {
 	
 }
 
-function checkAdminLoginName(loginName) {
-	if (loginName === 'admin') {
-		$.messager.show({
-            title:'提示',
-            msg:'<div class="messager-icon messager-info"></div>'+loginName +'为管理员工号不能添加',
-            timeout:3800,
-            showType:'slide'
-		});
-		$('#saveBtn').hide();
-		return true;
-	} else {
-		return false;
-	}
-}
+//function checkAdminLoginName(loginName) {
+//	if (loginName === 'admin') {
+//		$.messager.show({
+//            title:'提示',
+//            msg:'<div class="messager-icon messager-info"></div>'+loginName +'为管理员工号不能添加',
+//            timeout:3800,
+//            showType:'slide'
+//		});
+//		$('#saveBtn').hide();
+//		return true;
+//	} else {
+//		return false;
+//	}
+//}
 
 function saveForm() {
 	var loginName = $('#loginName').val();
@@ -429,43 +508,30 @@ function saveForm() {
 }
 
 function modifyForm() {
-	var id = $('#userId').val();
-	var loginName = $('#loginName').val();
-	if (checkAdminLoginName(loginName)) {
-		return;
-	}
-	var shopCode= $('#shopCodeList').combo('getText');
-	var nickName = $('#nickName').val();
-	var password = $('#password').val();
+	var id = $('#customerId').val();
+	var name = $('#name').val();
+	var address = $('#address').val();
 	var phoneNumber = $('#phoneNumber').val();
-//	var isCheck = $('#isCheck').val();
-	var isCheckTemp = "";
-	if ($(":checked[name=isCheck]").val() == undefined) {
-		isCheckTemp = "NO";
-	} else {
-		isCheckTemp = $(":checked[name=isCheck]").val();
-	}
-	if (shopCode == '' || loginName== '') {
-		$('#af-showreq').click();  
-		return;
-	}
-
+	var gender= $('#gender').combo('getValue');
+	var ageSection= $('#ageSection').combo('getValue');
+	var whetherHaveCar= $('#whetherHaveCar').combo('getValue');
+	
 	$.ajax({
-		url : contextPath+"/pages/system/modifyUser.light",
+		url : contextPath+"/pages/system/modifyCustomer.light",
 		type: "POST",
 		dataType:'json',
 		data:
 		{
 			"id":id,
-			"loginName":loginName,
-			"shopCode":shopCode,
-			"nickName":nickName,
-			"password":password,
+			"name":name,
+			"address":address,
 			"phoneNumber":phoneNumber,
-			"isCheck":isCheckTemp
+			"gender":gender,
+			"ageSection":ageSection,
+			"whetherHaveCar":whetherHaveCar
 		},
 		success : function(data) {
-			$('#userGrid').datagrid("reload");
+			$('#customerGrid').datagrid("reload");
 			$('#addUser').window('close');
 			$.messager.show({
                 title:'提示',
@@ -499,4 +565,31 @@ function formatItem(row){
     var s = '<span style="font-weight:bold">' + row.desc + '</span><br/>' +
             '<span style="color:#888">' + row.text + '</span>';
     return s;
+}
+
+function formatGender(row){
+	var ip = $("#gender").parent().find('.combo').children().eq(1);
+	var comb = $(this).combobox('options');
+	$(ip).click(function(){
+		$('#gender').combo('showPanel');	
+	});
+    return row.text;
+}
+
+function formatAgeSection(row){
+	var ip = $("#ageSection").parent().find('.combo').children().eq(1);
+	var comb = $(this).combobox('options');
+	$(ip).click(function(){
+		$('#ageSection').combo('showPanel');	
+	});
+    return row.text;
+}
+
+function formatWhetherHaveCar(row){
+	var ip = $("#whetherHaveCar").parent().find('.combo').children().eq(1);
+	var comb = $(this).combobox('options');
+	$(ip).click(function(){
+		$('#whetherHaveCar').combo('showPanel');	
+	});
+    return row.text;
 }

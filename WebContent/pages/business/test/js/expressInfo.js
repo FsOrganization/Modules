@@ -47,27 +47,25 @@ $(document).ready(function() {
 		});
 		
 		$('#areaCodeGrid').datagrid({
-			dataType : 'json',
-//			url : contextPath + '/pages/system/getInAndOutExpressInfoList.light',//getNotOutExpressInfoByFilterConditions
+//			dataType : 'json',
+			url : contextPath + '/pages/system/getExpressInfoByFilterConditions.light',//getNotOutExpressInfoByFilterConditions
 			width : $(window).width() * 1,
 			height :($(window).height()-30)*0.99,
 			singleSelect : true,
 			rownumbers : true,
 			pagination : true,
-			striped : true,
+//			striped : true,
+			method : 'post',
 			idField : 'ID',
-			pageSize : 30,
-			queryParams: {
-				batchNumber: ''
-			},
+//			pageSize : 30,
+//			queryParams: {
+//				batchNumber: '',
+//				endDate:'', 
+//				startDate:'',
+//				queryParams:'',
+//				expressService:''
+//			},
 			toolbar: [
-//			{
-//	            text: 
-//	            	'&nbsp;&nbsp;开始日期：<input id="startDateId" name="startDateId" style="width: 100px;height:25px;" onclick="WdatePicker()" >&nbsp;&nbsp;'+
-//	            	'&nbsp;&nbsp;截止日期:<input id="endDateId" name="endDateId"  style="width: 100px;height:25px;" onclick="WdatePicker()" >'+
-//	            	'&nbsp;&nbsp;客户信息：<input id="queryParams" name="queryParams" style="width: 150px;height:25px;" placeholder="手机后四位、客户姓名">'+
-//	            	'&nbsp;&nbsp;快递服务商：<input id="expressServiceId" name="expressServiceId" style="width: 150px;" class="easyui-combobox" value=2> '
-//	        },
 	        {
 				text:'查询快件',
 				iconCls: 'icon-search',
@@ -195,7 +193,6 @@ $(document).ready(function() {
 				align : 'center',
 				hidden : true,
 				formatter : function(value,row,index) {
-// 					return '<button onclick="getBarCode('+row.id+')" >查看条码</button>';
 					return "<button onclick=\"getBarCode("+row.LOGISTICS+",'"+row.RECIPIENT_NAME+"')\">查看条码</button>";
 				}
 			}] ],
@@ -204,9 +201,28 @@ $(document).ready(function() {
 			},
 			onDblClickRow : function(rowIndex, rowData) {
 //				openWindow(rowIndex, rowData);
-			},
-			loadFilter : pagerFilter
+			}
 		});
+		 var p = $('#areaCodeGrid').datagrid('getPager');
+		 $(p).pagination({
+	        pageSize: 15,//每页显示的记录条数，默认为10 
+	        pageList: [5,10,15,25,50],//可以设置每页记录条数的列表 
+	        beforePageText: '第',//页数文本框前显示的汉字 
+	        afterPageText: '页    共 {pages} 页',
+	        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录', 
+	        onBeforeRefresh:function(){
+	            $(this).pagination('loading');
+	            alert('before refresh');
+	            $(this).pagination('loaded');
+	        },
+			onRefresh:function(pageNumber,pageSize){
+			},   
+			onChangePageSize:function(){   
+				alert('pagesize changed');   
+			},   
+			onSelectPage:function(pageNumber,pageSize){   
+			}
+		  });
 	});
 	
 function initExpressServiceProviders() {
@@ -370,23 +386,13 @@ function submitForm() {
 	});
 }
 
-//查询患者信息
+//
 function searchExpressInfo() {
 	var endDate = $("#endDateId").val();
 	var startDate = $("#startDateId").val();
 	var queryParams = $("#queryParams").val();
 	queryParams = encodeURI(queryParams);
 	var expressService = $("#expressServiceId").combobox('getValue');
-	if(endDate==''&& startDate==''&&queryParams==''&&expressService=='') {
-		$.messager.show({
-			title : '提示',
-			msg : '<div class="messager-icon messager-info"></div>'+'请选择查询条件',
-			timeout : 3800,
-			showType : 'slide'
-		});
-		return ;
-	}
-	
 	var obj = {
 		"endDate" : endDate,
 		"startDate" : startDate,
@@ -407,6 +413,7 @@ function searchExpressInfo() {
 	$(paper).pagination('refresh', {
 		pageNumber : 1
 	});
+	
 }
 
 function exportExpressList() {

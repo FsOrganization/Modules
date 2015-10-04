@@ -1,8 +1,32 @@
+
 var obj;
 var tempIds;
 var expressServiceMap = {};
+var shopNameMap = {};
 function queryData() {
 	searchExpressInfo();
+}
+
+function formatShopCodeColumnTitle(value){
+	return shopNameMap[value];
+}
+
+function initShopNameMap() {
+	$.ajax({
+		url : contextPath + "/pages/system/pageconfig/getServiceShopName.light",
+		type : "POST",
+		dataType : 'json',
+		data : {
+			"shop_code" : ""
+		},
+		success : function(data) {
+			$.each(data, function(i) {    
+				shopNameMap[data[i].SHOP_CODE] = data[i].NAME;
+		     });
+		},
+		error : function(data) {
+		}
+	});
 }
 
 function modifyExpress() {
@@ -50,7 +74,9 @@ $(document).ready(function(){
 				queryData();
 				e.preventDefault();						
 			}
-		});	
+		});
+		
+		initShopNameMap();
 		
 		$("#submitBtn").click(function(){
 			submitForm();
@@ -59,6 +85,13 @@ $(document).ready(function(){
 		$("#modifyBtn").click(function() {
 			modifyExpress();
 		});
+		
+		$("#getExpressBtn").click(function() {
+			$('#signatureRegion').window('open');
+			initializationSignatureRegion();
+	    	closeBPopup();
+		});
+		
 		$('#signatureRegion').window({
 			title:'取件确认',
 			width:560,
@@ -89,20 +122,10 @@ $(document).ready(function(){
 				batchNumber: ''
 			},
 			toolbar: [
-//			{ 
-//	            text: 
-//	            	'&nbsp;&nbsp;开始日期：<input id="startDateId" name="startDateId" style="width: 100px;height:25px;border-style: solid;border-color: antiquewhite;" onclick="WdatePicker()" >&nbsp;&nbsp;'+
-//	            	'&nbsp;&nbsp;截止日期:<input id="endDateId" name="endDateId"  style="width: 100px;height:25px;border-style: solid;border-color: antiquewhite;" onclick="WdatePicker()" >'+
-//	            	'&nbsp;&nbsp;客户信息：<input id="queryParams" name="queryParams" style="width: 150px;height:25px;border-style: solid;border-color: antiquewhite;" placeholder="手机后四位、客户姓名">'+
-//	            	'&nbsp;&nbsp;快递服务商：<input id="expressServiceId" name="expressServiceId" style="width: 150px;border-style: solid;border-color: antiquewhite;" class="easyui-combobox" value=2>'
-//	        },
 	        {
 				text:'查询快件',
 				iconCls: 'icon-search',
 				handler: function(){
-//					if($("#startDateId").val() > $("#endDateId").val()){
-//				    	alert("开始日期不能大于截止日期");
-//				    }
 					searchExpressInfo();
 				}
 			},{
@@ -115,14 +138,8 @@ $(document).ready(function(){
 				text:'打印出库单',
 				iconCls: 'icon-print',
 				handler: function(){
-//					$("#areaCodeGrid").datagrid('resize',{
-//						height: 1400
-//					});
 					var gridView = $(".datagrid-view");
 					$(gridView).jqprint({operaSupport: true});
-//					$("#areaCodeGrid").datagrid('resize',{
-//						height : $(window).height() * 0.98
-//					});
 				}
 			}],
 			columns : [ [{
@@ -137,7 +154,7 @@ $(document).ready(function(){
 				width : 100, 
 				align : 'center',
 				formatter : function(value,row,index){
-					return "<button style='width: inherit;' onclick=\"letExpressOutStorehouse("+row.ID+",'"+row.RECIPIENT_NAME+"','"+row.PHONE_NUMBER+"')\">取件</button>";
+					return "<button style='width: inherit;' id='expressOpara' onclick=\"letExpressOutStorehouse("+row.ID+",'"+row.RECIPIENT_NAME+"','"+row.PHONE_NUMBER+"','"+row.EXPRESS_lOCATION+"','"+row.EXPRESS_SERVICE_ID+"','"+row.GENDER+"')\">取件</button>";
 				}
 			},{
 				field : 'LOGISTICS',
@@ -150,6 +167,12 @@ $(document).ready(function(){
 				width : 120,
 				align : 'center',
 				hidden : false
+			},{
+				field : 'GENDER',
+				title : '性别',
+				width : 120,
+				align : 'center',
+				hidden : true
 			},{
 				field : 'PHONE_NUMBER',
 				title : '手机号码',
@@ -203,15 +226,25 @@ $(document).ready(function(){
 				title : '备注',
 				width : 200,
 				align : 'center',
-				hidden : false
+				hidden : true
+			},{
+				field : 'SERVICE_SHOP_CODE',
+				title : '网点',
+				width : 200,
+				align : 'center',
+				hidden : true
 			},{  
-				field : 'extractCodenotify', 
-				title : '提醒',
+				field : 'WEIXIN_ID',
+				title : '推送微信通知',
 				width : 100, 
 				align : 'center',
-				hidden : true,
-				formatter : function(value,row,index){
-					return "<button onclick=\"extractCodenotify("+row.PHONE_NUMBER+",'"+row.RECIPIENT_NAME+"')\">提取码通知取件</button>";
+				hidden : false,
+				formatter : function(value,row,index) {
+					if (row.WEIXIN_ID === '' || row.WEIXIN_ID ==null) {
+						return value;
+					} else {
+						return "<button onclick=\"pushWechatNotification('"+row.WEIXIN_ID+"','"+formatShopCodeColumnTitle(row.SERVICE_SHOP_CODE)+"','"+formatColumnTitle(row.EXPRESS_SERVICE_ID)+"','"+row.LOGISTICS+"','"+row.OPERA_TIME+"')\">推送微信通知</button>";
+					}
 				}
 			},{  field : 'showBarCode', 
 				title : '查看条码',
@@ -251,10 +284,36 @@ $(document).ready(function(){
 			},
 			onDblClickRow : function(rowIndex, rowData) {
 				openWindow(rowIndex, rowData);
-			},
-			loadFilter : pagerFilter
+			}
 		});
+		$('#my-button').bind('click', function(e) {
+            e.preventDefault();
+            $('#element_to_pop_up').bPopup({
+                onOpen: function() {
+                	//$('#genderSpan').hide();
+                }, 
+                onClose: function() {
+                	$('#genderSpan').hide();
+                },
+                modalClose: false,
+                opacity: 0.6,
+                positionStyle: 'fixed', //'fixed' or 'absolute'
+                follow: [false, false], //x, y
+                position: [395, 45] //x, y
+            }, 
+            function() {
+                //alert('Callback fired');
+            });
+
+        });
+		
 	});
+
+	function closeBPopup(){
+		$('#genderSpan').hide();
+		var bPopup = $('#element_to_pop_up').bPopup();
+		bPopup.close();
+	}
 	function getBarCode(LOGISTICS,name){
 		$.ajax({
 			url : contextPath+"/pages/system/getBarCode.light",
@@ -283,8 +342,31 @@ $(document).ready(function(){
 		});
 	}
 	
-	function extractCodenotify(PHONE_NUMBER,RECIPIENT_NAME){
+	function pushWechatNotification(WEIXIN_ID,SHOP_NAME,EXPRESS_SERVICE_NAME,LOGISTICS,OPERA_TIME){
 		
+		$.messager.confirm('确认对话框', '您确定推送吗？', function(r){
+			if (r)
+			{
+				$.messager.progress(); 
+				var msg = '尊敬的客户 您的快递'+LOGISTICS+'('+EXPRESS_SERVICE_NAME+')'+'已于['+OPERA_TIME+']到达 '+SHOP_NAME+' 幸福快递网点 请尽快领取';
+				$.ajax({
+					url : contextPath + "/pages/system/wechat/sendMessage.light",
+					type : "POST",
+					dataType : 'json',
+					data : {
+						"msg" : msg,
+						"touser":WEIXIN_ID
+					},
+					success : function(data){
+						$.messager.progress('close');
+						$.messager.alert('服务器消息','推送成功,'+'{errcode:'+data.errcode+'errmsg:'+data.errmsg+'}','info');
+					},
+					error : function(data) {
+					}
+				});
+			}
+		});
+
 	}
 	
 	function initExpressServiceProviders() {
@@ -409,63 +491,78 @@ $(document).ready(function(){
 		return ids;
 	}
 	
+	function getFirstSelectRowGender(){
+		var selectedRows = $('#areaCodeGrid').datagrid('getSelections');
+		if (selectedRows.length != 0){
+			return selectedRows[0].GENDER;
+		} else {
+			return null;
+		}
+	}
+	
 	function getPhoneNumberBySelectRows(){
 		var selectedRows = $('#areaCodeGrid').datagrid('getSelections');
 		if (selectedRows.length != 0){
 			var cInfo = '';
 			for(var i = 0; i < selectedRows.length; i ++){
-				if(cInfo != ''){
-					cInfo += ",";
-				}
-				cInfo += selectedRows[i].RECIPIENT_NAME+','+selectedRows[i].PHONE_NUMBER;
+//				if(cInfo != ''){
+//					cInfo += ",";
+//				}
+				cInfo += selectedRows[i].RECIPIENT_NAME+':'+selectedRows[i].PHONE_NUMBER+',货位:'+selectedRows[i].EXPRESS_lOCATION+" ("+formatColumnTitle(selectedRows[i].EXPRESS_SERVICE_ID)+")"+"</br></br>";
 			}
 		}
 		return cInfo;
 	}
 	
 	function batchLetExpressOutStorehouse(){
+		$('#genderSpan').hide();
 		var ids = null;
 		ids = getSelectRows();
 		if (ids===undefined ){
 			showMsg("请选择快件...", "提示");
 			return;
 		} else{
+			var tempValue = getFirstSelectRowGender();
+			if (tempValue != null && tempValue ==='unknown') {
+				$('#genderSpan').show();
+			}
 			var cInfo = getPhoneNumberBySelectRows();
-			var titleInfo = "请核对取件人: ";
-			$.messager.confirm('确认',titleInfo+cInfo,function(r){
-			    if (r){
-//					$.ajax({
-//						url : contextPath + "/pages/system/letExpressOutStorehouse.light",
-//						type : "POST",
-//						data :{
-//							"ids" : ids
-//						},
-//						success : function(result){
-//							$('#areaCodeGrid').datagrid('clearSelections');
-//							$('#areaCodeGrid').datagrid("reload");
-//						}
-//					});
-			    	
-			    	$('#signatureRegion').window('open');
-					initializationSignatureRegion();
-			    	tempIds = null;
-			    	tempIds = ids;
-			    }    
-			});  
+			var titleInfo = "请核对取件人: "+'</br></br>';
+			$('#content').empty();
+			$('#content').append(titleInfo+cInfo);
+			$('#my-button').click();
+			tempIds = null;
+	    	tempIds = ids;
+//			$.messager.confirm('确认',titleInfo+cInfo,function(r){
+//			    if (r){
+//			    	$('#signatureRegion').window('open');
+//					initializationSignatureRegion();
+//			    	tempIds = null;
+//			    	tempIds = ids;
+//			    }    
+//			});  
 		}
 
 	}
 
-	function letExpressOutStorehouse(id,name,phone){
-		var cInfo = '请核对取件人: '+name+','+phone;
-		$.messager.confirm('确认',cInfo,function(r){
-		    if (r){
-		    	$('#signatureRegion').window('open');
-				initializationSignatureRegion();
-		    	tempIds = null;
-		    	tempIds = id;
-		    }    
-		}); 
+	function letExpressOutStorehouse(id,name,phone,expressLocation,expressServiceId,gender){
+		if (gender === 'unknown') {
+			$('#genderSpan').show();
+		}
+		var cInfo = '请核对取件人: '+'</br></br>'+name+','+phone+",货位:"+expressLocation+" ("+formatColumnTitle(expressServiceId)+")" +"</br></br>";
+		$('#content').empty();
+		$('#content').append(cInfo);
+		$('#my-button').click();
+		tempIds = null;
+    	tempIds = id;
+//		$.messager.confirm('确认',cInfo,function(r){
+//		    if (r){
+//		    	$('#signatureRegion').window('open');
+//				initializationSignatureRegion();
+//		    	tempIds = null;
+//		    	tempIds = id;
+//		    }    
+//		});
 
 	}
 	

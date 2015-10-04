@@ -16,10 +16,10 @@
 			position: fixed;
 			top: 220px;
 			right: 0;
-			width: 25px;
+			width: 22px;
 			padding: 15px 0;
 			text-align: center;
-			background: none repeat scroll 0% 0% #A8BB25;
+			background: none repeat scroll 0% 0% rgba(63, 139, 190, 0.58);
 			-webkit-transition-duration: 0.3s;
 			-moz-transition-duration: 0.3s;
 			-o-transition-duration: 0.3s;
@@ -32,7 +32,7 @@
 			position: fixed;
 			top: 220px;
 			right: -250px;
-			background: none repeat scroll 0% 0% #A8BB25;
+			background: none repeat scroll 0% 0% rgba(63, 139, 190, 0.58);
 			width: 200px;
 			padding: 25px;
 			height: 130px;
@@ -57,51 +57,6 @@
 			right: 0;
 }
 
-#slideout_2 {
-
-			position: fixed;
-			top: 820px;
-			right: 0;
-			width: 25px;
-			padding: 15px 0;
-			text-align: center;
-			background: none repeat scroll 0% 0% #0CA3D2;
-			-webkit-transition-duration: 0.3s;
-			-moz-transition-duration: 0.3s;
-			-o-transition-duration: 0.3s;
-			transition-duration: 0.3s;
-			-webkit-border-radius: 5 0px 0px 5;
-			-moz-border-radius: 5 0px 0px 5;
-			border-radius: 5 0px 0px 5;
-}
-#slideout_inner_2 {
-			position: fixed;
-			top: 820px;
-			right: -250px;
-			background: none repeat scroll 0% 0% #0CA3D2;
-			width: 200px;
-			padding: 25px;
-			height: 130px;
-			-webkit-transition-duration: 0.3s;
-			-moz-transition-duration: 0.3s;
-			-o-transition-duration: 0.3s;
-			transition-duration: 0.3s;
-			text-align: left;
-			-webkit-border-radius: 0 0 0px 5;
-			-moz-border-radius: 0 0 0px 5;
-			border-radius: 0 0 0px 5;
-}
-#slideout_inner_2 textarea {
-			width: 190px;
-			height: 100px;
-			margin-bottom: 6px;
-}
-#slideout_2:hover {
-			right: 250px;
-}
-#slideout_2:hover #slideout_inner_2 {
-			right: 0;
-}
 </style>
 <title>源信幸福快递</title>
 <script type="text/javascript" src="<%=contextPath%>/pages/js/menu.js"></script>
@@ -126,19 +81,15 @@
 			<td height="1"><img src="<%=contextPath%>/pages/images/spacer.gif" border="0" width="1" height="1"></td>
 		</tr>
 		<tr>
-			<td colspan="10" background="<%=contextPath%>/pages/images/top-back.gif" height="100">
-				<img name="index_r1_c1" src="<%=contextPath%>/pages/images/headbg_1826.png" style="border: 0; width: 100%;height: 100px;">
+			<td colspan="10" background="<%=contextPath%>/pages/images/top-back.gif">
+				<img name="index_r1_c1" src="<%=contextPath%>/pages/images/headbg_1826.png" style="border: 0; width: 100%;height: 40px;">
 			</td>
 			<td colspan="3"
-				background="<%=contextPath%>/pages/images/top-back.gif" height="95">
+				background="<%=contextPath%>/pages/images/top-back.gif" height="40px">
 			</td>
 		</tr>
 		<tr>
-			<td colspan="10" style="background: #3F8BBE;" valign="top" height="13">
-<!-- 				<div style="float: right;position: absolute;margin: -35px 1750px;"> -->
-<%-- 					<img name="logout _icon" src="<%=contextPath%>/pages/images/logout _icon.png"> --%>
-<!-- 				</div> -->
-			</td>
+			<td colspan="10" style="background: #3F8BBE;" valign="top" height="2"></td>
 		</tr>
 		<tr>
 			<td rowspan="4" style="background: #3F8BBE;" valign="top" height="319">
@@ -171,13 +122,13 @@
 				<p align="right">
 					<img name="index_r3_c9" src="<%=contextPath%>/pages/images/index_r3_c9.gif" border="0" width="6" height="6">
 			</td>
-			<td rowspan="4" style="background: #3F8BBE;" valign="top" height="319"></td>
+<!-- 			<td rowspan="4" style="background: #3F8BBE;" valign="top" height="319"></td> -->
 		</tr>
 		<tr>
 			<td rowspan="2" style="background: #fff;" valign="top" height="307"></td>
 		</tr>
 		<tr>
-			<td style="background: #fff;" valign="top" height="306">
+			<td style="background: #fff;" valign="top" height="100%">
 				<div align="center">
 					<center>
 						<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border-width: 0" bordercolor="#111111" width="89%" id="AutoNumber1">
@@ -327,21 +278,22 @@
 					</center>
 				</div>
 			</td>
-			<td style="background: #fff;" valign="top" height="306"></td>
-			<td style="background: #fff;" valign="top" height="306"></td>
-			<td colspan="2" style="background: #fff;" valign="top" height="306">
-			<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border-width: 0;" id="AutoNumber3">
-				<div id="tabs" class="easyui-tabs" style="width: 1695px;height: 877px;">
-					<div title="特别说明" style="padding:10px">
-						<ul>
-							<li class="speli" style="font-size: large;">签字板功能仅支持IE浏览器
- 								<span class="formInfo">
-									<a href="<%=contextPath%>/pages/system/getToolTipMsgById.light" class="jTip" id="one" name="重要提示!">!</a>
-								</span>
-							</li>
-						</ul>
+			<td style="background: #fff;" valign="top" height="100%"></td>
+			<td style="background: #fff;" valign="top" height="100%"></td>
+			<td colspan="2" style="background: #fff;" valign="top" height="100%">
+				<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border-width: 0;" id="AutoNumber3">
+					<div id="tabs" class="easyui-tabs" style="width: 1695px;height: 877px;">
+						<div title="特别说明" style="padding:10px">
+<!-- 							<ul> -->
+<!-- 								<li class="speli" style="font-size: large;">签字板功能仅支持IE浏览器 -->
+<!-- 	 								<span class="formInfo"> -->
+<%-- 										<a href="<%=contextPath%>/pages/system/getToolTipMsgById.light" class="jTip" id="one" name="重要提示!">!</a> --%>
+<!-- 									</span> -->
+<!-- 								</li> -->
+<!-- 							</ul> -->
+								<div style="margin: 5px 5px;">你好：${loginName}</div>
+						</div>
 					</div>
-				</div>
 				</table>
 			</td>
 			<td style="background: #fff;" valign="top" height="306"></td>
@@ -349,35 +301,27 @@
 		<tr>
 			<td valign="bottom" height="7">
 				<p align="left">
-					<img name="index_r6_c2"
-						src="<%=contextPath%>/pages/images/index_r6_c2.gif" border="0"
-						width="5" height="7">
+					<img name="index_r6_c2" src="<%=contextPath%>/pages/images/index_r6_c2.gif" border="0" width="5" height="7">
 			</td>
 			<td style="background: #fff;" valign="top" height="7"></td>
 			<td valign="bottom" height="7">
 				<p align="right">
-					<img name="index_r6_c4"
-						src="<%=contextPath%>/pages/images/index_r6_c4.gif" border="0"
-						width="6" height="7">
+					<img name="index_r6_c4" src="<%=contextPath%>/pages/images/index_r6_c4.gif" border="0" width="6" height="7">
 			</td>
 			<td valign="bottom" height="7">
 				<p align="left">
-					<img name="index_r6_c6"
-						src="<%=contextPath%>/pages/images/index_r6_c6.gif" border="0"
-						width="6" height="7">
+					<img name="index_r6_c6" src="<%=contextPath%>/pages/images/index_r6_c6.gif" border="0" width="6" height="7">
 			</td>
 			<td colspan="2" style="background: #fff;" valign="top" height="7">
 				
 			</td>
 			<td valign="bottom" height="7">
 				<p align="right">
-					<img name="index_r6_c9"
-						src="<%=contextPath%>/pages/images/index_r6_c9.gif" border="0"
-						width="6" height="7">
+					<img name="index_r6_c9" src="<%=contextPath%>/pages/images/index_r6_c9.gif" border="0" width="6" height="7">
 			</td>
 		</tr>
 		<tr>
-			<td colspan="10" style="background: #3F8BBE;" valign="top" height="19"></td>
+			<td colspan="10" style="background: #3F8BBE;" valign="top" height="5"></td>
 		</tr>
 		<tr>
 			<td colspan="10" bgcolor="#000;" height="26">
@@ -389,11 +333,12 @@
 
 </body>
 <div id="slideout">
-  <img src="<%=contextPath%>/pages/images/feedback.png" alt="Feedback" />
+  <img src="<%=contextPath%>/pages/images/systemset.png" alt="Feedback" />
   <div id="slideout_inner">
     <form action="<%=contextPath%>/pages/system/welcome.light" method="post">
 		<div style="margin: 5px 5px;">你好：${loginName}</div>
-		<input type="submit" value="退出系统">
+		<input type="submit" style="height: 30px;width: 60px;" class="l-btn-text" value="退出系统">
+		<input type="button" style="height: 30px;width: 60px;" class="l-btn-text" value="修改密码">
 	</form>
   </div>
 </div>

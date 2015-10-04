@@ -4,9 +4,18 @@
 <html lang='zh'>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<link rel="stylesheet" type="text/css" href="<%=contextPath%>/common/form-style/css/demo.css" />
-<link rel="stylesheet" type="text/css" href="<%=contextPath%>/common/form-style/css/style3.css" />
-<script type="text/javascript" src="<%=contextPath%>/common/form-style/js/modernizr.custom.04022.js"></script>
+	<link rel="stylesheet" type="text/css" href="<%=contextPath%>/common/form-style/css/demo.css" />
+	<link rel="stylesheet" type="text/css" href="<%=contextPath%>/common/form-style/css/style3.css" />
+	<link rel="stylesheet" type="text/css" href="<%=contextPath%>/common/jquery.bpopup/css/bpopup-main.css">
+	<link rel="stylesheet" type="text/css" href="<%=contextPath%>/common/jquery.bpopup/css/font.css">
+	
+	<script type="text/javascript" src="<%=contextPath%>/common/form-style/js/modernizr.custom.04022.js"></script>
+
+<%-- 	<script type="text/javascript" charset="utf-8" src="<%=contextPath%>/common/jquery.bpopup/js/jquery.bpopup-0.11.0.min.js"></script> --%>
+	<script type="text/javascript" charset="utf-8" src="<%=contextPath%>/common/jquery.bpopup/js/jquery.easing.1.3.js"></script>
+	<script type="text/javascript" charset="utf-8" src="<%=contextPath%>/common/jquery.bpopup/js/scripting.min.js"></script>
+	<script src="<%=contextPath%>/common/jquery.bpopup/jquery.bpopup.min.js" ></script>
+
 <style type="text/css">
 table.contacts { 
 	width: 100%;
@@ -34,7 +43,45 @@ td.contact {
 .contactinput:hover {
   background: #e6e6e6;
 }
+#element_to_pop_up { display:none; }
 
+#element_to_pop_up, .bMulti {
+    background-color: #FFF;
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 0 0 25px 5px #999;
+    color: #111;
+    display: none;
+    min-width: 450px;
+    min-height: 250px;
+    padding: 25px;
+}
+
+#element_to_pop_up .logo {
+    color: #2B91AF;
+    font: bold 325% 'Petrona',sans;
+}
+
+.button.b-close, .button.bClose {
+   border-radius: 7px 7px 7px 7px;
+    box-shadow: none;
+    font: bold 131% sans-serif;
+    padding: 0 6px 2px;
+    position: absolute;
+    right: -7px;
+    top: -7px;
+}
+
+.button {
+    background-color: #2B91AF;
+    border-radius: 10px;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+    color: #FFF;
+    cursor: pointer;
+    display: inline-block;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+}
 </style>
 <script type="text/javascript">
 </script>
@@ -46,6 +93,25 @@ td.contact {
        	&nbsp;&nbsp;快递服务商：<input id="expressServiceId" name="expressServiceId" style="width: 150px;border-style: solid;border-color: antiquewhite;" class="easyui-combobox">
        	&nbsp;&nbsp;开始日期：<input id="startDateId" name="startDateId" style="width: 120px;height:30px;border-style: solid;border-color: antiquewhite;" onclick="WdatePicker()" >
        	&nbsp;&nbsp;截止日期:<input id="endDateId" name="endDateId"  style="width: 120px;height:30px;border-style: solid;border-color: antiquewhite;" onclick="WdatePicker()" >
+            <button style="display: none;" id="my-button"></button>
+            <div id="element_to_pop_up" style="display: none;">
+    			<span class="button b-close"><span>X</span></span>
+    				<div class="logo" style="text-align: center;margin-top: -80px;">
+    					<img src="<%=contextPath%>/mobile-style/images/box.png">
+    				</div>
+    				<div id="content" style="font-size:14px;text-align: center;" class="content"></div>
+    				<div style="height:20px;margin-top:0px;text-align: center;">
+	        				<a id="getExpressBtn" class="easyui-linkbutton">确 定</a>
+	        				<a id="close" class="easyui-linkbutton" onclick="closeBPopup();">取 消</a>
+	        				<span style="display: none;" id="genderSpan">
+	        					<input type="radio" name="sex" value="male" /> 先生
+	        					<input type="radio" name="sex" value="female" /> 女士
+	        				</span>
+	        				
+    				</div>
+    				
+			</div>
+       	
 	</div>
 	<table id="areaCodeGrid" class="easyui-datagrid" style="height: auto;"></table>
 	<div id="detail" class="easyui-dialog" title="修改快件信息" style="width:460px;height:350px;padding:10px;overflow: hidden;"

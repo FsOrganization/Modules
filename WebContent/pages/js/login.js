@@ -1,12 +1,52 @@
 $(document).ready(function() {
-	if ($('#name').val() == '') {
-		 return;
-	}
-	if (msgType == -1) {
+//	if ($('#name').val() == '') {
+//		 return;
+//	}
+	$("#name").bind("keydown",function(e){
+		var keycode = e.which;
+		//输入回车判定
+		if(keycode == 13){
+			if ($.trim($("#name").val()) != '') {
+				$("#password").focus();
+				$("#useruname-error").show();
+				$("#msg").val(" ");
+			} else {
+				$("#useruname-error").show();
+				$("#msg").val("请输入用户名");
+				
+			}
+			e.preventDefault();						
+		}
+	});
+	
+	$("#password").bind("keydown",function(e){
+		var keycode = e.which;
+		//输入回车判定
+		if(keycode == 13){
+			if ($.trim($("#password").val()) != '') {
+				$("#loginForm").submit();
+				$("#useruname-error").show();
+				$("#msg").val(" ");
+			} else {
+				$("#useruname-error").show();
+				$("#msg").val("请输入密码");
+			}
+			e.preventDefault();
+		}
+	});
+	
+	if (msgType === "-1") {
 		$("#useruname-error").show();
 		$("#codeDiv").show();
 		getVerificationCode();
 	}
+	
+	$("#loginFormCommit").click(function(){
+//		$("#useruname-error").hide();
+//		$("#msg").val("");
+		$("#loginForm").submit();
+	});
+	
 	
 	$("form").submit(function(e){
 		var inputCode = $('#code').val();
@@ -19,6 +59,7 @@ $(document).ready(function() {
 			e.preventDefault();//此处阻止提交表单  
 		} 
 	});
+	
 	$("#VerificationCode").click(function(){
 		getVerificationCode();
 	});
@@ -42,7 +83,7 @@ function getVerificationCode() {
 		data:{"id":"","name":""},
 		success : function(data) {
 			$('#hiddenCode').val(data.CODE);
-			$('#VerificationCode').attr('src',contextPath+data.PATH);
+			$('#VerificationCode').attr("src", 'data:image/jpg;base64,'+data.PATH);
 		},
 		error : function(data) {
 			$.messager.show({

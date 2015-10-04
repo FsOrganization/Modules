@@ -14,6 +14,8 @@
 
 <%-- <script src="<%=contextPath%>/js/ModulesImport.js"></script> --%>
 <script type="text/javascript" src="<%=contextPath%>/js/ModulesEasyUI.js"></script>
+<script type="text/javascript" src="<%=contextPath%>/EasyUI_1.4.1/locale/easyui-lang-zh_CN.js"></script>
+
 <script type="text/javascript" src="<%=contextPath%>/js/util.js"></script>
 <script type="text/javascript" src="<%=contextPath%>/common/My97DatePicker/WdatePicker.js"></script>
 <script type="text/javascript" src="<%=contextPath%>/pages/css/jquery-tooltip/js/jtip.js"></script> 

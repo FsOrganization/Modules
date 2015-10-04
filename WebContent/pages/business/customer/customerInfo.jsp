@@ -110,82 +110,80 @@ label:hover:before {
 </head>
 <body style="background: white;">
 	<div style="margin: 4px;">
-       	&nbsp;&nbsp;用户信息：<input id="queryParams" name="queryParams" style="width: 150px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="登陆名">
+       	&nbsp;&nbsp;用户信息：<input id="queryParams" name="queryParams" style="width: 150px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="">
 	</div>
 	<table id="customerGrid" class="easyui-datagrid" style="height: auto;"></table>
-	<div id="detail" class="easyui-dialog" title="Complex Toolbar on Dialog" style="width:400px;height:200px;padding:10px;"
-            data-options="
-                iconCls: 'icon-save',
-                toolbar: '#dlg-toolbar',
-                buttons: '#dlg-buttons',closed: true">
-    <form id="ff" action="<%=contextPath%>/pages/system/editDataById.light" method="post" style="height: inherit;">
-	    <table class="contacts" cellspacing="0">
-			<tr>
-				<td class="contact" width="25%">id:</td>
-				<td class="contact" width="60%"><input type="text" id="id" /></td>
-			</tr>
-			<tr>
-				<td class="contact" width="25%">name:</td>
-				<td class="contact" width="60%"><input type="input" id="name" class="contactinput"/></td>
-			</tr>
-		</table>     
-	</form>
-    </div>
-    <div id="dlg-toolbar" style="padding:2px 0">
-        <table cellpadding="0" cellspacing="0" style="width:100%">
-            <tr>
-                <td style="padding-left:2px">
-                    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">Edit</a>
-                    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-help',plain:true">Help</a>
-                </td>
-                <td style="text-align:right;padding-right:2px">
-                    <input class="easyui-searchbox" data-options="prompt:'Please input somthing'" style="width:150px"></input>
-                </td>
-            </tr>
-        </table>
-    </div>
-    <div id="dlg-buttons">
-        <a id="submitBtn" class="easyui-linkbutton">Save</a>
-        <a id="close" class="easyui-linkbutton" onclick="javascript:$('#detail').dialog('close')">Close</a>
-    </div>
     <div id="addUser" class="container" style="min-height: 300px;overflow:hidden;">
 			<section class="af-wrapper">
 	            <h1></h1>
 	            <label for="af-showreq" class="af-show" style="margin: -15px 40px;">*突出必填项</label>
 				<input id="af-showreq" class="af-show-input" type="checkbox" name="showreq"/>
-				<input type="hidden" name="userId" id="userId">
+				<input type="hidden" name="customerId" id="customerId">
 				<form class="af-form" id="af-form" novalidate style="margin: 16px -15px;">
+<!-- 					<div class="af-outer af-required"> -->
+<!-- 						<div class="af-inner"> -->
+<!-- 						  <label for="shopCodeList">所属网点 :</label> -->
+<%-- 						  <input id="shopCodeList" class="easyui-combobox" name="shopCodeList" data-options=" --%>
+<%-- 								                url: '<%=contextPath%>/pages/system/getShopInfoForSelect.light', --%>
+<!-- 								                method: 'get', -->
+<!-- 								                valueField: 'id', -->
+<!-- 								                textField: 'text', -->
+<!-- 								                panelWitdh: 380, -->
+<!-- 								                panelHeight: 260, -->
+<!-- 								                width:280, -->
+<!-- 								                height: 35, -->
+<%-- 								                formatter: formatItem" /> --%>
+<!-- 						</div> -->
+<!-- 					</div> -->
 					<div class="af-outer af-required">
 						<div class="af-inner">
-						  <label for="shopCodeList">所属网点 :</label>
-						  <input id="shopCodeList" class="easyui-combobox" name="shopCodeList" data-options="
-								                url: '<%=contextPath%>/pages/system/getShopInfoForSelect.light',
-								                method: 'get',
-								                valueField: 'id',
-								                textField: 'text',
-								                panelWitdh: 380,
-								                panelHeight: 260,
-								                width:280,
-								                height: 35,
-								                formatter: formatItem" />
-						</div>
-					</div>
-					<div class="af-outer af-required">
-						<div class="af-inner">
-							<label for="shopName">登陆名:</label>
-							<input type="text" name="loginName" id="loginName" style="width: 279px;">
+							<label for="shopName">姓名:</label>
+							<input type="text" name="name" id="name" style="width: 279px;">
 						</div>
 					</div>
 					<div class="af-outer">
 						<div class="af-inner">
-							<label for="shopCode">昵称:</label>
-							<input type="text" name="nickName" id="nickName" style="width: 279px;">
+							<label for="gender">性别:</label>
+							<input id="gender" class="easyui-combobox" name="gender" data-options="
+								                url: '<%=contextPath%>/pages/system/pageconfig/getPageGender.light',
+								                method: 'get',
+								                valueField: 'value',
+								                textField: 'text',
+								                panelWitdh: 380,
+								                panelHeight: 95,
+								                width:280,
+								                height: 35,
+								                formatter: formatGender" />
 						</div>
 					</div>
 					<div class="af-outer af-required">
 						<div class="af-inner">
-							<label for="shopAddress">密码:</label>
-							<input type="password" name="password" id="password" style="width: 279px;"/>
+							<label for="ageSection">年龄段:</label>
+							<input id="ageSection" class="easyui-combobox" name="ageSection" data-options="
+								                url: '<%=contextPath%>/pages/system/pageconfig/getAgeSection.light',
+								                method: 'get',
+								                valueField: 'value',
+								                textField: 'text',
+								                panelWitdh: 380,
+								                panelHeight: 95,
+								                width:280,
+								                height: 35,
+								                formatter: formatAgeSection" />
+						</div>
+					</div>
+					<div class="af-outer af-required">
+						<div class="af-inner">
+							<label for="whetherHaveCar">是否有车:</label>
+							<input id="whetherHaveCar" class="easyui-combobox" name="whetherHaveCar" data-options="
+								                url: '<%=contextPath%>/pages/system/pageconfig/getWhetherHaveCar.light',
+								                method: 'get',
+								                valueField: 'value',
+								                textField: 'text',
+								                panelWitdh: 380,
+								                panelHeight: 70,
+								                width:280,
+								                height: 35,
+								                formatter: formatWhetherHaveCar" />
 						</div>
 					</div>
 					<div class="af-outer">
@@ -194,14 +192,19 @@ label:hover:before {
 							<input type="text" name="phoneNumber" id="phoneNumber" style="width: 279px;"/>
 						</div>
 					</div>
-					
-					<div class="af-outer af-required">
+					<div class="af-outer">
 						<div class="af-inner">
-						  <label for="isCheck">是否启用:</label>
-						  <input type="checkbox" name="isCheck" value="YES" id="isCheck"/>
-						  <label for="isCheck" style="margin: 8px 15px; font-size:12px;"></label>
+							<label for="address">地址:</label>
+							<input type="text" name="address" id="address" style="width: 279px;"/>
 						</div>
 					</div>
+<!-- 					<div class="af-outer af-required"> -->
+<!-- 						<div class="af-inner"> -->
+<!-- 						  <label for="isCheck">是否启用:</label> -->
+<!-- 						  <input type="checkbox" name="isCheck" value="YES" id="isCheck"/> -->
+<!-- 						  <label for="isCheck" style="margin: 8px 15px; font-size:12px;"></label> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
 				</form>
 				<div style="text-align:center;">
 				  	<input id="saveBtn" type="button" value="保存" style="height: 30px;width: 49px;"/>

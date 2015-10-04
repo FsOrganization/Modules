@@ -1,11 +1,11 @@
 $(document).ready(function() {
-	$('#tabs').height(($(window).height()-163)*0.99);
+	$('#tabs').height(($(window).height()-78)*0.99);
 	$('#tabs').width($(window).width()*0.91);
 	$(window).bind('resize', function(e) {
 			clearTimeout(window.resizeEvt);
 //			alert($(window).height());
 			window.resizeEvt = setTimeout(function() {
-				$('#tabs').height(($(window).height()-163)*0.99);
+				$('#tabs').height(($(window).height()-78)*0.99);
 				$('#tabs').width($(window).width()*0.91);
 //				$('#searchList').datagrid('resize',{
 //					width : '100%',
