@@ -277,6 +277,41 @@
 						</table>
 					</center>
 				</div>
+				<p style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
+				<div align="center">
+					<center>
+						<table border="1" cellpadding="0" cellspacing="0"
+							style="border-collapse: collapse; border-width: 0"
+							bordercolor="#111111" width="89%" id="AutoNumber2">
+							<tr>
+								<td width="100%"
+									style="border-style: none; border-width: medium"
+									bgcolor="#1B536D" align="center" height="18">
+									<p style="margin-top: 2; margin-bottom: 2">
+										<b><font face="Arial" size="2" color="#FFFFFF">统计分析</font></b>
+								</td>
+							</tr>
+							<tr>
+								<td width="100%"
+									style="border-left: 1px none #111111; border-right: 1px none #111111; border-top-style: none; border-top-width: medium; border-bottom-style: none; border-bottom-width: medium">
+									<p style="margin: 8px 5px;" dir="ltr">
+										<font face="Arial" size="2" color="#111111">
+											<a href="javascript:void(0);" onclick='addTab("网点人数统计表", "<%=contextPath%>/pages/business/systemSetUp/areaSetUp.jsp","icon-sz",undefined,"infinished");'>网点人数统计表</a>
+										</font>
+								</td>
+							</tr>
+							<tr>
+								<td width="100%"
+									style="border-left: 1px none #111111; border-right: 1px none #111111; border-top-style: none; border-top-width: medium; border-bottom-style: none; border-bottom-width: medium">
+									<p style="margin: 8px 5px;" dir="ltr">
+										<font face="Arial" size="2" color="#111111">
+											<a href="javascript:void(0);" onclick='addTab("网点收寄件统计", "<%=contextPath%>/pages/business/systemSetUp/shopSetUp.jsp","icon-sz",undefined,"infinished");'>网点收寄件统计</a>
+										</font>
+								</td>
+							</tr>
+						</table>
+					</center>
+				</div>
 			</td>
 			<td style="background: #fff;" valign="top" height="100%"></td>
 			<td style="background: #fff;" valign="top" height="100%"></td>
