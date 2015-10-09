@@ -4,19 +4,6 @@ var whetherHaveCarMap = {};
 var ageSectionMap = {};
 var shopNameMap = {};
 $(document).ready(function() {
-		$('#id').prop('readonly', true);
-		$("#name").bind("keydown",function(e){
-			var keycode = e.which;
-			//输入回车判定
-			if(keycode == 13){
-				submitForm();
-				e.preventDefault();						
-			}
-		});
-		
-		$("#submitBtn").click(function() {
-			submitForm();
-		});
 		initShopNameMap();
 		initGender();
 		initWhetherHaveCar();
@@ -50,7 +37,7 @@ $(document).ready(function() {
 		});
 		
 		$('#customerGrid').datagrid({
-			dataType : 'json',
+//			dataType : 'json',
 			url : contextPath + '/pages/system/customer/getCustomerList.light',
 			width : $(window).width() * 1,
 			height :($(window).height()-30)*0.99,
@@ -58,8 +45,9 @@ $(document).ready(function() {
 			rownumbers : true,
 			pagination : true,
 			striped : true,
+			method : 'post',
 			idField : 'ID',
-			pageSize : 30,
+			pageSize : 20,
 			queryParams: {
 				batchNumber: ''
 			},
@@ -150,20 +138,15 @@ $(document).ready(function() {
 			}] ],
 			onLoadSuccess : function(data) {
 			},
+			onLoadError : function() {
+				parent.location.href=contextPath+'/pages/system/welcome.light';
+			},
 			onDblClickRow : function(rowIndex, rowData) {
 				openWindow(rowIndex, rowData);
 				operatingTag = true;
-			},
-			loadFilter : pagerFilter
+			}
 		});
-//		 $('#loginName').keydown(function(e){
-//		        if(e.keyCode != 13 && e.keyCode != 9){
-//		        	var endChar = String.fromCharCode(e.keyCode);
-//					var loginName = $("#loginName").val();
-//					var name = loginName+endChar.toLowerCase();
-//					checkLoginNameUniqueness(name);
-//		        }
-//		 });
+
 });
 
 function formatPhoneNumber(value){
@@ -288,31 +271,6 @@ function getBarCode(LOGISTICS, RECIPIENT_NAME) {
 	});
 }
 
-//function checkLoginNameUniqueness(loginName) {
-//	if (checkAdminLoginName(loginName)) {
-//		return;
-//	}
-//	$.ajax({
-//		url : contextPath + "/pages/system/checkLoginNameUniqueness.light",
-//		type : "POST",
-//		dataType : 'json',
-//		sync:false,
-//		data : {
-//			"loginName" : loginName
-//		},
-//		success : function(data) {
-//			if (data.UNIQUE === 'false') {
-////				alert('已存在登录名');
-//				$('#saveBtn').hide();
-//			} else  {
-//				$('#saveBtn').show();
-//			}
-//		},
-//		error : function(data) {
-//		}
-//	});
-//}
-
 function getSignatureCode(batchNumber, type) {
 	$.ajax({
 		url : contextPath + "/pages/system/getSignatureByBatchNumber.light",
@@ -340,31 +298,6 @@ function openSignatureCodeWindow() {
 	$('#signatureDetail').dialog('open');
 }
 
-function deleteRow(id, name) {
-	$.ajax({
-		url : contextPath + "/pages/system/deleteCode.light",
-		type : "POST",
-		dataType : 'json',
-		data : {
-			"id" : id,
-			"name" : name
-		},
-		success : function(data) {
-			$('#barimg').attr('src', contextPath + data.PATH);
-			openBarCodeWindow(id);
-		},
-		error : function(data) {
-			$.messager.show({
-				title : '错误',
-				msg : '<div class="messager-icon messager-info"></div>'
-						+ data.PATH,
-				timeout : 2000,
-				showType : 'slide'
-			});
-		}
-	});
-}
-
 function getSelections() {
 	var rows = $('#userGrid').datagrid('getSelections');
 	return rows;
@@ -385,10 +318,6 @@ function openWindow(rowIndex, rowData) {
 	
 	$('#name').val(name);
 	$('#phoneNumber').val(phoneNumber);
-//	if (isCheck === '1') {
-//		$("input[id='isCheck']").prop("checked",true);
-//	}
-//	$('#shopCodeList').combobox('setValue', serviceShopCode);
 	$('#addUser').window('open');
 	
 }
@@ -401,24 +330,22 @@ function clearFormData() {
 	$('#phoneNumber').val('');
 	$('#address').val('');
 	
-//	$("input[id='isCheck']").prop("checked",false);
 }
 
-//查询患者信息
 function searchExpressInfo() {
 	var queryParams = $("#queryParams").val();
 	queryParams = encodeURI(queryParams);
 	var obj = {
 		"queryParams" : queryParams
 	};
-	$('#userGrid').datagrid("loadData", []);
-	$('#userGrid').datagrid("clearSelections");
+	$('#customerGrid').datagrid("loadData", []);
+	$('#customerGrid').datagrid("clearSelections");
 	//		
-	$('#userGrid').datagrid({
-		url : contextPath+ "/pages/system/queryUserInfos.light?queryParams="+ queryParams 
+	$('#customerGrid').datagrid({
+		url : contextPath+ "/pages/system/customer/getCustomerList.light?queryParams="+ queryParams 
 	});
 
-	var paper = $('#userGrid').datagrid('getPager');
+	var paper = $('#customerGrid').datagrid('getPager');
 	$(paper).pagination('refresh', {
 		pageNumber : 1
 	});
@@ -475,17 +402,6 @@ function saveForm() {
 			"isCheck":isCheckTemp
 		},
 		success : function(data) {
-			if (data === 'NEED_LOGIN') {
-				$.ajax({
-					url : contextPath+"/pages/system/welcome.light",
-					type: "POST",
-					dataType:'json',
-					data:{
-						"name":''
-					}
-				});
-			}
-
 			$('#userGrid').datagrid("reload");
 			$('#addUser').window('close');
 			$.messager.show({
@@ -515,7 +431,15 @@ function modifyForm() {
 	var gender= $('#gender').combo('getValue');
 	var ageSection= $('#ageSection').combo('getValue');
 	var whetherHaveCar= $('#whetherHaveCar').combo('getValue');
-	
+	if (!isPhoneNmuber(phoneNumber)) {
+		$.messager.show({
+            title:'提示',
+            msg:'<div class="messager-icon messager-info"></div>'+'手机或座机号码填写不正确',
+            timeout:3800,
+            showType:'slide'
+		});
+		return;
+	}
 	$.ajax({
 		url : contextPath+"/pages/system/modifyCustomer.light",
 		type: "POST",

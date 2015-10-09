@@ -65,3 +65,19 @@ var block = function (e,msg,height){
 var unblock = function(e) {
 	$('#'+e).unblock();
 };
+
+/**
+ * 验证手机座机,松散验证
+ * @param phoneNumber
+ * @returns {Boolean}
+ */
+function isPhoneNmuber(phoneNumber) {
+	var str = phoneNumber;
+	var reg = /[0]([0-9]{2,3})?[0-9]{7,8}|(^[1][345678][0-9]{9}$)/;
+	if (reg.test(str)){
+		return true;
+	} else {
+		return false;
+	}
+}
+

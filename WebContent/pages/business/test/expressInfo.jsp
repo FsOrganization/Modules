@@ -36,7 +36,7 @@ td.contact {
 </script>
 <script src="<%=contextPath%>/pages/business/test/js/expressInfo.js" type="text/javascript"></script>
 </head>
-<body id="expressBody">
+<body id="expressBody" style="background: white;">
 	<div style="margin: 4px;">
        	&nbsp;&nbsp;客户信息：<input id="queryParams" name="queryParams" style="width: 210px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="手机后四位、客户姓名、快件运单号">
        	&nbsp;&nbsp;快递服务商：<input id="expressServiceId" name="expressServiceId" style="width: 150px;border-style: solid;border-color: antiquewhite;" class="easyui-combobox">

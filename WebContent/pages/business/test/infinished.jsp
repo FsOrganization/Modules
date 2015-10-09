@@ -39,7 +39,7 @@ td.contact {
 
 <script src="<%=contextPath%>/pages/business/test/js/infinished.js" type="text/javascript"></script>
 </head>
-<body style="overflow-y: hedden;">
+<body style="overflow-y: hedden;" id="allBodyDiv" >
 	<div style="width: auto; overflow: hidden;background: white;">
 		<div style="margin: 4px;">
 		       	&nbsp;&nbsp;批次号：<input id="query_batchNumber" name="query_batchNumber" style="width: 150px;height:30px;border-style: solid;border-color: antiquewhite;">
@@ -78,17 +78,12 @@ td.contact {
 				</div>
 			</form>
 	    </div>
-	    <div id="dlg-buttons">
-	        <a id="submitBtn" class="easyui-linkbutton">Save</a>
-	        <a id="close" class="easyui-linkbutton" onclick="javascript:$('#detail').dialog('close')">Close</a>
-	    </div>
     </div>
     <div id="presentSelfForm" class="container" style="min-height: 300px;overflow:auto;">
 			<section class="af-wrapper">
-	            <h1></h1>
-	            <label for="af-showreq" class="af-show" style="margin: -15px 40px;">*突出必填项</label>
+				<label id='showBatchNumber' class="af-show" style="margin: -14px 152px;width: 100px;">*显示批次号</label>
+	            <label for="af-showreq" class="af-show" style="margin:-15px -45px;">*突出必填项</label>
 				<input id="af-showreq" class="af-show-input" type="checkbox" name="showreq"/>
-
 				<form class="af-form" id="af-form" novalidate style="margin: 16px -15px;">
 					<div class="af-outer af-required">
 						<div class="af-inner">
@@ -126,7 +121,7 @@ td.contact {
 						</div>
 					</div>
 					
-					<div class="af-outer af-required">
+					<div class="af-outer af-required" id="expressLocationDiv">
 						<div class="af-inner">
 							<label for="expressLocation">货位:</label>
 							<div style="padding: inherit;margin: -5px 0px;">
@@ -147,7 +142,7 @@ td.contact {
 						</div>
 					</div>
 					
-					<div class="af-outer">
+					<div style="display: none;" class="af-outer" id="batchNumberDiv">
 						<div class="af-inner">
 						  <label for="input-catname">批次号:</label>
 						  <input type="text" name="batchNumber" id="batchNumber" style="width: 279px;">
@@ -163,18 +158,22 @@ td.contact {
         </div>
         
         <!-- 条码显示 -->
-	    <div id="imgDetail" class="easyui-dialog" title="Complex Toolbar on Dialog" style="width:400px;height:200px;padding:10px;"
-	            data-options="buttons: '#dlg-buttons',closed: true">
-	            <div style="margin: 15px 10px;">
-	            	<img id="barimg" src=""></img>
-	                <span id="fileName" style="margin: 2px 58px;letter-spacing: 7px;"></span>
-	            </div>
+<!-- 	    <div id="imgDetail" class="easyui-dialog" title="Complex Toolbar on Dialog" style="width:400px;height:200px;padding:10px;" -->
+<!-- 	            data-options="buttons: '#dlg-buttons',closed: true"> -->
+<!-- 	            <div style="margin: 15px 10px;"> -->
+<!-- 	            	<img id="barimg" src=""></img> -->
+<!-- 	                <span id="fileName" style="margin: 2px 58px;letter-spacing: 7px;"></span> -->
+<!-- 	            </div> -->
 	                
-	    </div>
+<!-- 	    </div> -->
 	    <div id="dlg-buttons">
-	        <a id="submitBtn" class="easyui-linkbutton">打印条码</a>
-	        <a id="close" class="easyui-linkbutton" onclick="javascript:$('#imgDetail').dialog('close')">Close</a>
+	        <a id="submitBtn" class="easyui-linkbutton">Save</a>
+	        <a id="close" class="easyui-linkbutton" onclick="javascript:$('#detail').dialog('close')">Close</a>
 	    </div>
+<!-- 	    <div id="dlg-buttons"> -->
+<!-- 	        <a id="submitBtn" class="easyui-linkbutton">打印条码</a> -->
+<!-- 	        <a id="close" class="easyui-linkbutton" onclick="javascript:$('#imgDetail').dialog('close')">Close</a> -->
+<!-- 	    </div> -->
 		<!-- 签字区域 -->
 	<div id="signatureRegion" style="overflow: hidden;">
 		<table width="90%" border="0" align="center" cellpadding="3"

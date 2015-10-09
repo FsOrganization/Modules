@@ -53,7 +53,7 @@ $(document).ready(function() {
 			pagination : true,
 			striped : true,
 			idField : 'ID',
-			pageSize : 30,
+			pageSize : 20,
 			queryParams: {
 				batchNumber: ''
 			},
@@ -120,6 +120,9 @@ $(document).ready(function() {
 			}] ],
 			onLoadSuccess : function(data) {
 
+			},
+			onLoadError : function() {
+				parent.location.href=contextPath+'/pages/system/welcome.light';
 			},
 			onDblClickRow : function(rowIndex, rowData) {
 				openWindow(rowIndex, rowData);
@@ -415,7 +418,6 @@ function saveForm() {
 	
 }
 
-//查询患者信息
 function searchExpressInfo() {
 	var queryParams = $("#queryParams").val();
 	queryParams = encodeURI(queryParams);

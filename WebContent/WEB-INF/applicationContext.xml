@@ -72,7 +72,7 @@
           <property name="jdbcTemplate" ref="jdbcTemplate"></property>
  	</bean>
  	
- 	<bean id="systemUser" class="com.fla.common.entity.SystemUser" scope="session">
+	<bean id="systemUser" class="com.fla.common.entity.SystemUser" scope="session">
 		<aop:scoped-proxy />
 	</bean>
 	

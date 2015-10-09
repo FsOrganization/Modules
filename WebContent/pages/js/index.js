@@ -15,7 +15,11 @@ $(document).ready(function() {
 	});
 	var loginName = $('#loginTag').val();
 	if ( loginName != 'admin') {
-		$('#sysSeting').hide();
+		$('#statistics').hide();
+		$('#configSeting').hide();
+		$('#customerSeting').hide();
+		
+		
 	}
 });
 

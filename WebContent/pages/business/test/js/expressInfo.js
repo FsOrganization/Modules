@@ -49,15 +49,15 @@ $(document).ready(function() {
 		$('#areaCodeGrid').datagrid({
 //			dataType : 'json',
 			url : contextPath + '/pages/system/getExpressInfoByFilterConditions.light',//getNotOutExpressInfoByFilterConditions
-			width : $(window).width() * 1,
+			width : $(window).width() * 0.97,
 			height :($(window).height()-30)*0.99,
 			singleSelect : true,
 			rownumbers : true,
 			pagination : true,
-//			striped : true,
+			striped : true,
 			method : 'post',
 			idField : 'ID',
-//			pageSize : 30,
+			pageSize : 20,
 //			queryParams: {
 //				batchNumber: '',
 //				endDate:'', 
@@ -197,32 +197,12 @@ $(document).ready(function() {
 				}
 			}] ],
 			onLoadSuccess : function(data) {
-
+//				$('.pagination-info').style("margin","0px 180px;");
 			},
 			onDblClickRow : function(rowIndex, rowData) {
 //				openWindow(rowIndex, rowData);
 			}
 		});
-		 var p = $('#areaCodeGrid').datagrid('getPager');
-		 $(p).pagination({
-	        pageSize: 15,//每页显示的记录条数，默认为10 
-	        pageList: [5,10,15,25,50],//可以设置每页记录条数的列表 
-	        beforePageText: '第',//页数文本框前显示的汉字 
-	        afterPageText: '页    共 {pages} 页',
-	        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录', 
-	        onBeforeRefresh:function(){
-	            $(this).pagination('loading');
-	            alert('before refresh');
-	            $(this).pagination('loaded');
-	        },
-			onRefresh:function(pageNumber,pageSize){
-			},   
-			onChangePageSize:function(){   
-				alert('pagesize changed');   
-			},   
-			onSelectPage:function(pageNumber,pageSize){   
-			}
-		  });
 	});
 	
 function initExpressServiceProviders() {
@@ -230,6 +210,7 @@ function initExpressServiceProviders() {
 		url : contextPath + "/pages/system/initExpressServiceProviders.light",
 		type : "POST",
 		dataType : 'json',
+		sync:false,
 		data : {
 			"shop_code" : ""
 		},
@@ -238,8 +219,8 @@ function initExpressServiceProviders() {
 		           //alert(data[i].text);
 				expressServiceMap[data[i].id] = data[i].text;
 		     });
-		},
-		error : function(data) {
+		},error : function(data) {
+			parent.location.href=contextPath+'/pages/system/welcome.light';
 		}
 	});
 }

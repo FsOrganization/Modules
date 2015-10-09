@@ -44,8 +44,7 @@ function modifyExpress() {
                 showType:'slide'
 		  });
 		$('#detail').dialog('close');
-		},
-		error : function(data) {
+		}, error : function(data) {
 			$.messager.show({
                 title:'提示',
                 msg:'<div class="messager-icon messager-info"></div>'+data.msg,
@@ -56,17 +55,31 @@ function modifyExpress() {
 	});
 }
 
-$(document).ready(function(){
-		$('#id').prop('readonly', true);
-		$("#name").bind("keydown",function(e){
-			var keycode = e.which;
-			//输入回车判定
-			if(keycode == 13){
-				submitForm();
-				e.preventDefault();						
+function updateCustomerGender(){
+	var sex = $("input[name='sex']:checked").val();
+	if (sex === undefined) {
+		return ;
+	} else {
+		var phoneNumber = $('#hiddenPhoneNumber').val();
+		$.ajax({
+			url : contextPath+"/pages/system/customer/updateCustomerGender.light",
+			type: "POST",
+			dataType:'json',
+			data:{"phoneNumber":phoneNumber,"sex":sex},
+			success : function(data) {
+				$('#hiddenPhoneNumber').val("");
+				$("#sex").attr("checked",false);
+			}, 
+			error : function(data) {
+				$('#hiddenPhoneNumber').val("");
+				$("#sex").attr("checked",false);
 			}
 		});
-		
+	}
+}
+
+$(document).ready(function(){
+		initExpressServiceProviders();
 		//输入框按回车
 		$("#queryParams").bind("keydown",function(e){
 			var keycode = e.which;
@@ -90,6 +103,8 @@ $(document).ready(function(){
 			$('#signatureRegion').window('open');
 			initializationSignatureRegion();
 	    	closeBPopup();
+	    	updateCustomerGender();
+	    	
 		});
 		
 		$('#signatureRegion').window({
@@ -100,7 +115,7 @@ $(document).ready(function(){
 		    closed:true,
 		    maximizable:false
 		});
-		initExpressServiceProviders();
+		
 		window.onload = function(){
 			obj = document.getElementById("HWPenSign");
 			obj.HWSetBkColor(0xFFF5EE);
@@ -110,14 +125,15 @@ $(document).ready(function(){
 		$('#areaCodeGrid').datagrid({
 			dataType : 'json',
 			url : contextPath + '/pages/system/getExpressInfoList.light',
-//			width : $(window).width() * 0.98,
-			height :($(window).height()-32)*0.99,
+			width : $(window).width() * 0.97,
+			height :($(window).height()-30)*0.99,
 			singleSelect : false,
 			rownumbers : true,
 			pagination : true,
 			striped : true,
+			method : 'post',
 			idField : 'ID',
-			pageSize : 30,
+			pageSize : 20,
 			queryParams:{
 				batchNumber: ''
 			},
@@ -159,7 +175,7 @@ $(document).ready(function(){
 			},{
 				field : 'LOGISTICS',
 				title : '快件运单号',
-				width : 220,
+				width : 180,
 				align : 'center'
 			},{
 				field : 'RECIPIENT_NAME',
@@ -252,7 +268,6 @@ $(document).ready(function(){
 				align : 'center',
 				hidden : true,
 				formatter : function(value,row,index){
-// 					return '<button onclick="getBarCode('+row.id+')" >查看条码</button>';
 					return "<button onclick=\"getBarCode("+row.LOGISTICS+",'"+row.RECIPIENT_NAME+"')\">查看条码</button>";
 				}
 			}] ],
@@ -281,6 +296,9 @@ $(document).ready(function(){
 				$("#queryParams").bind("click",function(e){
 					$("#queryParams").focus();
 				});
+			},
+			onLoadError : function() {
+				parent.location.href=contextPath+'/pages/system/welcome.light';
 			},
 			onDblClickRow : function(rowIndex, rowData) {
 				openWindow(rowIndex, rowData);
@@ -321,12 +339,6 @@ $(document).ready(function(){
 			dataType:'json',
 			data:{"id":LOGISTICS,"name":name},
 			success : function(data){
-// 				$.messager.show({
-// 	                title:'提示',
-// 	                msg:'<div class="messager-icon messager-info"></div>'+data.PATH,
-// 	                timeout:3000,
-// 	                showType:'slide'
-// 				});
 				$('#barimg').attr('src',contextPath+data.PATH);
 // 				$('#fileName').html(id);
 				openBarCodeWindow(id);
@@ -374,12 +386,12 @@ $(document).ready(function(){
 			url : contextPath + "/pages/system/initExpressServiceProviders.light",
 			type : "POST",
 			dataType : 'json',
+			sync:false,
 			data : {
 				"shop_code" : ""
 			},
 			success : function(data) {
 				$.each(data, function(i) {    
-			           //alert(data[i].text);
 					expressServiceMap[data[i].id] = data[i].text;
 			     });
 			},
@@ -407,14 +419,7 @@ $(document).ready(function(){
 			dataType:'json',
 			data:{"id":id,"name":name},
 			success : function(data){
-// 				$.messager.show({
-// 	                title:'提示',
-// 	                msg:'<div class="messager-icon messager-info"></div>'+data.PATH,
-// 	                timeout:3000,
-// 	                showType:'slide'
-// 				});
 				$('#barimg').attr('src',contextPath+data.PATH);
-// 				$('#fileName').html(id);
 				openBarCodeWindow(id);
 			},
 			error : function(data){
@@ -500,6 +505,15 @@ $(document).ready(function(){
 		}
 	}
 	
+	function getFirstSelectRowPhoneNumber(){
+		var selectedRows = $('#areaCodeGrid').datagrid('getSelections');
+		if (selectedRows.length != 0){
+			return selectedRows[0].PHONE_NUMBER;
+		} else {
+			return null;
+		}
+	}
+	
 	function getPhoneNumberBySelectRows(){
 		var selectedRows = $('#areaCodeGrid').datagrid('getSelections');
 		if (selectedRows.length != 0){
@@ -533,14 +547,6 @@ $(document).ready(function(){
 			$('#my-button').click();
 			tempIds = null;
 	    	tempIds = ids;
-//			$.messager.confirm('确认',titleInfo+cInfo,function(r){
-//			    if (r){
-//			    	$('#signatureRegion').window('open');
-//					initializationSignatureRegion();
-//			    	tempIds = null;
-//			    	tempIds = ids;
-//			    }    
-//			});  
 		}
 
 	}
@@ -555,39 +561,10 @@ $(document).ready(function(){
 		$('#my-button').click();
 		tempIds = null;
     	tempIds = id;
-//		$.messager.confirm('确认',cInfo,function(r){
-//		    if (r){
-//		    	$('#signatureRegion').window('open');
-//				initializationSignatureRegion();
-//		    	tempIds = null;
-//		    	tempIds = id;
-//		    }    
-//		});
-
+    	$('#hiddenPhoneNumber').val(phone);
+    	
 	}
 	
-//	function getSignatureRegionWindow(){
-//		var obj;
-//		obj = document.getElementById("HWPenSign"); 
-//        obj.HWSetBkColor(0xE0F8E0);  
-//        obj.HWSetCtlFrame(2, 0x000000);
-//	}
-	
-//	function getOutStorehouseBatchNumber(){
-//		var batchNumber =null;
-//		 $.ajax({
-//				url : contextPath + "/pages/system/getOutStorehouseBatchNumber.light",
-//				type : "POST",
-//				dataType : 'json',
-////				sync:false,
-//				success: function(data){
-//					return data.temporaryId;
-//				}
-//		});
-//		
-//	}
-	
-	//查询患者信息
 	function searchExpressInfo(){
 		var endDate = $("#endDateId").val();
 		var startDate = $("#startDateId").val();

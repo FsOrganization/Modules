@@ -1,19 +1,5 @@
 var operatingTag=null;
 $(document).ready(function() {
-		$('#id').prop('readonly', true);
-		$("#name").bind("keydown",function(e){
-			var keycode = e.which;
-			//输入回车判定
-			if(keycode == 13){
-				submitForm();
-				e.preventDefault();						
-			}
-		});
-		
-		$("#submitBtn").click(function() {
-			submitForm();
-		});
-		
 		//输入框按回车
 		$("#queryParams").bind("keydown",function(e){
 			var keycode = e.which;
@@ -56,7 +42,7 @@ $(document).ready(function() {
 			pagination : true,
 			striped : true,
 			idField : 'ID',
-			pageSize : 30,
+			pageSize : 20,
 			queryParams: {
 				batchNumber: ''
 			},
@@ -126,6 +112,9 @@ $(document).ready(function() {
 				}
 			}] ],
 			onLoadSuccess : function(data) {
+			},
+			onLoadError : function() {
+				parent.location.href=contextPath+'/pages/system/welcome.light';
 			},
 			onDblClickRow : function(rowIndex, rowData) {
 				openWindow(rowIndex, rowData);
@@ -319,7 +308,6 @@ function clearFormData() {
 	$("input[id='isCheck']").prop("checked",false);
 }
 
-//查询患者信息
 function searchExpressInfo() {
 	var queryParams = $("#queryParams").val();
 	queryParams = encodeURI(queryParams);
@@ -364,6 +352,15 @@ function saveForm() {
 	var nickName = $('#nickName').val();
 	var password = $('#password').val();
 	var phoneNumber = $('#phoneNumber').val();
+	if (!isPhoneNmuber(phoneNumber)) {
+		$.messager.show({
+            title:'提示',
+            msg:'<div class="messager-icon messager-info"></div>'+'手机或座机号码填写不正确',
+            timeout:3800,
+            showType:'slide'
+		});
+		return;
+	}
 //	var isCheck = $('#isCheck').val();
 	var isCheckTemp = "";
 	if ($(":checked[name=isCheck]").val() == undefined) {
@@ -390,17 +387,6 @@ function saveForm() {
 			"isCheck":isCheckTemp
 		},
 		success : function(data) {
-			if (data === 'NEED_LOGIN') {
-				$.ajax({
-					url : contextPath+"/pages/system/welcome.light",
-					type: "POST",
-					dataType:'json',
-					data:{
-						"name":''
-					}
-				});
-			}
-
 			$('#userGrid').datagrid("reload");
 			$('#addUser').window('close');
 			$.messager.show({
@@ -432,6 +418,15 @@ function modifyForm() {
 	var nickName = $('#nickName').val();
 	var password = $('#password').val();
 	var phoneNumber = $('#phoneNumber').val();
+	if (!isPhoneNmuber(phoneNumber)) {
+		$.messager.show({
+            title:'提示',
+            msg:'<div class="messager-icon messager-info"></div>'+'手机或座机号码填写不正确',
+            timeout:3800,
+            showType:'slide'
+		});
+		return;
+	}
 //	var isCheck = $('#isCheck').val();
 	var isCheckTemp = "";
 	if ($(":checked[name=isCheck]").val() == undefined) {

@@ -102,6 +102,7 @@ td.contact {
     				<div id="content" style="font-size:14px;text-align: center;" class="content"></div>
     				<div style="height:20px;margin-top:0px;text-align: center;">
 	        				<a id="getExpressBtn" class="easyui-linkbutton">确 定</a>
+	        				<input type="hidden" id="hiddenPhoneNumber">
 	        				<a id="close" class="easyui-linkbutton" onclick="closeBPopup();">取 消</a>
 	        				<span style="display: none;" id="genderSpan">
 	        					<input type="radio" name="sex" value="male" /> 先生

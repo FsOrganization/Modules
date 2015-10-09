@@ -11,7 +11,13 @@ function modifyExpress() {
 		url : contextPath+"/pages/system/editDataById.light",
 		type: "POST",
 		dataType:'json',
-		data:{"id":$('#id').val(),"logistics":$('#modify_logistics').val(),"recipientName":$('#modify_recipientName').val(),"phoneNumber":$('#modify_phoneNumber').val(),"expressLocation":$('#modify_expressLocation').val()},
+		data:{
+			"id":$('#id').val(),
+			"logistics":$('#modify_logistics').val(),
+			"recipientName":$('#modify_recipientName').val(),
+			"phoneNumber":$('#modify_phoneNumber').val(),
+			"expressLocation":$('#modify_expressLocation').val()
+		},
 		success : function(data) {
 			$('#sentExpressGrid').datagrid('reload');
 			$.messager.show({
@@ -78,12 +84,6 @@ $(document).ready(function(){
 		});
 		initExpressServiceProviders();
 		
-//		window.onload = function(){
-//			obj = document.getElementById("HWPenSign");
-//			obj.HWSetBkColor(0xFFF5EE);
-//			obj.HWSetCtlFrame(0, 0x000000);
-//		};
-		
 		$('#dataForm').window({
 			title:'新增寄件',
 		    width:580,
@@ -131,40 +131,42 @@ $(document).ready(function(){
 		});
 		
 		$('#sentExpressGrid').datagrid({
-			dataType : 'json',
+//			dataType : 'json',
 			url : contextPath + '/pages/system/getSentExpressInfo.light',
-//			width : $(window).width() * 0.98,
+			width : $(window).width() * 0.98,
 			height :($(window).height()-32)*0.99,
 			singleSelect : false,
 			rownumbers : true,
 			pagination : true,
 			striped : true,
 			idField : 'ID',
-			pageSize : 30,
-			queryParams:{
-				batchNumber: ''
-			},
+			pageSize : 20,
+			showFooter: true,
 			toolbar: [
 	        {
 				text:'查询快件',
 				iconCls: 'icon-search',
-				handler: function(){
+				handler: function()
+				{
 					searchExpressInfo();
 				}
 			},{
 				text:'新增寄件',
 				iconCls: 'icon-search',
-				handler: function(){
+				handler: function()
+				{
 					operaTag = 'new';
 					$('#sentExpressId').val('');
 					$('#logistics').val('');
-					$('#phoneNumber').val('');
+//					$('#phoneNumber').val('');
 					$('#recipientName').val('');
-					$('#destination').val('');
+//					$('#destination').val('');
 					$('#senderNumber').combobox('setValue','');
 					$('#senderName').val('');
 					$('#address').val('');
 					$('#res').val('');
+					$('#price').val('');
+					
 					$('#formExpressServiceId').combobox('setValue','');
 					$('#dataForm').window('open');
 				}
@@ -191,7 +193,7 @@ $(document).ready(function(){
 				title : '收件人姓名',
 				width : 120,
 				align : 'center',
-				hidden : false
+				hidden : true
 			},{
 				field : 'PHONE_NUMBER',
 				title : '收件手机号码',
@@ -203,7 +205,7 @@ $(document).ready(function(){
 				title : '收件地址',
 				width : 100,
 				align : 'center',
-				hidden : false
+				hidden : true
 			},{
 				field : 'SENDER_NAME',
 				title : '寄件人姓名',
@@ -224,7 +226,7 @@ $(document).ready(function(){
 				title : '寄件地址',
 				width : 100,
 				align : 'center',
-				hidden : false
+				hidden : true
 			},{
 				field : 'EXPRESS_SERVICE_ID',
 				title : '快件服务商',
@@ -233,6 +235,22 @@ $(document).ready(function(){
 				hidden : false,
 				formatter : function(value, row, index){
 					return formatColumnTitle(value);
+				}
+			},{
+				field : 'PRICE',
+				title : '价格',
+				width : 100,
+				sum: 'true',
+				align : 'center',
+				hidden : false,
+				formatter : function(value, row, index)
+				{
+					if (value != null && value != 0) 
+					{
+						return "￥"+(value/100);
+					} else {
+						return value;
+					}
 				}
 			},{
 				field : 'OPERATOR',
@@ -278,71 +296,140 @@ $(document).ready(function(){
 				$("#queryParams").bind("click",function(e){
 					$("#queryParams").focus();
 				});
+				 $('#sentExpressGrid').datagrid('statistics');
+				//totalPrice();
+			},onLoadError : function() {
+				parent.location.href=contextPath+'/pages/system/welcome.light';
 			},
 			onDblClickRow : function(rowIndex, rowData) {
-				sentExpressId
+//				sentExpressId
 				operaTag = 'modify';
 				openWindow(rowIndex, rowData);
 			},
 			loadFilter : pagerFilter
 		});
 	});
-	function getBarCode(LOGISTICS,name){
-		$.ajax({
-			url : contextPath+"/pages/system/getBarCode.light",
-			type: "POST",
-			dataType:'json',
-			data:{"id":LOGISTICS,"name":name},
-			success : function(data){
-// 				$.messager.show({
-// 	                title:'提示',
-// 	                msg:'<div class="messager-icon messager-info"></div>'+data.PATH,
-// 	                timeout:3000,
-// 	                showType:'slide'
-// 				});
-				$('#barimg').attr('src',contextPath+data.PATH);
-// 				$('#fileName').html(id);
-				openBarCodeWindow(id);
-			},
-			error : function(data){
-				$.messager.show({
-	                title:'错误',
-	                msg:'<div class="messager-icon messager-info"></div>'+data.PATH,
-	                timeout:2000,
-	                showType:'slide'
-			  });
-			  }
-		});
-	}
-	
-	function extractCodenotify(PHONE_NUMBER,RECIPIENT_NAME){
-		
-	}
-	
-	function initExpressServiceProviders() {
-		$.ajax({
-			url : contextPath + "/pages/system/initExpressServiceProviders.light",
-			type : "POST",
-			dataType : 'json',
-			data : {
-				"shop_code" : ""
-			},
-			success : function(data) {
-				$.each(data, function(i) {    
-			           //alert(data[i].text);
-					expressServiceMap[data[i].id] = data[i].text;
-			     });
-			},
-			error : function(data) {
+
+$.extend($.fn.datagrid.methods, { statistics : function(jq) {
+		var opt = $(jq).datagrid('options').columns;
+		var rows = $(jq).datagrid("getRows");
+		var footer = new Array();
+		footer['sum'] = "";
+		for (var i = 0; i < opt[0].length; i++) {
+			if (opt[0][i].sum) {
+				footer['sum'] = footer['sum'] + sum(opt[0][i].field, 1) + ',';
 			}
-		});
+		}
+		var footerObj = new Array();
+		if (footer['sum'] != "") {
+			var tmp = '{'
+					+ footer['sum'].substring(0, footer['sum'].length - 1)
+					+ "}";
+			var obj = eval('(' + tmp + ')');
+			if (obj[opt[0][0].field] == undefined) {
+				footer['sum'] += '"' + opt[0][0].field + '":"<b>合计:</b>"';
+				// 第0列显示为合计
+				obj = eval('({' + footer['sum'] + '})');
+			} else {
+				obj[opt[0][0].field] = "<b>合计:</b>" + obj[opt[0][0].field];
+			}
+			footerObj.push(obj);
+		}
+		if (footerObj.length > 0) {
+			$(jq).datagrid('reloadFooter', footerObj);
+		}
+		function sum(filed) {
+			var sumNum = 0;
+			var str = "";
+			for (var i = 0; i < rows.length; i++) {
+				var num = rows[i][filed];
+				sumNum += Number(num);
+			}
+			return '"' + filed + '":"' + sumNum.toFixed(2) + '"';
+		}
 	}
+});
+
+function totalPrice(){
+	$('#sentExpressGrid').datagrid('appendRow', {
+        Saler: '<span class="subtotal">价格合计</span>',
+        TotalPriceCount: '<span class="subtotal">' + compute("PRICE") + '</span>'
+    });
+}
+
+function compute(colName) {
+    var rows = $('#sentExpressGrid').datagrid('getRows');
+    var total = 0;
+    for (var i = 0; i < rows.length; i++) {
+    	if (rows[i][colName] != null && rows[i][colName] != '') {
+    		total += parseFloat(rows[i][colName]);
+		}
+    	continue;
+        
+    }
+    return total;
+}
+
+function getBarCode(LOGISTICS, name) {
+	$.ajax({
+		url : contextPath + "/pages/system/getBarCode.light",
+		type : "POST",
+		dataType : 'json',
+		data : {
+			"id" : LOGISTICS,
+			"name" : name
+		},
+		success : function(data) {
+			$('#barimg').attr('src', contextPath + data.PATH);
+			// $('#fileName').html(id);
+			openBarCodeWindow(id);
+		},
+		error : function(data) {
+			$.messager.show({
+				title : '错误',
+				msg : '<div class="messager-icon messager-info"></div>'
+						+ data.PATH,
+				timeout : 2000,
+				showType : 'slide'
+			});
+		}
+	});
+}
+	
+
+function extractCodenotify(PHONE_NUMBER, RECIPIENT_NAME) {
+
+}
+	
+
+function initExpressServiceProviders() {
+	$.ajax({
+		url : contextPath + "/pages/system/initExpressServiceProviders.light",
+		type : "POST",
+		dataType : 'json',
+		sync:false,
+		data : {
+			"shop_code" : ""
+		},
+		success : function(data) {
+			$.each(data, function(i) {
+				// alert(data[i].text);
+				expressServiceMap[data[i].id] = data[i].text;
+			});
+		},
+		error : function(data) {
+		}
+	});
+}
 	
 	function formatColumnTitle(value){
 		return expressServiceMap[value];
 	}
 	
 	function formatPhoneNumber(value){
+		if (value === undefined) {
+			return;
+		}
 		var t=value.substring(0,3);
 		var firstTemp = value.substring(3,7);
 		var lastTemp = value.substring(7,11);
@@ -357,14 +444,7 @@ $(document).ready(function(){
 			dataType:'json',
 			data:{"id":id,"name":name},
 			success : function(data){
-// 				$.messager.show({
-// 	                title:'提示',
-// 	                msg:'<div class="messager-icon messager-info"></div>'+data.PATH,
-// 	                timeout:3000,
-// 	                showType:'slide'
-// 				});
 				$('#barimg').attr('src',contextPath+data.PATH);
-// 				$('#fileName').html(id);
 				openBarCodeWindow(id);
 			},
 			error : function(data){
@@ -389,11 +469,12 @@ $(document).ready(function(){
 		var recipientName = rowData.RECIPIENT_NAME;
 		var phoneNumber = rowData.PHONE_NUMBER;
 		
-		var destination = rowData.DESTINATION;
+//		var destination = rowData.DESTINATION;
 		var senderNumber = rowData.SENDER_NUMBER;
 		var senderName = rowData.SENDER_NAME;
-		var address = rowData.ADDRESS;
+//		var address = rowData.ADDRESS;
 		var res = rowData.RES;
+		var price = rowData.PRICE;
 		
 		var expressLocation = rowData.EXPRESS_lOCATION;
 		var expressServiceId = rowData.EXPRESS_SERVICE_ID;
@@ -404,11 +485,18 @@ $(document).ready(function(){
 		$('#expressLocation').val(expressLocation);
 		$("#formExpressServiceId").combobox('setValue',expressServiceId);
 		
-		$('#destination').val(destination);
+//		$('#destination').val(destination);
 		$('#senderNumber').combobox('setText',senderNumber);
 		$('#senderName').val(senderName);
-		$('#address').val(address);
+//		$('#address').val(address);
 		$('#res').val(res);
+		if (price != null && price != 0) {
+			$('#price').val(price/100);
+		} else {
+			$('#price').val(price);
+		}
+		
+		
 		$('#dataForm').window('open');
 	};
 	
@@ -421,11 +509,22 @@ $(document).ready(function(){
 		var logistics = $('#logistics').val();
 		var phoneNumber = $('#phoneNumber').val();
 		var recipientName = $('#recipientName').val();
-		var destination = $('#destination').val();
+//		var destination = $('#destination').val();
 		var senderNumber = $('#senderNumber').combobox('getText');
 		var senderName = $('#senderName').val();
-		var address = $('#address').val();
+//		var address = $('#address').val();
 		var res = $('#res').val();
+		var price = $('#price').val();
+		if (!$.isNumeric(price)) {
+			$.messager.show({
+                title:'提示',
+                msg:'<div class="messager-icon messager-info"></div>'+"价格填写不正确",
+                timeout:3800,
+                showType:'slide'
+			});
+			return;
+		}
+		
 		var urlStr = "";
 		var sentExpressId = "";
 		if (operaTag === 'new') {
@@ -455,11 +554,12 @@ $(document).ready(function(){
 				"logistics":logistics,
 				"phoneNumber":phoneNumber,
 				"recipientName":recipientName,
-				"destination":destination,
+//				"destination":destination,
 				"senderNumber":senderNumber,
 				"senderName":senderName,
-				"address":address,
+//				"address":address,
 				"res":res,
+				"price":price,
 				"expressServiceId":expressService
 			},
 			success : function(data){
@@ -469,7 +569,7 @@ $(document).ready(function(){
 	                msg:'<div class="messager-icon messager-info"></div>'+data.msg,
 	                timeout:3800,
 	                showType:'slide'
-			  });
+				});
 				//$('#detail').dialog('close');
 				$('#dataForm').window('close');
 			},
@@ -489,11 +589,13 @@ $(document).ready(function(){
 		$('#logistics').val('');
 		$('#phoneNumber').val('');
 		$('#recipientName').val('');
-		$('#destination').val('');
+//		$('#destination').val('');
 		$('#senderNumber').combobox('setValue','');
 		$('#senderName').val('');
-		$('#address').val('');
+//		$('#address').val('');
 		$('#res').val('');
+		$('#price').val('');
+		
 		$('#formExpressServiceId').combobox('setValue','');
 	}
 	
@@ -525,74 +627,6 @@ $(document).ready(function(){
 		return cInfo;
 	}
 	
-	function batchLetExpressOutStorehouse(){
-		var ids = null;
-		ids = getSelectRows();
-		if (ids===undefined ){
-			showMsg("请选择快件...", "提示");
-			return;
-		} else{
-			var cInfo = getPhoneNumberBySelectRows();
-			var titleInfo = "请核对取件人: ";
-			$.messager.confirm('确认',titleInfo+cInfo,function(r){
-			    if (r){
-//					$.ajax({
-//						url : contextPath + "/pages/system/letExpressOutStorehouse.light",
-//						type : "POST",
-//						data :{
-//							"ids" : ids
-//						},
-//						success : function(result){
-//							$('#sentExpressGrid').datagrid('clearSelections');
-//							$('#sentExpressGrid').datagrid("reload");
-//						}
-//					});
-			    	
-			    	$('#signatureRegion').window('open');
-					initializationSignatureRegion();
-			    	tempIds = null;
-			    	tempIds = ids;
-			    }    
-			});  
-		}
-
-	}
-
-	function letExpressOutStorehouse(id,name,phone){
-		var cInfo = '请核对取件人: '+name+','+phone;
-		$.messager.confirm('确认',cInfo,function(r){
-		    if (r){
-		    	$('#signatureRegion').window('open');
-				initializationSignatureRegion();
-		    	tempIds = null;
-		    	tempIds = id;
-		    }    
-		}); 
-
-	}
-	
-//	function getSignatureRegionWindow(){
-//		var obj;
-//		obj = document.getElementById("HWPenSign"); 
-//        obj.HWSetBkColor(0xE0F8E0);  
-//        obj.HWSetCtlFrame(2, 0x000000);
-//	}
-	
-//	function getOutStorehouseBatchNumber(){
-//		var batchNumber =null;
-//		 $.ajax({
-//				url : contextPath + "/pages/system/getOutStorehouseBatchNumber.light",
-//				type : "POST",
-//				dataType : 'json',
-////				sync:false,
-//				success: function(data){
-//					return data.temporaryId;
-//				}
-//		});
-//		
-//	}
-	
-	//查询患者信息
 	function searchExpressInfo(){
 		var endDate = $("#endDateId").val();
 		var startDate = $("#startDateId").val();
@@ -616,25 +650,6 @@ $(document).ready(function(){
 //		$("#number").focus();
 		var paper = $('#sentExpressGrid').datagrid('getPager');  
 		$(paper).pagination('refresh',{ pageNumber: 1 });
-	}
-	//初始化设备
-	function initializationSignatureRegion(){
-		  res = obj.HWInitialize();
-	}
-	
-	//关闭设备
-	function closeSignatureRegion(){
-		   var stream;
-		   stream = obj.HWFinalize();
-	}
-	
-	//重新签名
-	function clearSignatureRegion(){
-		   obj.HWClearPenSign();
-	}
-	
-	function signRestart(){
-		;
 	}
 	
 	//确认
@@ -669,44 +684,13 @@ $(document).ready(function(){
 		});
 		
 	}
-	
-	function saveSignature(){
-		   var stream;
-		   stream = obj.HWGetBase64Stream(2);
-//		   var imgStr = "<img src='"+stream+"' />";
-//		   $('#sssff').attr("src", 'data:image/jpg;base64,'+stream);
-		   return stream;
-	}
-	
-	//保存图片到磁盘
-	function saveSignatureToDisk(){
-		   obj.HWSetFilePath("e:\\sign.jpg");
-		   obj.HWSaveFile();
-	}
-	
-	//保存图片到数据库
-	function saveSignatureToDisk(){
-		   obj.HWSetFilePath("e:\\sign.jpg");
-		   obj.HWSaveFile();
-	}
-	
-	function saveSignatureByBase64Code(){
-		$.ajax({
-			url : contextPath + "/pages/system/saveSignature.light",
-			type : "POST",
-			dataType : 'json',
-			sync:false,
-			success: function(data){
-				return data.temporaryId;
-			}
-		});
-	}
+
 	
 	function formatItem(row){
-		var ip = $("#expressServiceId").parent().find('.combo').children().eq(1);
+		var ip = $("#formExpressServiceId").parent().find('.combo').children().eq(1);
 		var comb = $(this).combobox('options');
 		$(ip).click(function(){
-			$('#expressServiceId').combo('showPanel');	
+			$('#formExpressServiceId').combo('showPanel');
 		});
 	    var s = '<span style="font-weight:bold">' + row.text + '</span><br/>' +
 	            '<span style="color:#888">' + row.desc + '</span>';

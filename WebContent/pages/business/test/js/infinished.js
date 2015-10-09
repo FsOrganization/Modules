@@ -6,7 +6,8 @@ var seq_locationCodeByExpressType_X=null;
 var seq_locationCodeByExpressType_S=null;
 var seq_locationCodeByExpressType_M=null;
 var seq_locationCodeByExpressType_D=null;
-
+var toggleSwitchT = true;
+var toggleSwitchF = false;
 var getBatchNumber = function(){
 	 $.ajax({
 			url : contextPath + "/pages/system/getTemporaryStorage.light",
@@ -51,6 +52,9 @@ var getExpressLocationCode = function(type){
 				$("span[id=expressLocationTitle]").html(type+data.temporaryId);
 				$('#expressLocation').val(type+data.temporaryId);
 				checkType(type, type+data.temporaryId);
+				unblock("expressLocationDiv");
+			},error : function(data) {
+				parent.location.href=contextPath+'/pages/system/welcome.light';
 			}
 	});
 };
@@ -88,11 +92,31 @@ function clearOneType(type){
 	$("span[id=expressLocationTitle]").html("");
 }
 
+
+
 $(document).ready(function() {
-//	if (batchNumber==null) {
-//		batchNumber = getBatchNumber();
-//	}
-	
+	$("#showBatchNumber").click(function(){
+		toggleSwitchF
+		  $("#batchNumberDiv").toggle(50,
+				  function()
+				  {
+					  if ($("#batchNumberDiv").is(":hidden")) {
+						  $("#showBatchNumber").text('*显示批次号');
+						  $('#presentSelfForm').panel('resize',{
+							  	width:580,
+							    height:413,
+						  });
+					  } else {
+						  $("#showBatchNumber").text('*隐藏批次号');
+						  $('#presentSelfForm').panel('resize',{
+							  	width:580,
+							    height:468,
+						  });
+					  }
+					  
+			  	  }
+		  );
+	});
 	//输入框按回车
 	$("#query_batchNumber").bind("keydown",function(e){
 		var keycode = e.which;		
@@ -105,8 +129,10 @@ $(document).ready(function() {
 	initExpressServiceProviders();
 	
 	$("input[name=expressType]").click(function(e){
+		block("expressLocationDiv");
 		var type = $("input[name='expressType']:checked").val();
 		if (type === undefined) {
+			unblock("expressLocationDiv");
 			return false;
 		} else {
 //			var val = $('#expressLocation').val();
@@ -116,6 +142,7 @@ $(document).ready(function() {
 				} else {
 					$('#expressLocation').val(seq_locationCodeByExpressType_D);
 					$("span[id=expressLocationTitle]").html(seq_locationCodeByExpressType_D);
+					unblock("expressLocationDiv");
 				}
 			} else if (type==='X') {
 				if (seq_locationCodeByExpressType_X == null) {
@@ -123,6 +150,7 @@ $(document).ready(function() {
 				} else {
 					$('#expressLocation').val(seq_locationCodeByExpressType_X);
 					$("span[id=expressLocationTitle]").html(seq_locationCodeByExpressType_X);
+					unblock("expressLocationDiv");
 				}
 			} else if (type==='M') {
 				if (seq_locationCodeByExpressType_M == null) {
@@ -130,6 +158,7 @@ $(document).ready(function() {
 				} else {
 					$('#expressLocation').val(seq_locationCodeByExpressType_M);
 					$("span[id=expressLocationTitle]").html(seq_locationCodeByExpressType_M);
+					unblock("expressLocationDiv");
 				}
 			} else if (type==='S') {
 				if (seq_locationCodeByExpressType_S == null) {
@@ -137,15 +166,9 @@ $(document).ready(function() {
 				} else {
 					$('#expressLocation').val(seq_locationCodeByExpressType_S);
 					$("span[id=expressLocationTitle]").html(seq_locationCodeByExpressType_S);
+					unblock("expressLocationDiv");
 				}
-			} else {
-				
 			}
-			
-//			var index=val.indexOf(type); 
-//			if (index === -1) {
-//				getExpressLocationCode(type);
-//			}
 		}
 		
 	});
@@ -177,7 +200,11 @@ $(document).ready(function() {
 		onSelect:function(row){
 			$('#recipientName').val(row.text);
 //			$('.combo-panel').hide();
+		},
+		onBeforeLoad: function(param){
+			$('#phoneNumber').combobox('setValue', '');
 		}
+
 	});
 	
 	window.onload = function(){
@@ -198,7 +225,7 @@ $(document).ready(function() {
 	$('#presentSelfForm').window({
 		title:'快件入库',
 	    width:580,
-	    height:468,
+	    height:413,
 	    modal:true,
 	    closed:true,
 	    left:340,    
@@ -217,7 +244,7 @@ $(document).ready(function() {
 		pagination : true,
 		striped : true,
 		idField : 'id',
-		pageSize : 30,
+		pageSize : 20,
 		queryParams: {
 			batchNumber: $('#batchNumber').val()
 		},
@@ -351,7 +378,9 @@ $(document).ready(function() {
 			}
 		} ] ],
 		onLoadSuccess : function(data) {
-			
+		},
+		onLoadError : function() {
+			parent.location.href=contextPath+'/pages/system/welcome.light';
 		},
 		onDblClickRow : function(rowIndex, rowData) {
 			openWindow(rowIndex, rowData);
@@ -393,6 +422,7 @@ function initExpressServiceProviders() {
 		url : contextPath + "/pages/system/initExpressServiceProviders.light",
 		type : "POST",
 		dataType : 'json',
+		sync:false,
 		data : {
 			"shop_code" : ""
 		},
@@ -412,6 +442,16 @@ function formatColumnTitle(value){
 }
 
 function modifyExpress() {
+	if (!isPhoneNmuber($('#modify_phoneNumber').val())) {
+		$.messager.show({
+            title:'提示',
+            msg:'<div class="messager-icon messager-info"></div>'+'手机或座机号码填写不正确',
+            timeout:3800,
+            showType:'slide'
+		});
+		return;
+		return;
+	}
 	$.ajax({
 		url : contextPath+"/pages/system/editDataById.light",
 		type: "POST",
@@ -453,12 +493,14 @@ function checkData(e) {
 }
 
 var submitForm = function() {
+	block("presentSelfForm");
 	var recipientName = $('#recipientName').val();
 	var expressServiceId= $('#expressServiceId').combo('getValue');
 	var phoneNumber = $('#phoneNumber').combobox('getText');
 	var expressType = $("input[name='expressType']:checked").val();
 	if (phoneNumber == '' || expressServiceId== '' || recipientName == '') {
-		$('#af-showreq').click();  
+		$('#af-showreq').click();
+		unblock("presentSelfForm");
 		return;
 	}
 	if ($('#expressLocation').val() == '') {
@@ -468,12 +510,25 @@ var submitForm = function() {
             timeout:3800,
             showType:'slide'
 		});
+		unblock("presentSelfForm");
 		return;
 	}
 	if ($('#batchNumber').val() == '') {
 		$.messager.show({
             title:'提示',
             msg:'<div class="messager-icon messager-info"></div>'+'批次号不能为空',
+            timeout:3800,
+            showType:'slide'
+		});
+		unblock("presentSelfForm");
+		return;
+	}
+	
+	if (!isPhoneNmuber(phoneNumber)) {
+		unblock("presentSelfForm");
+		$.messager.show({
+            title:'提示',
+            msg:'<div class="messager-icon messager-info"></div>'+'手机或座机号码填写不正确',
             timeout:3800,
             showType:'slide'
 		});
@@ -515,6 +570,7 @@ var submitForm = function() {
 			clearFormData();
 			clearOneType(expressType);
 			$('#logistics').focus();
+			unblock("presentSelfForm");
 		},
 		error : function(data) {
 			$.messager.show({
@@ -522,15 +578,16 @@ var submitForm = function() {
                 msg:'<div class="messager-icon messager-info"></div>'+data.msg,
                 timeout:3800,
                 showType:'slide'
-		  });
-		  }
+			});
+			unblock("presentSelfForm");
+		}
 	});
 };
 
 var clearFormData = function(){
 	$('#logistics').val("");
 	$('#expressLocation').val("");
-	$('#phoneNumber').combobox('setValue',"");
+	$('#phoneNumber').combobox('setValue', null);
 	$('#recipientName').val("");
 	$('#address').val("");
 	$('#remark').val("");

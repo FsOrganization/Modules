@@ -29,6 +29,8 @@
 
 <!-- business util js -->
 <script src="<%=contextPath%>/pages/js/util.js"></script>
+<script src="<%=contextPath%>/js/expressDateUtil.js"></script>
+
 
 
 <script>

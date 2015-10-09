@@ -50,7 +50,7 @@ $(document).ready(function(){
 			pagination : true,
 			striped : true,
 			idField : 'ID',
-			pageSize : 30,
+			pageSize : 20,
 			queryParams:{
 				batchNumber: ''
 			},
@@ -107,6 +107,7 @@ $(document).ready(function(){
 			url : contextPath + "/pages/system/initExpressServiceProviders.light",
 			type : "POST",
 			dataType : 'json',
+			sync:false,
 			data : {
 				"shop_code" : ""
 			},
@@ -132,7 +133,6 @@ $(document).ready(function(){
 		return '<span style="font-size:1.1em;">'+allTemp+'</span>';
 	}
 	
-	//查询患者信息
 	function searchExpressInfo(){
 		$("#mainDiv").empty();
 //		block("queryBody");

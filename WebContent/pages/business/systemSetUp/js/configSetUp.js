@@ -60,7 +60,7 @@ $(document).ready(function() {
 			iconCls:'icon-ok',
 			idField : 'ID',
 			treeField:'CONFIG_NAME',
-			pageSize : 30,
+			pageSize : 20,
 			queryParams: {
 				batchNumber: ''
 			},
@@ -120,6 +120,8 @@ $(document).ready(function() {
 			onDblClickRow : function(rowIndex, rowData) {
 				openWindow(rowIndex, rowData);
 				operatingTag = true;
+			},onLoadError : function() {
+				parent.location.href=contextPath+'/pages/system/welcome.light';
 			},
 			onClickCell : function(rowIndex, rowData) {
 				$('#configGrid').treegrid('beginEdit', rowIndex);
@@ -298,7 +300,6 @@ function clearFormData() {
 	$("input[id='isCheck']").prop("checked",false);
 }
 
-//查询患者信息
 function searchExpressInfo() {
 	var queryParams = $("#queryParams").val();
 	queryParams = encodeURI(queryParams);

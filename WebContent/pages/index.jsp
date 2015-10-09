@@ -7,6 +7,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <link rel="stylesheet" type="text/css" href="<%=contextPath%>/pages/css/main.css" />
+<link rel="stylesheet" href="<%=contextPath%>/pages/menuStyle/style.css" type="text/css" />
 <style type="text/css">
 .speli {
 	margin: 2px 25px;
@@ -66,6 +67,7 @@
 <script type="text/javascript" src="<%=contextPath%>/pages/js/index.js"></script>
 </head>
 <body id="indexbody" style="background: #fff;overflow-y:auto;overflow-x:hidden;" topmargin="0">
+	<input type="hidden" id="loginTag" value="${loginName}"/>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%" height="473" style="border-collapse: collapse" bordercolor="#111111">
 		<tr>
 			<td height="1"><img src="<%=contextPath%>/pages/images/spacer.gif" width="10" height="1" border="0"></td>
@@ -131,185 +133,55 @@
 			<td style="background: #fff;" valign="top" height="100%">
 				<div align="center">
 					<center>
-						<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border-width: 0" bordercolor="#111111" width="89%" id="AutoNumber1">
-							<tr>
-								<td width="100%"
-									style="border-left: medium none #111111; border-right: medium none #111111; border-top-style: none; border-top-width: medium; border-bottom-style: none; border-bottom-width: medium"
-									bgcolor="#1B536D" align="center">
-									<p style="margin-top: 2; margin-bottom: 2">
-										<b><font face="Arial" size="2" color="#FFFFFF">入库管理</font></b>
-								</td>
-							</tr>
-							<tr>
-								<td width="100%"
-									style="border-left: 1px none #111111; border-right: 1px none #111111; border-top-style: none; border-top-width: medium; border-bottom-style: none; border-bottom-width: medium">
-									<p style="margin: 8px 5px;" dir="ltr">
-										<font face="Arial" size="2" color="#111111">
-											<a href="javascript:void(0);" onclick='addTab("快件入库", "<%=contextPath%>/pages/business/test/infinished.jsp","icon-sz",undefined,"infinished");'>快件入库</a>
-										</font>
-								</td>
-							</tr>
-							<tr>
-								<td width="100%"
-									style="border-left: 1px none #111111; border-right: 1px none #111111; border-top-style: none; border-top-width: medium; border-bottom-style: none; border-bottom-width: medium">
-									<p style="margin: 8px 5px;" dir="ltr">
-										<font face="Arial" size="2" color="#111111">
-											<a href="javascript:void(0);" onclick='addTab("快件出库", "<%=contextPath%>/pages/business/test/NewFile.jsp","icon-sz");'>快件出库</a>
-										</font>
-								</td>
-							</tr>
-							<tr>
-								<td width="100%"
-									style="border-left: 1px none #111111; border-right: 1px none #111111; border-top-style: none; border-top-width: medium; border-bottom-style: none; border-bottom-width: medium">
-									<p style="margin: 8px 5px;" dir="ltr">
-										<font face="Arial" size="2" color="#111111">
-											<a href="javascript:void(0);" onclick='addTab("快件日志", "<%=contextPath%>/pages/business/test/expressInfo.jsp","icon-sz");'>快件日志</a>
-										</font>
-								</td>
-							</tr>
-							<tr>
-								<td width="100%"
-									style="border-left: 1px none #111111; border-right: 1px none #111111; border-top-style: none; border-top-width: medium; border-bottom-style: none; border-bottom-width: medium">
-									<p style="margin: 8px 5px;" dir="ltr">
-										<font face="Arial" size="2" color="#111111">
-											<a href="javascript:void(0);" onclick='addTab("寄件管理", "<%=contextPath%>/pages/business/test/sentExpress.jsp","icon-sz");'>寄件管理</a>
-										</font>
-								</td>
-							</tr>
-						</table>
+						<ul id="css3menu1" class="topmenu">
+									<input type="checkbox" id="css3menu-switcher" class="switchbox">
+									<label onclick="" class="switch" for="css3menu-switcher"></label>	
+									<li class="topmenu"><a href="#" style="width:125px;height:25px;line-height:25px;cursor:default;"><img src="<%=contextPath%>/pages/menuStyle/refresh.png" alt=""/>快件管理</a></li>
+									<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("快件入库", "<%=contextPath%>/pages/business/test/infinished.jsp","icon-sz",undefined,"infinished");'>快件入库</a></li>
+									<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("快件出库", "<%=contextPath%>/pages/business/test/NewFile.jsp","icon-sz");'>快件出库</a></li>
+									<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("寄件管理", "<%=contextPath%>/pages/business/test/sentExpress.jsp","icon-sz");'>寄件管理</a></li>
+									<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("快件日志", "<%=contextPath%>/pages/business/test/expressInfo.jsp","icon-sz");'>快件日志</a></li>
+						</ul>
 					</center>
 				</div>
-				<p style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
-				<div align="center" id="sysSeting">
-					<input type="hidden" id="loginTag" value="${loginName}"/>
+				<div align="center" id="customerSeting">
 					<center>
-						<table border="1" cellpadding="0" cellspacing="0"
-							style="border-collapse: collapse; border-width: 0"
-							bordercolor="#111111" width="89%" id="AutoNumber2">
-							<tr>
-								<td width="100%"
-									style="border-style: none; border-width: medium"
-									bgcolor="#1B536D" align="center" height="18">
-									<p style="margin-top: 2; margin-bottom: 2">
-										<b><font face="Arial" size="2" color="#FFFFFF">系统设置</font></b>
-								</td>
-							</tr>
-							<tr>
-								<td width="100%"
-									style="border-left: 1px none #111111; border-right: 1px none #111111; border-top-style: none; border-top-width: medium; border-bottom-style: none; border-bottom-width: medium">
-									<p style="margin: 8px 5px;" dir="ltr">
-										<font face="Arial" size="2" color="#111111">
-											<a href="javascript:void(0);" onclick='addTab("区域设置", "<%=contextPath%>/pages/business/systemSetUp/areaSetUp.jsp","icon-sz",undefined,"infinished");'>区域设置</a>
-										</font>
-								</td>
-							</tr>
-							<tr>
-								<td width="100%"
-									style="border-left: 1px none #111111; border-right: 1px none #111111; border-top-style: none; border-top-width: medium; border-bottom-style: none; border-bottom-width: medium">
-									<p style="margin: 8px 5px;" dir="ltr">
-										<font face="Arial" size="2" color="#111111">
-											<a href="javascript:void(0);" onclick='addTab("网点设置", "<%=contextPath%>/pages/business/systemSetUp/shopSetUp.jsp","icon-sz",undefined,"infinished");'>网点设置</a>
-										</font>
-								</td>
-							</tr>
-							<tr>
-								<td width="100%"
-									style="border-left: 1px none #111111; border-right: 1px none #111111; border-top-style: none; border-top-width: medium; border-bottom-style: none; border-bottom-width: medium">
-									<p style="margin: 8px 5px;" dir="ltr">
-										<font face="Arial" size="2" color="#111111">
-											<a href="javascript:void(0);" onclick='addTab("用户设置", "<%=contextPath%>/pages/business/systemSetUp/userSetUp.jsp","icon-sz",undefined,"infinished");'>用户设置</a>
-										</font>
-								</td>
-							</tr>
-							<tr>
-								<td width="100%"
-									style="border-left: 1px none #111111; border-right: 1px none #111111; border-top-style: none; border-top-width: medium; border-bottom-style: none; border-bottom-width: medium">
-									<p style="margin: 8px 5px;" dir="ltr">
-										<font face="Arial" size="2" color="#111111">
-											<a href="javascript:void(0);" onclick='addTab("快递服务商设置", "<%=contextPath%>/pages/business/systemSetUp/expressServiceProviderSetUp.jsp","icon-sz",undefined,"infinished");'>快递服务商设置</a>
-										</font>
-								</td>
-							</tr>
-							<tr>
-								<td width="100%"
-									style="border-left: 1px none #111111; border-right: 1px none #111111; border-top-style: none; border-top-width: medium; border-bottom-style: none; border-bottom-width: medium">
-									<p style="margin: 8px 5px;" dir="ltr">
-										<font face="Arial" size="2" color="#111111">
-											<a href="javascript:void(0);" onclick='addTab("客户信息管理", "<%=contextPath%>/pages/business/customer/customerInfo.jsp","icon-sz",undefined,"infinished");'>客户信息管理</a>
-										</font>
-								</td>
-							</tr>
-						</table>
+							<ul id="css3menu1" class="topmenu">
+								<input type="checkbox" id="css3menu-switcher" class="switchbox">
+								<label onclick="" class="switch" for="css3menu-switcher"></label>	
+								<li class="topmenu"><a href="#" style="width:125px;height:25px;line-height:25px;cursor:default;"><img src="<%=contextPath%>/pages/menuStyle/users.png" alt=""/>客户管理</a></li>
+								<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("客户信息管理", "<%=contextPath%>/pages/business/customer/customerInfo.jsp","icon-sz",undefined,"infinished");'>客户信息管理</a></li>
+							</ul>
 					</center>
 				</div>
-				<div align="center" id="configSeting" style="display: none">
-<%-- 					<input type="hidden" id="loginTag" value="${loginName}"/> --%>
+				<div align="center" id="statistics">
 					<center>
-						<table border="1" cellpadding="0" cellspacing="0"
-							style="border-collapse: collapse; border-width: 0"
-							bordercolor="#111111" width="89%" id="AutoNumber2">
-							<tr>
-								<td width="100%"
-									style="border-style: none; border-width: medium"
-									bgcolor="#1B536D" align="center" height="18">
-									<p style="margin-top: 2; margin-bottom: 2">
-										<b><font face="Arial" size="2" color="#FFFFFF">客户管理</font></b>
-								</td>
-							</tr>
-							<tr style="display: none;">
-								<td width="100%"
-									style="border-left: 1px none #111111; border-right: 1px none #111111; border-top-style: none; border-top-width: medium; border-bottom-style: none; border-bottom-width: medium">
-									<p style="margin: 8px 5px;" dir="ltr">
-										<font face="Arial" size="2" color="#111111">
-											<a href="javascript:void(0);" onclick='addTab("系统参数设置", "<%=contextPath%>/pages/business/systemSetUp/configSetUp.jsp","icon-sz",undefined,"infinished");'>系统参数设置</a>
-										</font>
-								</td>
-							</tr>
-							<tr>
-								<td width="100%"
-									style="border-left: 1px none #111111; border-right: 1px none #111111; border-top-style: none; border-top-width: medium; border-bottom-style: none; border-bottom-width: medium">
-									<p style="margin: 8px 5px;" dir="ltr">
-										<font face="Arial" size="2" color="#111111">
-											<a href="javascript:void(0);" onclick='addTab("客户信息", "<%=contextPath%>/pages/business/systemSetUp/configSetUp.jsp","icon-sz",undefined,"infinished");'>客户信息</a>
-										</font>
-								</td>
-							</tr>
-						</table>
+						<ul id="css3menu1" class="topmenu">
+									<input type="checkbox" id="css3menu-switcher" class="switchbox">
+									<label onclick="" class="switch" for="css3menu-switcher"></label>	
+									<li class="topmenu"><a href="#" style="width:125px;height:25px;line-height:25px;cursor:default;"><img src="<%=contextPath%>/pages/menuStyle/chart.png" alt=""/>统计分析 </a></li>
+									<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("网点人数统计表", "<%=contextPath%>/pages/report/shopNumberOfPeopleStatistics.jsp","icon-sz",undefined,"statistics");'>网点人数统计表</a></li>
+									<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("网点收寄件统计", "<%=contextPath%>/pages/report/shopInAndSendExpressGroupCount.jsp","icon-sz",undefined,"statistics");'>网点收寄件统计</a></li>
+								</ul>
 					</center>
 				</div>
-				<p style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
-				<div align="center">
+				
+				<div align="center" id="configSeting">
 					<center>
-						<table border="1" cellpadding="0" cellspacing="0"
-							style="border-collapse: collapse; border-width: 0"
-							bordercolor="#111111" width="89%" id="AutoNumber2">
-							<tr>
-								<td width="100%"
-									style="border-style: none; border-width: medium"
-									bgcolor="#1B536D" align="center" height="18">
-									<p style="margin-top: 2; margin-bottom: 2">
-										<b><font face="Arial" size="2" color="#FFFFFF">统计分析</font></b>
-								</td>
-							</tr>
-							<tr>
-								<td width="100%"
-									style="border-left: 1px none #111111; border-right: 1px none #111111; border-top-style: none; border-top-width: medium; border-bottom-style: none; border-bottom-width: medium">
-									<p style="margin: 8px 5px;" dir="ltr">
-										<font face="Arial" size="2" color="#111111">
-											<a href="javascript:void(0);" onclick='addTab("网点人数统计表", "<%=contextPath%>/pages/business/systemSetUp/areaSetUp.jsp","icon-sz",undefined,"infinished");'>网点人数统计表</a>
-										</font>
-								</td>
-							</tr>
-							<tr>
-								<td width="100%"
-									style="border-left: 1px none #111111; border-right: 1px none #111111; border-top-style: none; border-top-width: medium; border-bottom-style: none; border-bottom-width: medium">
-									<p style="margin: 8px 5px;" dir="ltr">
-										<font face="Arial" size="2" color="#111111">
-											<a href="javascript:void(0);" onclick='addTab("网点收寄件统计", "<%=contextPath%>/pages/business/systemSetUp/shopSetUp.jsp","icon-sz",undefined,"infinished");'>网点收寄件统计</a>
-										</font>
-								</td>
-							</tr>
-						</table>
+					<ul id="css3menu1" class="topmenu">
+									<input type="checkbox" id="css3menu-switcher" class="switchbox">
+									<label onclick="" class="switch" for="css3menu-switcher"></label>	
+									<li class="topmenu"><a href="#" style="width:125px;height:25px;line-height:25px;cursor:default;"><img src="<%=contextPath%>/pages/menuStyle/process1.png" alt=""/>系统设置</a></li>
+									<li class="topmenu"><a href="#" style="width:125px;text-align: center;"><span>区域&网点设置</span></a>
+										<ul>
+											<li><a href="javascript:void(0);" onclick='addTab("区域设置", "<%=contextPath%>/pages/business/systemSetUp/areaSetUp.jsp","icon-sz",undefined,"infinished");'>区域设置</a></li>
+											<li><a style="font-weight: 100;" href="javascript:void(0);" onclick='addTab("网点设置", "<%=contextPath%>/pages/business/systemSetUp/shopSetUp.jsp","icon-sz",undefined,"infinished");'>网点设置</a></li>
+										</ul>
+									</li>
+									<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("用户设置", "<%=contextPath%>/pages/business/systemSetUp/userSetUp.jsp","icon-sz",undefined,"infinished");'>用户设置</a></li>
+									<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("快递服务商设置", "<%=contextPath%>/pages/business/systemSetUp/expressServiceProviderSetUp.jsp","icon-sz",undefined,"infinished");'>快递服务商设置</a></li>
+									
+								</ul>
 					</center>
 				</div>
 			</td>

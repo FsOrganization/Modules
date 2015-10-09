@@ -110,7 +110,7 @@ label:hover:before {
 </head>
 <body style="background: white;">
 	<div style="margin: 4px;">
-       	&nbsp;&nbsp;用户信息：<input id="queryParams" name="queryParams" style="width: 150px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="">
+       	&nbsp;&nbsp;用户信息：<input id="queryParams" name="queryParams" style="width: 150px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="姓名、电话">
 	</div>
 	<table id="customerGrid" class="easyui-datagrid" style="height: auto;"></table>
     <div id="addUser" class="container" style="min-height: 300px;overflow:hidden;">
@@ -212,32 +212,5 @@ label:hover:before {
 				</div>
 			</section>
         </div>
-	<!-- 条码显示 -->
-    <div id="imgDetail" class="easyui-dialog" title="Complex Toolbar on Dialog" style="width:400px;height:200px;padding:10px;"
-            data-options="buttons: '#dlg-buttons',closed: true">
-            <div style="margin: 20px 30px;">
-            	<img id="barimg" src=""></img>
-                <span id="fileName" style="margin: 0px 80px;font-weight: 300;font-size: 18px;"></span>
-            </div>
-                
-    </div>
-    <div id="dlg-buttons">
-        <a id="submitBtn" class="easyui-linkbutton">打印条码</a>
-        <a id="close" class="easyui-linkbutton" onclick="javascript:$('#imgDetail').dialog('close')">Close</a>
-    </div>
-    
-    <!-- 显示签名 -->
-    <div id="signatureDetail" class="easyui-dialog" title="Complex Toolbar on Dialog" style="width:600px;height:430px;padding:10px;overflow: hidden;"
-            data-options="buttons: '#dlg-buttons',closed: true">
-            <div style="margin: 8px 5px;">
-            	<img id="signatureImg" src=""></img>
-                <span id="fileName" style="margin: 0px 80px;font-weight: 300;font-size: 18px;"></span>
-            </div>
-                
-    </div>
-    <div id="dlg-buttons">
-        <a id="submitBtn" class="easyui-linkbutton">打印签名</a>
-        <a id="close" class="easyui-linkbutton" onclick="javascript:$('#signatureDetail').dialog('close')">Close</a>
-    </div>
 </body>
 </html>

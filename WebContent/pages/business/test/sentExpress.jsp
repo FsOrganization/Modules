@@ -47,7 +47,7 @@ td.contact {
        	&nbsp;&nbsp;开始日期：<input id="startDateId" name="startDateId" style="width: 120px;height:30px;border-style: solid;border-color: antiquewhite;" onclick="WdatePicker()" >
        	&nbsp;&nbsp;截止日期:<input id="endDateId" name="endDateId"  style="width: 120px;height:30px;border-style: solid;border-color: antiquewhite;" onclick="WdatePicker()" >
 	</div>
-	<table id="sentExpressGrid" class="easyui-datagrid" style="height: auto;"></table>
+	<table id="sentExpressGrid"></table>
     <div id="dataForm" class="container" style="min-height: 300px;overflow:auto;">
 			<section class="af-wrapper">
 	            <h1></h1>
@@ -71,32 +71,18 @@ td.contact {
 								                formatter: formatItem" />
 						</div>
 					</div>
-					<div class="af-outer">
-						<div class="af-inner">
-							<label for="input-title">快件运单号:</label>
-							<input type="text" name="logistics" id="logistics" style="width: 279px;">
-						</div>
-					</div>
-				
-					<div class="af-outer af-required">
-						<div class="af-inner">
-							<label for="input-name">收件人手机号码:</label>
-							<input type="text" name="phoneNumber" id="phoneNumber" style="width: 279px;">
-						</div>
-					</div>
-					
-					<div class="af-outer af-required">
-						<div class="af-inner">
-							<label for="input-name">收件人姓名:</label>
-							<input type="text" name="recipientName" id="recipientName" style="width: 279px;"/>
-						</div>
-					</div>
-					<div class="af-outer af-required">
-						<div class="af-inner">
-						  <label for="input-country">收件人地址:</label>
-						  <input type="text" name="destination" id="destination" style="width: 279px;">
-						</div>
-					</div>
+<!-- 					<div class="af-outer af-required"> -->
+<!-- 						<div class="af-inner"> -->
+<!-- 							<label for="input-name">收件人姓名:</label> -->
+<!-- 							<input type="text" name="recipientName" id="recipientName" style="width: 279px;"/> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 					<div class="af-outer af-required"> -->
+<!-- 						<div class="af-inner"> -->
+<!-- 						  <label for="input-country">收件人地址:</label> -->
+<!-- 						  <input type="text" name="destination" id="destination" style="width: 279px;"> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
 					<div class="af-outer af-required">
 						<div class="af-inner">
 							<label for="input-name">寄件人手机号码:</label>
@@ -110,16 +96,34 @@ td.contact {
 							<input type="text" name="senderName" id="senderName" style="width: 279px;"/>
 						</div>
 					</div>
+<!-- 					<div class="af-outer af-required"> -->
+<!-- 						<div class="af-inner"> -->
+<!-- 						  <label for="input-country">寄件人地址:</label> -->
+<!-- 						  <input type="text" name="address" id="address" style="width: 279px;"> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+					<div class="af-outer">
+						<div class="af-inner">
+							<label for="input-title">快件运单号:</label>
+							<input type="text" name="logistics" id="logistics" style="width: 279px;">
+						</div>
+					</div>
 					<div class="af-outer af-required">
 						<div class="af-inner">
-						  <label for="input-country">寄件人地址:</label>
-						  <input type="text" name="address" id="address" style="width: 279px;">
+							<label for="input-name">收件人手机号码:</label>
+							<input type="text" name="phoneNumber" id="phoneNumber" style="width: 279px;">
 						</div>
 					</div>
 					<div class="af-outer af-required">
 						<div class="af-inner">
 						  <label for="input-country">物品:</label>
 						  <input type="text" name="res" id="res" style="width: 279px;">
+						</div>
+					</div>
+					<div class="af-outer af-required">
+						<div class="af-inner">
+						  <label for="input-country">价格:</label>
+						  <input type="text" name="price" id="price" style="width: 279px;" placeholder="￥"> (￥)
 						</div>
 					</div>
 				</form>
@@ -136,7 +140,6 @@ td.contact {
             	<img id="barimg" src=""></img>
                 <span id="fileName" style="margin: inherit;"></span>
             </div>
-                
     </div>
     <div id="dlg-buttons">
         <a id="printBtn" class="easyui-linkbutton">打印条码</a>
