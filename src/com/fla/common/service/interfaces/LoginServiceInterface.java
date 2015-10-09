@@ -11,14 +11,13 @@ import com.fla.common.entity.CustomerInfo;
 import com.fla.common.entity.ExpressInfo;
 import com.fla.common.entity.Signature;
 import com.fla.common.entity.SystemUser;
+import com.fla.common.util.Pagination;
 
 public interface LoginServiceInterface {
 	
 	public JSONArray getExpressByBatchNumber(final int rowSize, final int pageSize,Map<String,String> params) throws SQLException ;
 	
-	public JSONArray getExpressInfoList(final int rowSize, final int pageSize,Map<String,String> params) throws SQLException ;
-	
-	public JSONArray getInAndOutExpressInfoList(final int rowSize, final int pageSize,Map<String,String> params) throws SQLException ;
+	public Pagination getExpressInfoList(final int rowSize, final int pageSize,Map<String,String> params) throws SQLException ;
 	
 	public JSONObject editDataById(ExpressInfo ei) throws SQLException;
 	
@@ -42,11 +41,13 @@ public interface LoginServiceInterface {
 	
 	public JSONArray getExpressInfoByFilterConditions(final int rowSize, final int pageSize,Map<String,String> params) throws SQLException ;
 	
+	public Pagination getExpressInfoPagination(final int rowSize, final int pageSize,Map<String,String> params) throws SQLException ;
+	
 	public JSONArray exportExpressInfoByFilterConditions(Map<String, String> params) throws SQLException;
 	
 	public JSONArray getSimplyConstructedNotOutExpressInfoByFilter(int rowSize,int pageSize, Map<String, String> params) throws SQLException ;
 	
-	public JSONArray getNotOutExpressInfoByFilterConditions(final int rowSize, final int pageSize,Map<String,String> params) throws SQLException ;
+	public Pagination getNotOutExpressInfoByFilterConditions(final int rowSize, final int pageSize,Map<String,String> params) throws SQLException ;
 	
 	public JSONObject insertSignature(Signature sign) throws SQLException;
 	

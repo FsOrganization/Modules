@@ -67,4 +67,12 @@ public interface SystemDaoInterface {
 	
 	public void modifyExpressServiceProvider(ExpressServiceProvider esp) throws SQLException;
 	
+	public List<Map<String, Object>> getExpressStatisticalArea(String areaCode) throws SQLException;
+	
+	public List<Map<String, Object>> getAreaChildrenShops(String areaCode) throws SQLException;
+	
+	public List<Map<String, Object>> getShopNumberOfPeopleGroupCount(String type,String areaCode) throws SQLException;
+	
+	public List<Map<String, Object>> getShopInAndSendExpressGroupCount(String type,String code,String startDate,String endDate) throws SQLException;
+	
 	}

@@ -43,7 +43,7 @@ public class LoginController extends SuperController{
 	private static final long serialVersionUID = -92227420050300172L;
 	
 	@Autowired
-	public SystemUser systemUser;
+	public SystemUser s;
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
@@ -62,7 +62,7 @@ public class LoginController extends SuperController{
 //	@RequestMapping(value = "/login/{name:.+}", method = RequestMethod.GET)
 	@RequestMapping("/pages/system/welcome.light")
 	public ModelAndView welcome(HttpServletRequest request, HttpServletResponse response,String name) throws SQLException {
-//		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
+//		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		request.getSession().setAttribute("systemUser", null);
 		// logger.debug("welcome() - name {}", name);
 		InternalResourceView iv = new InternalResourceView("/pages/login.jsp");
@@ -98,21 +98,19 @@ public class LoginController extends SuperController{
 		InternalResourceView iv = new InternalResourceView("/pages/index.jsp");
 		ModelAndView model = new ModelAndView(iv);
 		checkRememberMe(model, rememberMe, name);
-		if (name == null || name.trim().equals("") || pd.trim().equals("")) {
-			return JumpModelAndView();
-		}
-		systemUser = loginServiceInterface.checkLoginAction(name);
-		if (systemUser.getLoginName() != null) {
+		SystemUser s = loginServiceInterface.checkLoginAction(name);
+		if (s.getLoginName() != null) 
+		{
 			String pageCode = MD5Utils.encodeMd5(pd, name);
 //			String dbCode = MD5Utils.encodeMd5(su.getPassword(), su.getLoginName());
-			if (!pageCode.equals(systemUser.getPassword())) {
+			if (!pageCode.equals(s.getPassword())) {
 				iv = new InternalResourceView("/pages/login.jsp");
 				model = new ModelAndView(iv);
 				model.addObject("msg", "用户名或密码错误");
 				model.addObject("msgType", "-1");
 			} else {
-				request.getSession().setAttribute("systemUser", systemUser);
 				model.addObject("loginName",name);
+				request.getSession().setAttribute("systemUser", s);
 			}
 		} else {
 			iv = new InternalResourceView("/pages/login.jsp");
@@ -135,17 +133,17 @@ public class LoginController extends SuperController{
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/getExpressByBatchNumber.light")
-	public ModelAndView  getExpressByBatchNumber(String batchNumber,HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser !=null) {
+	public void  getExpressByBatchNumber(String batchNumber,HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		if (s !=null) {
 			String rows = request.getParameter("rows"); 
 			String page = request.getParameter("page");
 			final int rowSize=Integer.valueOf(rows); 
 			final int pageSize=Integer.valueOf(page);
 			Map<String,String> params = new HashMap<String,String>();
 			params.put("batchNumber", batchNumber);
-			params.put("areaCode", systemUser.getAreaCode());
-			params.put("serviceShopCode", systemUser.getServiceShopCode());
+			params.put("areaCode", s.getAreaCode());
+			params.put("serviceShopCode", s.getServiceShopCode());
 			JSONArray ja = loginServiceInterface.getExpressByBatchNumber(rowSize, pageSize,params);
 			response.setCharacterEncoding("utf-8");          
 			response.setContentType("text/html; charset=utf-8");
@@ -153,69 +151,15 @@ public class LoginController extends SuperController{
 			printWriter.write(ja.toString()); 
 	        printWriter.flush(); 
 	        printWriter.close();
-	        return null;
-		} else {
-			return JumpModelAndView();
-		}
+		} 
 
 	}
-	
-	@ResponseBody
-	@RequestMapping("/pages/system/getExpressInfoList.light")
-	public ModelAndView  getExpressInfoList(String batchNumber,HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser !=null) {
-			String rows = request.getParameter("rows"); 
-			String page = request.getParameter("page");
-			final int rowSize=Integer.valueOf(rows); 
-			final int pageSize=Integer.valueOf(page);
-			Map<String,String> params = new HashMap<String,String>();
-			params.put("batchNumber", batchNumber);
-			params.put("serviceShopCode", systemUser.getServiceShopCode());
-			JSONArray ja = loginServiceInterface.getExpressInfoList(rowSize, pageSize,params);
-			response.setCharacterEncoding("utf-8");          
-			response.setContentType("text/html; charset=utf-8");
-			 PrintWriter printWriter = response.getWriter();
-			printWriter.write(ja.toString()); 
-	        printWriter.flush(); 
-	        printWriter.close();
-	        return null;
-		} else {
-			return JumpModelAndView();
-		}
-	}
-		
-		@ResponseBody
-		@RequestMapping("/pages/system/getInAndOutExpressInfoList.light")
-		public ModelAndView  getInAndOutExpressInfoList(String batchNumber,HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-			SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-			if (systemUser !=null) {
-				String rows = request.getParameter("rows"); 
-				String page = request.getParameter("page");
-				final int rowSize=Integer.valueOf(rows); 
-				final int pageSize=Integer.valueOf(page);
-				Map<String,String> params = new HashMap<String,String>();
-				params.put("batchNumber", batchNumber);
-				params.put("areaCode", systemUser.getAreaCode());
-				JSONArray ja = loginServiceInterface.getInAndOutExpressInfoList(rowSize, pageSize,params);
-				response.setCharacterEncoding("utf-8");          
-				response.setContentType("text/html; charset=utf-8");
-				PrintWriter printWriter = response.getWriter();
-				printWriter.write(ja.toString()); 
-		        printWriter.flush(); 
-		        printWriter.close();
-		        return null;
-			}  else {
-				return JumpModelAndView();
-			}
 
-	}
-	
 	@ResponseBody
 	@RequestMapping("/pages/system/editDataById.light")
-	public ModelAndView  editDataById(String str,HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser !=null) {
+	public void  editDataById(String str,HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		if (s !=null) {
 			String id = request.getParameter("id");
 			String logistics = request.getParameter("logistics");
 			String recipientName = request.getParameter("recipientName");
@@ -234,48 +178,18 @@ public class LoginController extends SuperController{
 			printWriter.write(ja.toString());
 	        printWriter.flush(); 
 	        printWriter.close();
-	        return null;
-		} else {
-			return JumpModelAndView();
-		}
+		} 
 		
 	}
-	
-	@ResponseBody
-	@RequestMapping("/pages/system/deleteCode.light")
-	public ModelAndView  deleteCode(String batchNumber,HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (s !=null) {
-			String id = request.getParameter("id"); 
-			String name = request.getParameter("name");
-			String rows = request.getParameter("rows"); 
-			String page = request.getParameter("page");
-			final int rowSize=Integer.valueOf(rows); 
-			final int pageSize=Integer.valueOf(page);
-			Map<String,String> params = new HashMap<String,String>();
-			params.put("batchNumber", batchNumber);
-			params.put("serviceShopCode", systemUser.getServiceShopCode());
-			JSONArray ja = loginServiceInterface.getExpressInfoList(rowSize, pageSize,params);
-			response.setCharacterEncoding("utf-8");          
-			response.setContentType("text/html; charset=utf-8");
-			 PrintWriter printWriter = response.getWriter();
-			printWriter.write(ja.toString()); 
-	        printWriter.flush(); 
-	        printWriter.close();
-	        return null;
-		} else {
-			return JumpModelAndView();
-		}
-	}
-	
+
 	@ResponseBody
 	@RequestMapping("/pages/system/getBarCode.light")
-	public ModelAndView  getBarCode(String str,HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+	public void  getBarCode(String str,HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		if (s !=null) {
 			String id = request.getParameter("id"); 
-			String name = request.getParameter("name");
-			String webRootPath = "WEB-INF";
+//			String name = request.getParameter("name");
+//			String webRootPath = "WEB-INF";
 			String webPageTemp = "temp";
 			String separator = System.getProperty ("file.separator");//File.separatorChar;
 			separator = separator.replace("\\", "/");
@@ -306,10 +220,7 @@ public class LoginController extends SuperController{
 		        printWriter.close(); 
 		        json = null;
 			}
-	        return null;
-		} else {
-			return JumpModelAndView();
-		}
+		} 
 		
 	}
 	

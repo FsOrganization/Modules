@@ -35,6 +35,8 @@ public class SentExpressInfo implements Serializable{
     private String remark;
     private String res;
     private boolean type;
+    private float price;
+    
 	public Integer getId() {
 		return id;
 	}
@@ -166,6 +168,12 @@ public class SentExpressInfo implements Serializable{
 	}
 	public void setType(boolean type) {
 		this.type = type;
+	}
+	public float getPrice() {
+		return price;
+	}
+	public void setPrice(float  price) {
+		this.price = price;
 	}
 
 	

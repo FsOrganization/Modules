@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -65,7 +64,7 @@ public class SuperController  implements Serializable {
 	}
 	
 	public ModelAndView JumpModelAndView() {
-		InternalResourceView iv = new InternalResourceView("/pages/login.jsp");
+		InternalResourceView iv = new InternalResourceView("/pages/system/login.light");
 		ModelAndView model = new ModelAndView(iv);
 		model = new ModelAndView(iv);
 		model.addObject("msg", "用户名或密码错误");

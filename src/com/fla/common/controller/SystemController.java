@@ -44,7 +44,7 @@ public class SystemController extends SuperController{
 	private LoginDao loginDao;
 	
 //	@Autowired
-//	public SystemUser systemUser;
+//	public SystemUser s;
 	
 	@Autowired
 	private SystemServiceInterface systemServiceInterface;
@@ -58,24 +58,10 @@ public class SystemController extends SuperController{
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/getAreaInfoList.light")
-	public ModelAndView getAreaInfoList(HttpServletRequest request,HttpServletResponse response) {
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
-			return JumpModelAndView();
-		}
-		String rows = request.getParameter("rows"); 
-		String page = request.getParameter("page");
-		int rowSize = 0;
-		int pageSize = 1;
-		if (rows != null ) {
-			rowSize=Integer.valueOf(rows); 
-		}
-		if (page != null ) {
-			pageSize=Integer.valueOf(page);
-		}
-		
+	public ModelAndView getAreaInfoList(Integer page, Integer rows,HttpServletRequest request,HttpServletResponse response) {
+//		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		Map<String,String> params = new HashMap<String,String>();
-		JSONArray jsonArray = systemServiceInterface.getAreaInfoList(rowSize, pageSize, params);
+		JSONArray jsonArray = systemServiceInterface.getAreaInfoList(rows, page, params);
 		PrintWriter printWriter =null;
 		try 
 		{
@@ -95,10 +81,7 @@ public class SystemController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getAreaInfoForSelect.light")
 	public ModelAndView getAreaInfoForSelect(HttpServletRequest request,HttpServletResponse response) {
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
-			return JumpModelAndView();
-		}
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		Map<String,String> params = new HashMap<String,String>();
 		JSONArray jsonArray = systemServiceInterface.getAreaInfoForSelect(params);
 		PrintWriter printWriter =null;
@@ -120,12 +103,29 @@ public class SystemController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getShopInfoForSelect.light")
 	public ModelAndView getShopInfoForSelect(HttpServletRequest request,HttpServletResponse response) {
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
-			return JumpModelAndView();
-		}
 		Map<String,String> params = new HashMap<String,String>();
 		JSONArray jsonArray = systemServiceInterface.getShopInfoForSelect(params);
+		PrintWriter printWriter =null;
+		try 
+		{
+			response.setCharacterEncoding("utf-8");          
+			response.setContentType("text/html; charset=utf-8");
+            printWriter = response.getWriter();
+            printWriter.write(jsonArray.toString());
+		} catch(IOException e) {
+			
+		} finally { 
+			printWriter.flush();
+			printWriter.close();
+		}
+		return null;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/pages/system/getShopInfoForSelectForWechat.light")
+	public ModelAndView getShopInfoForSelectForWechat(HttpServletRequest request,HttpServletResponse response) {
+		Map<String,String> params = new HashMap<String,String>();
+		JSONArray jsonArray = systemServiceInterface.getSpecialShopInfoForSelect(params);
 		PrintWriter printWriter =null;
 		try 
 		{
@@ -146,10 +146,6 @@ public class SystemController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getShopInfoList.light")
 	public ModelAndView getShopInfoList(HttpServletRequest request,HttpServletResponse response){
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
-			return JumpModelAndView();
-		}
 		String rows = request.getParameter("rows"); 
 		String page = request.getParameter("page");
 		int rowSize = 0;
@@ -181,10 +177,6 @@ public class SystemController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getUserInfoList.light")
 	public ModelAndView getUserInfoList(HttpServletRequest request,HttpServletResponse response){
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
-			return JumpModelAndView();
-		}
 		String rows = request.getParameter("rows"); 
 		String page = request.getParameter("page");
 		int rowSize = 0;
@@ -217,10 +209,7 @@ public class SystemController extends SuperController{
 	@RequestMapping("/pages/system/addArea.light")
 	public ModelAndView addArea(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
 		JSONObject json = new JSONObject();
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
-			return JumpModelAndView();
-		}
+//		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		SystemArea area=null;
 		try 
 		{
@@ -251,10 +240,6 @@ public class SystemController extends SuperController{
 	@RequestMapping("/pages/system/modifyArea.light")
 	public ModelAndView modifyArea(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
 		JSONObject json = new JSONObject();
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
-			return JumpModelAndView();
-		}
 		SystemArea area=null;
 		try 
 		{
@@ -283,10 +268,6 @@ public class SystemController extends SuperController{
 	@RequestMapping("/pages/system/addShop.light")
 	public ModelAndView addShop(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
 		JSONObject json = new JSONObject();
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
-			return JumpModelAndView();
-		}
 		SystemShop shop=null;
 		try 
 		{
@@ -315,10 +296,6 @@ public class SystemController extends SuperController{
 	@RequestMapping("/pages/system/modifyShop.light")
 	public ModelAndView modifyShop(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
 		JSONObject json = new JSONObject();
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
-			return JumpModelAndView();
-		}
 		SystemShop shop=null;
 		try 
 		{
@@ -347,10 +324,6 @@ public class SystemController extends SuperController{
 	@RequestMapping("/pages/system/addUser.light")
 	public ModelAndView addUser(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
 		JSONObject json = new JSONObject();
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
-			return JumpModelAndView();
-		}
 		SystemUser su=null;
 		try 
 		{
@@ -381,10 +354,6 @@ public class SystemController extends SuperController{
 	@RequestMapping("/pages/system/modifyUser.light")
 	public ModelAndView modifyUser(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
 		JSONObject json = new JSONObject();
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
-			return JumpModelAndView();
-		}
 		SystemUser user=null;
 		try 
 		{
@@ -546,8 +515,8 @@ public class SystemController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/queryAreaInfos.light")
 	public ModelAndView queryAreaInfos(String queryParams,HttpServletRequest request,HttpServletResponse response){
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		if (s ==null) {
 			return JumpModelAndView();
 		}
 		JSONArray jsonArray = systemServiceInterface.queryAreaInfos(queryParams);
@@ -570,8 +539,8 @@ public class SystemController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/queryShopInfos.light")
 	public ModelAndView queryShopInfos(String queryParams,HttpServletRequest request,HttpServletResponse response){
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		if (s ==null) {
 			return JumpModelAndView();
 		}
 		JSONArray jsonArray = systemServiceInterface.queryShopInfos(queryParams);
@@ -594,8 +563,8 @@ public class SystemController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/queryUserInfos.light")
 	public ModelAndView queryUserInfos(String queryParams,HttpServletRequest request,HttpServletResponse response){
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		if (s ==null) {
 			return JumpModelAndView();
 		}
 		JSONArray jsonArray = systemServiceInterface.queryUserInfos(queryParams);
@@ -618,8 +587,8 @@ public class SystemController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getConfigInfoList.light")
 	public ModelAndView getConfigInfoList(HttpServletRequest request,HttpServletResponse response){
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		if (s ==null) {
 			return JumpModelAndView();
 		}
 		String rows = request.getParameter("rows"); 
@@ -653,11 +622,8 @@ public class SystemController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getLocationCodeByExpressType.light")
 	public ModelAndView getLocationCodeByExpressType(String type, HttpServletRequest request,HttpServletResponse response){
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
-			return JumpModelAndView();
-		}
-		String shopCode = systemUser.getServiceShopCode();
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		String shopCode = s.getServiceShopCode();
 		JSONObject json = systemServiceInterface.getLocationCodeByExpressType(type,shopCode);
 		PrintWriter printWriter =null;
 		try 
@@ -681,14 +647,14 @@ public class SystemController extends SuperController{
 	@RequestMapping("/pages/system/getExpressServiceProviderList.light")
 	public ModelAndView getExpressServiceProviderList(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
 		PrintWriter printWriter = null;
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		if (s ==null) {
 			return JumpModelAndView();
 		}
 		try 
 		{
-			String areaCode = systemUser.getAreaCode();
-			String shopCode = systemUser.getServiceShopCode();
+			String areaCode = s.getAreaCode();
+			String shopCode = s.getServiceShopCode();
 			JSONArray jsonArray = systemServiceInterface.getExpressServiceProviderList(areaCode,shopCode);
 			response.setCharacterEncoding("utf-8");          
 			response.setContentType("text/html; charset=utf-8");
@@ -705,8 +671,8 @@ public class SystemController extends SuperController{
 	@RequestMapping("/pages/system/addExpressServiceProvider.light")
 	public ModelAndView addExpressServiceProvider(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
 		JSONObject json = new JSONObject();
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		if (s ==null) {
 			return JumpModelAndView();
 		}
 		ExpressServiceProvider expressServiceProvider=null;
@@ -737,8 +703,8 @@ public class SystemController extends SuperController{
 	@RequestMapping("/pages/system/modifyExpressServiceProvider.light")
 	public ModelAndView modifyExpressServiceProvider(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
 		JSONObject json = new JSONObject();
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		if (s ==null) {
 			return JumpModelAndView();
 		}
 		ExpressServiceProvider esp=null;

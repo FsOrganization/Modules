@@ -123,6 +123,27 @@ public class SystemService implements SystemServiceInterface{
 	}
 	
 	@Override
+	public JSONArray getSpecialShopInfoForSelect(Map<String, String> params) {
+		JSONArray ja = new JSONArray();
+		List<Map<String, Object>> mapList;
+		try 
+		{
+			mapList = systemDao.getShopInfoList(params);
+			if (mapList != null && mapList.size() != 0) {
+				for (Map<String, Object> map : mapList) {
+					JSONObject json = new JSONObject();
+					json.put("value", map.get("SHOP_CODE"));
+					json.put("text", map.get("NAME"));
+					ja.add(json);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return ja;
+	}
+	
+	@Override
 	public JSONArray getShopInfoList(int rowSize, int pageSize,Map<String, String> params) {
 		JSONArray array = new JSONArray();
 		try 
@@ -358,7 +379,7 @@ public class SystemService implements SystemServiceInterface{
 	}
 
 	@Override
-	public JSONObject getLocationCodeByExpressType(String type,String shopCode) {
+	public synchronized JSONObject getLocationCodeByExpressType(String type,String shopCode) {
 		Map<String, Object> m =null;
 		try 
 		{
@@ -372,8 +393,7 @@ public class SystemService implements SystemServiceInterface{
 	}
 
 	@Override
-	public JSONArray getExpressServiceProviderList(String areaCode,
-			String shopCode) throws SQLException {
+	public JSONArray getExpressServiceProviderList(String areaCode,String shopCode) throws SQLException {
 		List<Map<String, Object>> rowMap = systemDao.getExpressServiceProviderList(areaCode, shopCode);
 		JSONArray array = new JSONArray();
 		if (rowMap != null) {
@@ -396,8 +416,7 @@ public class SystemService implements SystemServiceInterface{
 	}
 
 	@Override
-	public JSONObject modifyExpressServiceProvider(
-			ExpressServiceProvider esp) throws SQLException {
+	public JSONObject modifyExpressServiceProvider(ExpressServiceProvider esp) throws SQLException {
 		try 
 		{
 			systemDao.modifyExpressServiceProvider(esp);
@@ -406,6 +425,61 @@ public class SystemService implements SystemServiceInterface{
 		}
 		return null;
 	}
+
+	@Override
+	public JSONArray getExpressStatisticalArea(String areaCode)
+			throws SQLException {
+		JSONArray ja = new JSONArray();
+		List<Map<String, Object>> rowMap = systemDao.getExpressStatisticalArea(areaCode);
+		if (rowMap != null && rowMap.size() != 0) {
+			for (Map<String, Object> map : rowMap) {
+				JSONObject json = new JSONObject();
+				json.put("id", map.get("ID"));
+				json.put("text", map.get("NAME"));
+				json.put("code", map.get("CODE"));
+				json.put("type", "A");
+				JSONArray cj = this.getAreaChildrenShops(map.get("CODE").toString());
+				json.put("children", cj);
+				ja.add(json);
+			}
+		}
+		return ja;
+	}
 	
+	public JSONArray getAreaChildrenShops(String areaCode) throws SQLException {
+		JSONArray ja = new JSONArray();
+		List<Map<String, Object>> rowMap = systemDao.getAreaChildrenShops(areaCode);
+		if (rowMap != null && rowMap.size() != 0) {
+			for (Map<String, Object> map : rowMap) {
+				JSONObject json = new JSONObject();
+				json.put("id", map.get("ID"));
+				json.put("text", map.get("NAME"));
+				json.put("code", map.get("SHOP_CODE"));
+				json.put("type", "S");
+				ja.add(json);
+			}
+		}
+		return ja;
+	}
+
+	@Override
+	public JSONArray getShopNumberOfPeopleGroupCount(String type,String code) throws SQLException {
+		List<Map<String, Object>> rowMap = systemDao.getShopNumberOfPeopleGroupCount(type, code);
+		JSONArray array = new JSONArray();
+		if (rowMap != null) {
+			makeJSONArray(rowMap, array);
+		}
+		return array;
+	}
+	
+	@Override
+	public JSONArray getShopInAndSendExpressGroupCount(String type,String code,String startDate,String endDate) throws SQLException {
+		List<Map<String, Object>> rowMap = systemDao.getShopInAndSendExpressGroupCount(type, code,startDate,endDate);
+		JSONArray array = new JSONArray();
+		if (rowMap != null) {
+			makeJSONArray(rowMap, array);
+		}
+		return array;
+	}
 	
 }

@@ -1,9 +1,7 @@
 package com.fla.common.controller;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -24,6 +22,8 @@ import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import sun.misc.BASE64Encoder;
 
 import com.fla.common.base.SuperController;
 import com.fla.common.dao.LoginDao;
@@ -61,35 +61,29 @@ public class PageToolsController extends SuperController{
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/getVerificationCode.light")
-	public void getVerificationCode(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
-		String webPageTemp = "temp";
-		String separator = System.getProperty ("file.separator");//File.separatorChar;
-		separator = separator.replace("\\", "/");
- 		File file = null;
+	public synchronized void getVerificationCode(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
 		PrintWriter printWriter = null;
 		JSONObject json = new JSONObject();
 		String code = null;
 		try 
 		{
 			final Cage cage = new GCage();
-        	String tempPath = request.getSession().getServletContext().getRealPath(separator.toString())+ separator+webPageTemp;
-        	file = new File(tempPath+separator+System.currentTimeMillis()+"_temp.png");
-    		final OutputStream os = new FileOutputStream(file, false);
-    		synchronized (os) 
+    		synchronized (request) 
     		{
 				code = getVerificationCode(cage, code);
 			}
 			code = code.substring(0, 6);
-			cage.draw(code, os);
+			BASE64Encoder encoder = new BASE64Encoder();
+			byte[] ddd= cage.draw(code);
             json.put("TYPE", "0");
             json.put("CODE", code);
-            json.put("PATH", separator+webPageTemp+separator+file.getName());
+            encoder.encode(ddd);// 返回Base64编码过的字节数组字符串
+            json.put("PATH", encoder.encode(ddd));
             printWriter = response.getWriter();
             printWriter.write(json.toString());
+		} catch(Exception e) {
+			e.printStackTrace();
 		} finally {
-			if (file.isFile() && file.exists()) {
-				// file.delete();
-			}
 			printWriter.flush();
 			printWriter.close();
 			json = null;
@@ -100,8 +94,8 @@ public class PageToolsController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getNewAreaCode.light")
 	public ModelAndView getNewAreaCode(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		if (s ==null) {
 			return JumpModelAndView();
 		}
 		JSONObject jo = systemServiceInterface.getNewAreaCode(null);
@@ -117,8 +111,8 @@ public class PageToolsController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getNewShopCode.light")
 	public ModelAndView getNewShopCode(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		if (s ==null) {
 			return JumpModelAndView();
 		}
 		JSONObject jo = systemServiceInterface.getNewShopCode(null);
@@ -134,8 +128,8 @@ public class PageToolsController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/checkLoginNameUniqueness.light")
 	public ModelAndView checkLoginNameUniqueness(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		if (s ==null) {
 			return JumpModelAndView();
 		}
 		String name = request.getParameter("loginName");
@@ -158,8 +152,8 @@ public class PageToolsController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getToolTipMsgById.light")
 	public ModelAndView getToolTipMsgById(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		if (s ==null) {
 			return JumpModelAndView();
 		}
 		PrintWriter printWriter = null;
@@ -185,16 +179,83 @@ public class PageToolsController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getExpressServiceProviderInfo.light")
 	public ModelAndView getExpressServiceProviderInfo(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		if (s ==null) {
 			return JumpModelAndView();
 		}
 		PrintWriter printWriter = null;
 		String areaCode = null;
-		if (systemUser != null) {
-			areaCode = systemUser.getAreaCode();
+		if (s != null) {
+			areaCode = s.getAreaCode();
 		}
 		JSONArray jsonArray = loginServiceInterface.getExpressServiceProviderInfo(areaCode);
+		try 
+		{
+			response.setCharacterEncoding("utf-8");          
+			response.setContentType("text/html; charset=utf-8");
+            printWriter = response.getWriter();
+            printWriter.write(jsonArray.toString());
+		} finally {
+			printWriter.flush();
+			printWriter.close();
+		}
+		return null;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/pages/system/getExpressStatisticalArea.light")
+	public ModelAndView getExpressStatisticalArea(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		PrintWriter printWriter = null;
+		String areaCode = null;
+		if (s != null) {
+			areaCode = s.getAreaCode();
+		}
+		JSONArray jsonArray = systemServiceInterface.getExpressStatisticalArea(areaCode);
+		try 
+		{
+			response.setCharacterEncoding("utf-8");          
+			response.setContentType("text/html; charset=utf-8");
+            printWriter = response.getWriter();
+            printWriter.write(jsonArray.toString());
+		} finally {
+			printWriter.flush();
+			printWriter.close();
+		}
+		return null;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/pages/system/getShopNumberOfPeopleGroupCount.light")
+	public ModelAndView getShopNumberOfPeopleGroupCount(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		PrintWriter printWriter = null;
+		String type = request.getParameter("type");
+		String code = request.getParameter("code");
+		JSONArray jsonArray = systemServiceInterface.getShopNumberOfPeopleGroupCount(type,code);
+		try 
+		{
+			response.setCharacterEncoding("utf-8");          
+			response.setContentType("text/html; charset=utf-8");
+            printWriter = response.getWriter();
+            printWriter.write(jsonArray.toString());
+		} finally {
+			printWriter.flush();
+			printWriter.close();
+		}
+		return null;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/pages/system/getShopInAndSendExpressGroupCount.light")
+	public ModelAndView getShopInAndSendExpressGroupCount(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		PrintWriter printWriter = null;
+		String type = request.getParameter("type");
+		String code = request.getParameter("code");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+		JSONArray jsonArray = systemServiceInterface.getShopInAndSendExpressGroupCount(type,code,startDate,endDate);
 		try 
 		{
 			response.setCharacterEncoding("utf-8");          
@@ -212,13 +273,10 @@ public class PageToolsController extends SuperController{
 	@RequestMapping("/pages/system/initExpressServiceProviders.light")
 	public ModelAndView initExpressServiceProviders(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
 		PrintWriter printWriter = null;
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-//		if (systemUser ==null) {
-//			return JumpModelAndView();
-//		}
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		String areaCode = null;
-		if (systemUser != null) {
-			areaCode = systemUser.getAreaCode();
+		if (s != null) {
+			areaCode = s.getAreaCode();
 		}
 		JSONArray jsonArray = loginServiceInterface.getExpressServiceProviderInfo(areaCode);
 		try 
@@ -234,18 +292,23 @@ public class PageToolsController extends SuperController{
 		return null;
 	}
 	
+	/**
+	 * 页面客户下拉列表
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws SQLException
+	 * @throws IOException
+	 */
 	@ResponseBody
 	@RequestMapping("/pages/system/getCustomeInfoList.light")
 	public ModelAndView getCustomeInfoList(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
 		PrintWriter printWriter = null;
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
-			return JumpModelAndView();
-		}
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		try 
 		{
-			String areaCode = systemUser.getAreaCode();
-			String shopCode = systemUser.getServiceShopCode();
+			String areaCode = s.getAreaCode();
+			String shopCode = s.getServiceShopCode();
 			JSONArray jsonArray = loginServiceInterface.getCustomeInfoList(areaCode,shopCode);
 			response.setCharacterEncoding("utf-8");          
 			response.setContentType("text/html; charset=utf-8");
@@ -261,8 +324,8 @@ public class PageToolsController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getTemporaryStorage.light")
 	public ModelAndView getTemporaryStorage(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		if (s ==null) {
 			return JumpModelAndView();
 		}
 		JSONObject jo = loginServiceInterface.getTemporaryStorage();
@@ -279,8 +342,8 @@ public class PageToolsController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getOutStorehouseBatchNumber.light")
 	public ModelAndView getOutStorehouseBatchNumber(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		if (s ==null) {
 			return JumpModelAndView();
 		}
 		JSONObject jo = loginServiceInterface.getOutStorehouseBatchNumber();
@@ -296,8 +359,8 @@ public class PageToolsController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getSignatureByBatchNumber.light")
 	public ModelAndView getSignatureByBatchNumber(HttpServletRequest request,HttpServletResponse response, String batchNumber, String type)  throws SQLException, IOException {
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (systemUser ==null) {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		if (s ==null) {
 			return JumpModelAndView();
 		}
 		JSONObject json = null;
@@ -315,10 +378,7 @@ public class PageToolsController extends SuperController{
 	@RequestMapping("/pages/system/downExpressInfoByFilterConditions.light")
 	public ModelAndView downExpressInfoByFilterConditions(
 			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-//		if (systemUser == null) {
-//			return JumpModelAndView();
-//		}
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		String endDate = request.getParameter("down_endDate");
 		String startDate = request.getParameter("down_startDate");
 		Map<String, String> params = new HashMap<String, String>();
@@ -326,7 +386,7 @@ public class PageToolsController extends SuperController{
 		params.put("startDate", startDate);
 		params.put("queryParams", request.getParameter("down_queryParams"));
 		params.put("expressService",request.getParameter("down_expressService"));
-		params.put("serviceShopCode", systemUser.getServiceShopCode());
+		params.put("serviceShopCode", s.getServiceShopCode());
 		JSONArray ja = loginServiceInterface.exportExpressInfoByFilterConditions(params);
 		String fileName = "快递导出模板.xlsx";
 		String name = getExcelPath(request, fileName);
@@ -338,5 +398,44 @@ public class PageToolsController extends SuperController{
 		return null;
 
 	}
+	
+	@ResponseBody
+	@RequestMapping("/pages/system/downShopInAndSendGroupCount.light")
+	public ModelAndView downShopInAndSendGroupCount(
+			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		String type = request.getParameter("down_type");
+		String code = request.getParameter("down_code");
+		String startDate = request.getParameter("down_startDate");
+		String endDate = request.getParameter("down_endDate");
+		JSONArray jsonArray = systemServiceInterface.getShopInAndSendExpressGroupCount(type,code,startDate,endDate);
+		String fileName = "网点收寄件统计.xlsx";
+		String name = getExcelPath(request, fileName);
+		File file = new File(name);
+		File model = new File(getExcelModelPath(request, fileName));
+		ExcelExportTools eet = new ExcelExportTools();
+		eet.exportQueryDataWithInAndSend(startDate, endDate, model, file, jsonArray, "TITLE");
+		downFile(request, response, file);
+		return null;
 
+	}
+	
+	@ResponseBody
+	@RequestMapping("/pages/system/downShopCustomerCount.light")
+	public ModelAndView downShopCustomerCount(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		String type = request.getParameter("down_type");
+		String code = request.getParameter("down_code");
+		JSONArray jsonArray = systemServiceInterface.getShopNumberOfPeopleGroupCount(type, code);
+		String fileName = "网点人数统计表.xlsx";
+		String name = getExcelPath(request, fileName);
+		File file = new File(name);
+		File model = new File(getExcelModelPath(request, fileName));
+		ExcelExportTools eet = new ExcelExportTools();
+		eet.exportQueryDataWithCustomerCount(model, file, jsonArray, "TITLE");
+		downFile(request, response, file);
+		return null;
+
+	}
+	
 }

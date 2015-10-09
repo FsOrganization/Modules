@@ -8,6 +8,7 @@ import java.util.Map;
 import com.fla.common.entity.CustomerInfo;
 import com.fla.common.entity.ExpressInfo;
 import com.fla.common.entity.Signature;
+import com.fla.common.util.Pagination;
 
 public interface LoginDaoInterface {
 	
@@ -29,7 +30,7 @@ public interface LoginDaoInterface {
 		 * @return
 		 * @throws SQLException
 		 */
-		public List<Map<String, Object>> getInExpressInfoList(final int rowSize, final int pageSize, Map<String,String> params) throws SQLException;
+		public Pagination getInExpressInfoList(final int rowSize, final int pageSize, Map<String,String> params) throws SQLException;
 		
 		/**
 		 * 获取已出库快件信息
@@ -67,7 +68,7 @@ public interface LoginDaoInterface {
 		 * @return
 		 * @throws SQLException
 		 */
-		public List<Map<String, Object>> getNotOutExpressInfoByFilterConditions(final int rowSize, final int pageSize, Map<String,String> params) throws SQLException;
+		public Pagination getNotOutExpressInfoByFilterConditions(final int rowSize, final int pageSize, Map<String,String> params);
 		
 		public List<Map<String, Object>> getSimplyConstructedNotOutExpressInfoByFilter(int rowSize, int pageSize, Map<String, String> params) throws SQLException ;
 		
@@ -182,5 +183,7 @@ public interface LoginDaoInterface {
 		 * @throws Exception
 		 */
 		public Signature getSignatureByBatchNumber(String batchNumber, String type) throws Exception;
+
+		public Pagination getExpressInfoPagination(Integer rowSize, Integer pageSize, Map<String, String> params)throws SQLException;
 		
 	}

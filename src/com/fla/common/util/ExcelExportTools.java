@@ -6,9 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -117,43 +115,89 @@ public class ExcelExportTools extends SuperController{
 		workBook.close();
 	}
 	
-//	private String transformTitle(String expressService) {
-//		try 
-//		{
-//			JSONArray jsonArray = getExpressServiceProviderInfo(null);
-//			for (Object obj : jsonArray) {
-//				JSONObject json = JSONObject.fromObject(obj);
-//				Object name = json.get(expressService);
-//				if (!BaseUtil.checkAllNull(name)) {
-//					return name.toString();
-//				}
-//			}
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		return null;
-//	}
+	/**
+	 * 收寄件统计导出
+	 * @param startDate
+	 * @param endDate
+	 * @param model
+	 * @param file
+	 * @param ja
+	 * @param exportTitle
+	 * @throws IOException
+	 */
+	public   void exportQueryDataWithInAndSend(String startDate,String endDate, File model,File file,JSONArray ja,String exportTitle) throws IOException {
+		copyFile(model, file);
+		InputStream input = new FileInputStream(file);
+		Workbook workBook = new XSSFWorkbook(input); 
+		Sheet sheet = workBook.getSheet("sheet1");
+		Row row;
+		Cell cell;
+		CellStyle style = workBook.createCellStyle();// 创建样式对象
+		Font font = workBook.createFont();// 创建字体对象
+		setStyle(font,style);
+		row = sheet.createRow(0);
+		cell = row.createCell(0);
+		cell.setCellStyle(style);
+		cell.setCellValue(exportTitle);
+		
+		int rowIndex = 2;
+		for (int i = 0; i < ja.size(); i++) {
+			row = sheet.createRow(rowIndex++);
+			JSONObject json = ja.getJSONObject(i);
+			String name = json.get("NAME").toString();
+			cell = row.createCell(0);
+			cell.setCellValue(name);
+			String icount = json.get("ICOUNT").toString();
+			cell = row.createCell(1);
+			cell.setCellValue(icount);
+			String scount = json.get("SCOUNT").toString();
+			cell = row.createCell(2);
+			cell.setCellValue(scount);
+			String total = json.get("TOTAL").toString();
+			cell = row.createCell(3);
+			cell.setCellValue(total);
+		}
+
+		FileOutputStream os = new FileOutputStream(file);
+		workBook.write(os);
+		os.close();
+		input.close();
+		workBook.close();
+	}
 	
-//	public JSONArray getExpressServiceProviderInfo(String areaCode) throws SQLException {
-//		JSONArray ja = new JSONArray();
-//		JSONObject jsonEmpty = new JSONObject();
-//		jsonEmpty.put("id", "");
-//		jsonEmpty.put("text", "请选择快递服务商");
-//		jsonEmpty.put("desc", "请选择快递服务商");
-//		ja.add(jsonEmpty);
-//		SequenceManager sm = SequenceManager.getInstance();
-//		List<Map<String, Object>> rowMap = sm.getExpressServiceProviderInfo(areaCode);
-//		if (rowMap != null && rowMap.size() != 0) {
-//			for (Map<String, Object> map : rowMap) {
-//				JSONObject json = new JSONObject();
-//				json.put("id", map.get("ID"));
-//				json.put("text", map.get("NAME"));
-//				json.put("desc", map.get("NAME")+","+map.get("REMARK"));
-//				ja.add(json);
-//			}
-//		}
-//		return ja;
-//	}
+	public   void exportQueryDataWithCustomerCount(File model,File file,JSONArray ja,String exportTitle) throws IOException {
+		copyFile(model, file);
+		InputStream input = new FileInputStream(file);
+		Workbook workBook = new XSSFWorkbook(input); 
+		Sheet sheet = workBook.getSheet("sheet1");
+		Row row;
+		Cell cell;
+		CellStyle style = workBook.createCellStyle();// 创建样式对象
+		Font font = workBook.createFont();// 创建字体对象
+		setStyle(font,style);
+		row = sheet.createRow(0);
+		cell = row.createCell(0);
+		cell.setCellStyle(style);
+		cell.setCellValue(exportTitle);
+		
+		int rowIndex = 2;
+		for (int i = 0; i < ja.size(); i++) {
+			row = sheet.createRow(rowIndex++);
+			JSONObject json = ja.getJSONObject(i);
+			String name = json.get("NAME").toString();
+			cell = row.createCell(0);
+			cell.setCellValue(name);
+			String count = json.get("COUNT").toString();
+			cell = row.createCell(1);
+			cell.setCellValue(count);
+		}
+
+		FileOutputStream os = new FileOutputStream(file);
+		workBook.write(os);
+		os.close();
+		input.close();
+		workBook.close();
+	}
 	
 	public static void removeRow(Sheet sheet, int rowIndex) {
 		int lastRowNum = sheet.getLastRowNum();

@@ -5,13 +5,16 @@ import java.util.List;
 import java.util.Map;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fla.common.dao.interfaces.CustomerDaoInterface;
+import com.fla.common.entity.CustomerInfo;
 import com.fla.common.service.interfaces.CustomerServiceInterface;
+import com.fla.common.util.Pagination;
 import com.fla.common.util.ResultSetUtils;
 
 @Service
@@ -25,20 +28,67 @@ public class CustomerService implements CustomerServiceInterface{
 	}
 	
 	@Override
-	public JSONArray getCustomerList(int rowSize, int pageSize,Map<String, String> params) {
-		JSONArray array = new JSONArray();
+	public Pagination getCustomerList(int rowSize, int pageSize,Map<String, String> params) {
+		Pagination pageData = null;
 		try 
 		{
-			List<Map<String, Object>> mapList = customerDao.getCustomerList(rowSize, pageSize, params);
-			if (mapList !=null) 
-			{
-				ResultSetUtils.makeJSONArray(mapList, array);
-			}
+			pageData = customerDao.getCustomerList(rowSize, pageSize, params);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return array;
+		return pageData;
 	}
+
+	@Override
+	public JSONObject modifyCustomerInfo(CustomerInfo customer) throws SQLException {
+		try 
+		{
+			customerDao.modifyCustomerInfo(customer);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@Override
+	public JSONObject registerCustomerByOpenId(CustomerInfo customer) throws SQLException {
+		try 
+		{
+			String areaCode = customerDao.getAreaCodeByShopCode(customer.getShopCode());
+			customer.setAreaCode(areaCode);
+			customerDao.registerCustomerByOpenId(customer);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public JSONObject checkWechatOpenId(Map<String, String> params)
+			throws SQLException {
+		JSONObject j = null;
+		try 
+		{
+			j = customerDao.checkWechatOpenId(params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return j;
+	}
+
+	
+	@Override
+	public JSONObject updateCustomerGender(String phoneNumber, String sex) {
+		try 
+		{
+			customerDao.updateCustomerGender(phoneNumber,sex);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
 	
 	
 }

@@ -23,6 +23,7 @@ import com.fla.common.entity.SystemUser;
 import com.fla.common.enums.Msg;
 import com.fla.common.service.interfaces.LoginServiceInterface;
 import com.fla.common.util.FlaJsonValueProcessor;
+import com.fla.common.util.Pagination;
 
 @Service
 @Transactional
@@ -34,28 +35,9 @@ public class LoginService implements LoginServiceInterface{
 	public LoginService() {
 	}
 
-	public JSONArray getExpressInfoList(final int rowSize, final int pageSize,Map<String,String> params) throws SQLException {
-		List<Map<String, Object>> inRowMap = loginDao.getInExpressInfoList(rowSize, pageSize,params);
-		JSONArray inJa = new JSONArray();
-		if (inRowMap !=null) {
-			makeJSONArray(inRowMap, inJa);
-		}
-		return inJa;
-	}
-	
-	public JSONArray getInAndOutExpressInfoList(final int rowSize, final int pageSize,Map<String,String> params) throws SQLException {
-		List<Map<String, Object>> inRowMap = loginDao.getInExpressInfoList(rowSize, pageSize,params);
-		List<Map<String, Object>> outRowMap = loginDao.getOutExpressInfoList(rowSize, pageSize,params);
-		JSONArray inJa = new JSONArray();
-		JSONArray outJa = new JSONArray();
-		if (inRowMap !=null) {
-			makeJSONArray(inRowMap, inJa);
-		}
-		if (outRowMap !=null) {
-			makeJSONArray(outRowMap, outJa);
-		}
-		inJa.addAll(outJa);
-		return inJa;
+	public Pagination getExpressInfoList(final int rowSize, final int pageSize,Map<String,String> params) throws SQLException {
+		Pagination rowPage = loginDao.getInExpressInfoList(rowSize, pageSize,params);
+		return rowPage;
 	}
 	
 	@Override
@@ -228,6 +210,14 @@ public class LoginService implements LoginServiceInterface{
 	}
 	
 	@Override
+	public Pagination getExpressInfoPagination(int rowSize,	int pageSize, Map<String, String> params) throws SQLException {
+		Pagination rowMap = loginDao.getExpressInfoPagination(rowSize, pageSize,params);
+		return rowMap;
+	}
+	
+	
+	
+	@Override
 	public JSONArray exportExpressInfoByFilterConditions(Map<String, String> params) throws SQLException {
 		List<Map<String, Object>> rowMap = loginDao.exportExpressInfoByFilterConditions(params);
 		JSONArray ja = new JSONArray();
@@ -238,13 +228,9 @@ public class LoginService implements LoginServiceInterface{
 	}
 	
 	@Override
-	public JSONArray getNotOutExpressInfoByFilterConditions(int rowSize,int pageSize, Map<String, String> params) throws SQLException {
-		List<Map<String, Object>> rowMap = loginDao.getNotOutExpressInfoByFilterConditions(rowSize, pageSize,params);
-		JSONArray ja = new JSONArray();
-		if (rowMap !=null) {
-			makeJSONArray(rowMap, ja);
-		}
-		return ja;
+	public Pagination  getNotOutExpressInfoByFilterConditions(int rowSize,int pageSize, Map<String, String> params) throws SQLException {
+		Pagination rowPage = loginDao.getNotOutExpressInfoByFilterConditions(rowSize, pageSize,params);
+		return rowPage;
 	}
 	
 	@Override

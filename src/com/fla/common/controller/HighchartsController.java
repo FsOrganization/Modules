@@ -59,7 +59,7 @@ public class HighchartsController extends SuperController{
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/getHighchartsControllerFilter.light")
-	public void  getNotOutExpressInfoByFilterConditions(String queryParams,int tag,
+	public void  getHighchartsControllerFilter(String queryParams,int tag,
 			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 //		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
 		if (tag == 1) {

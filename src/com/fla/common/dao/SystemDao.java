@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,7 @@ import com.fla.common.entity.ExpressServiceProvider;
 import com.fla.common.entity.SystemArea;
 import com.fla.common.entity.SystemShop;
 import com.fla.common.entity.SystemUser;
+import com.fla.common.util.DateUtil;
 import com.fla.common.util.SequenceManager;
 import com.fla.common.util.connection.ConnectionManager;
 
@@ -340,8 +343,6 @@ public class SystemDao implements SystemDaoInterface {
 		con = connectionManager.getConnection();
 		List<String> keys = new ArrayList<String>(4);
 		keys.add("seq_locationCodeByExpressType_S");
-//		keys.add("seq_locationCodeByExpressType_M");
-//		keys.add("seq_locationCodeByExpressType_D");
 		keys.add("seq_locationCodeByExpressType_X");
 		
 		String insertSQL = "INSERT INTO sequence(NAME, CURRENT_VALUE, INCREMENT, MODULE, CYCLE, MAX_VALUE, SHOP_CODE) VALUES(?, ?, ?, ?, ?, ?, ?)";
@@ -677,17 +678,19 @@ public class SystemDao implements SystemDaoInterface {
 	}
 
 	@Override
-	public Map<String, Object> getLocationCodeByExpressType(String type, String shopCode)
+	public synchronized Map<String, Object> getLocationCodeByExpressType(String type, String shopCode)
 			throws SQLException {
 		SequenceManager sm = SequenceManager.getInstance();
 		Integer temporaryId = null;
 		Connection con = null;
 		Map<String, Object> v = new HashMap<String, Object>();
 		con = connectionManager.getConnection();// jdbcTemplate.getDataSource().getConnection();
-//		temporaryId = sm.getTemporaryStorage(con, "seq_locationCodeByExpressType_"+type,shopCode);
 		do 
 		{
 			temporaryId = sm.getTemporaryStorage(con, "seq_locationCodeByExpressType_"+type,shopCode);
+			if (temporaryId==0) {
+				break;
+			}
 		} while (this.checkLocationCode(type+StringUtils.leftPad(temporaryId.toString(), 3, "0"), shopCode));
 		String newShopCode = temporaryId.toString();
 		String value = StringUtils.leftPad(newShopCode, 3, "0");
@@ -803,6 +806,182 @@ public class SystemDao implements SystemDaoInterface {
 			connectionManager.closeConnection(con);
 		}
 		
+	}
+
+	@Override
+	public List<Map<String, Object>> getExpressStatisticalArea(String areaCode) {
+		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement st = null;
+		List<Map<String, Object>> t = null;
+		try 
+		{
+			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
+			st = con.prepareStatement("select  * from tf_area_info");
+//			st.setString(1, areaCode);
+			rs = st.executeQuery();
+			t = checkResultSet(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			connectionManager.closeResultSet(rs);
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+		return t;
+	}
+
+	@Override
+	public List<Map<String, Object>> getAreaChildrenShops(String areaCode) throws SQLException {
+		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement st = null;
+		List<Map<String, Object>> t = null;
+		try 
+		{
+			con = connectionManager.getConnection();
+			st = con.prepareStatement("select  * from tf_shop_info a where a.AREA_CODE = ?");
+			st.setString(1, areaCode);
+			rs = st.executeQuery();
+			t = checkResultSet(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			connectionManager.closeResultSet(rs);
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+		return t;
+	}
+
+	@Override
+	public List<Map<String, Object>> getShopNumberOfPeopleGroupCount(String type,String code) throws SQLException {
+		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement st = null;
+		List<Map<String, Object>> t = null;
+		String sql = new String();
+		String sqlArea ="select b.name,count(1) COUNT from tf_customer_info a "+
+				"	left join tf_shop_info b on a.SERVICE_SHOP_CODE = b.shop_code  where a.AREA_CODE =?"+ 
+				" group by SERVICE_SHOP_CODE";
+		
+		String sqlShop ="select b.name,count(1) COUNT from tf_customer_info a "+
+				"	left join tf_shop_info b on a.SERVICE_SHOP_CODE = b.shop_code"+
+				"	where SERVICE_SHOP_CODE = ?"+
+				"	group by SERVICE_SHOP_CODE";
+		if (type.equals("A")) {
+			sql = sqlArea;
+		} else  if (type.equals("S")){
+			sql = sqlShop;
+		} else {
+			return null;
+		}
+		
+		try 
+		{
+			con = connectionManager.getConnection();
+			st = con.prepareStatement(sql);
+			st.setString(1, code);
+			rs = st.executeQuery();
+			t = checkResultSet(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			connectionManager.closeResultSet(rs);
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+		return t;
+	}
+	
+	private String checkStartDate(String startDate){
+		if (startDate == null || startDate.equals("")) {
+			startDate = DateUtil.dateAddToString(new Date(), Calendar.YEAR, -10);
+		}
+			return startDate;
+		}
+		
+		private String checkEndDate(String endDate){
+			if (endDate == null || endDate.equals("")) {
+				endDate = DateUtil.dateAddToString(new Date(), Calendar.YEAR, 0);
+			}
+			return endDate;
+	}
+	
+	@Override
+	public List<Map<String, Object>> getShopInAndSendExpressGroupCount(String type,String code,String startDate,String endDate) throws SQLException {
+		startDate = checkStartDate(startDate);
+		endDate = checkEndDate(endDate);
+		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement st = null;
+		List<Map<String, Object>> t = null;
+		String sql = new String();
+		String sqlArea = "select c.NAME,"
+				+ "	max(IF(type = 'inExpress',eCount,0)) as 'ICOUNT',"
+				+ " max(IF(type = 'sendExpress',eCount,0)) as 'SCOUNT',"
+				+ " sum(eCount) as 'TOTAL' "
+				+ " from ("
+				+ " select b.NAME,count(1) eCount,'inExpress' type"
+				+ " from ("
+				+ "	select PHONE_NUMBER,OPERA_TIME,AREA_CODE,SERVICE_SHOP_CODE from tf_express_out_storehouse where AREA_CODE = ? and OPERA_TIME >= '"+startDate+"' and OPERA_TIME <=  '"+endDate+"'"
+				+ "	UNION ALL"
+				+ "	select PHONE_NUMBER,OPERA_TIME,AREA_CODE,SERVICE_SHOP_CODE from tf_express_info where AREA_CODE =? and OPERA_TIME >=  '"+startDate+"' and OPERA_TIME <=  '"+endDate+"'"
+				+ " ) a right join tf_shop_info b on a.SERVICE_SHOP_CODE = b.shop_code "
+				+ "	where a.AREA_CODE = ? "
+				+ " group by a.SERVICE_SHOP_CODE"
+				+ "	UNION ALL"
+				+ " select b.NAME,count(1) eCount ,'sendExpress' type"
+				+ " from tf_sent_express_info a "
+				+ " right join tf_shop_info b on a.SERVICE_SHOP_CODE = b.shop_code"
+				+ " where a.AREA_CODE =? and OPERA_TIME >=  '"+startDate+"' and OPERA_TIME <=  '"+endDate+"'"
+				+ "	group by SERVICE_SHOP_CODE ) c group by c.name";
+		
+		String sqlShop = "select c.NAME,"
+				+ " max(IF(type = 'inExpress',eCount,0)) as 'ICOUNT',"
+				+ " max(IF(type = 'sendExpress',eCount,0)) as 'SCOUNT',"
+				+ " sum(eCount) as 'TOTAL' "
+				+ " from ("
+				+ " select b.NAME,count(1) eCount,'inExpress' type"
+				+ " from ("
+				+ "	select PHONE_NUMBER,OPERA_TIME,AREA_CODE,SERVICE_SHOP_CODE from tf_express_out_storehouse where SERVICE_SHOP_CODE = ? and OPERA_TIME >=  '"+startDate+"' and OPERA_TIME <=  '"+endDate+"'"
+				+ "	UNION ALL"
+				+ "	select PHONE_NUMBER,OPERA_TIME,AREA_CODE,SERVICE_SHOP_CODE from tf_express_info where SERVICE_SHOP_CODE = ? and OPERA_TIME >=  '"+startDate+"' and OPERA_TIME <=  '"+endDate+"'"
+				+ " ) a right join tf_shop_info b on a.SERVICE_SHOP_CODE = b.shop_code "
+				+ "	where SERVICE_SHOP_CODE = ? "
+				+ " group by a.SERVICE_SHOP_CODE"
+				+ "	UNION ALL"
+				+ " select b.NAME,count(1) eCount ,'sendExpress' type"
+				+ " from tf_sent_express_info a "
+				+ " right join tf_shop_info b on a.SERVICE_SHOP_CODE = b.shop_code"
+				+ " where SERVICE_SHOP_CODE = ? and OPERA_TIME >=  '"+startDate+"' and OPERA_TIME <=  '"+endDate+"'"
+				+ "	group by SERVICE_SHOP_CODE ) c group by c.name";
+		if (type.equals("A")) {
+			sql = sqlArea;
+		} else  if (type.equals("S")){
+			sql = sqlShop;
+		} else {
+			return null;
+		}
+		
+		try 
+		{
+			con = connectionManager.getConnection();
+			st = con.prepareStatement(sql);
+			st.setString(1, code);
+			st.setString(2, code);
+			st.setString(3, code);
+			st.setString(4, code);
+			rs = st.executeQuery();
+			t = checkResultSet(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			connectionManager.closeResultSet(rs);
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+		return t;
 	}
 	
 }

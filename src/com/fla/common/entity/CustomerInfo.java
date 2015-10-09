@@ -22,13 +22,16 @@ public class CustomerInfo implements Serializable{
 	private String landlineNumber;
 	private String weixinId;
 	private String identityCard;
-	private Character gender;
+	private String gender;
 	private String address;
 	private String areaCode;
 	private String remark;
 	private String initialsCode;
 	private String spellingCode;
 	private String shopCode;
+	private Short  age;
+	private String ageSection;
+	private String whetherHaveCar;
 	
 	public Integer getId() {
 		return id;
@@ -66,10 +69,10 @@ public class CustomerInfo implements Serializable{
 	public void setIdentityCard(String identityCard) {
 		this.identityCard = identityCard;
 	}
-	public Character getGender() {
+	public String getGender() {
 		return gender;
 	}
-	public void setGender(Character gender) {
+	public void setGender(String gender) {
 		this.gender = gender;
 	}
 	public String getAddress() {
@@ -108,6 +111,24 @@ public class CustomerInfo implements Serializable{
 	public void setShopCode(String shopCode) {
 		this.shopCode = shopCode;
 	}
-
+	public Short getAge() {
+		return age;
+	}
+	public void setAge(Short age) {
+		this.age = age;
+	}
+	public String getAgeSection() {
+		return ageSection;
+	}
+	public void setAgeSection(String ageSection) {
+		this.ageSection = ageSection;
+	}
+	public String getWhetherHaveCar() {
+		return whetherHaveCar;
+	}
+	public void setWhetherHaveCar(String whetherHaveCar) {
+		this.whetherHaveCar = whetherHaveCar;
+	}
+	
 	
 }
