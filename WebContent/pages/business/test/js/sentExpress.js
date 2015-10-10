@@ -40,10 +40,9 @@ function modifyExpress() {
 }
 
 $(document).ready(function(){
-		$('#id').prop('readonly', true);
+//		$('#id').prop('readonly', true);
 		$("#name").bind("keydown",function(e){
 			var keycode = e.which;
-			
 			//输入回车判定
 			if(keycode == 13){
 				submitForm();
@@ -95,10 +94,11 @@ $(document).ready(function(){
 		    onBeforeClose:function(){
 		    },
 		    onOpen:function(){
-//		    	$('#formExpressServiceId').combobox('clear');
-		    }
+		    },
+		    onClose:function(){
+		    	clearDataForm();
+		    },
 		}); 
-		
 		
 		$('#senderNumber').combobox({
 			url : contextPath + "/pages/system/getCustomeInfoList.light",
