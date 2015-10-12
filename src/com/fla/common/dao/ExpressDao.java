@@ -90,7 +90,7 @@ public class ExpressDao implements ExpressDaoInterface {
 				String endDate = params.get("endDate");
 				sql.append(" and OPERA_TIME <='" + endDate + "'");
 			}
-			sql.append(" order by OPERA_TIME desc");
+			sql.append(" order by EXPRESS_SERVICE_ID desc");
 			st = con.prepareStatement(sql.toString());
 			rs = st.executeQuery();
 			t = checkResultSet(rs);

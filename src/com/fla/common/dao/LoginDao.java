@@ -294,11 +294,11 @@ public class LoginDao implements LoginDaoInterface {
 			StringBuilder sql = new StringBuilder();
 			sql.append(" select a.ID, LOGISTICS, a.CODE, RECIPIENT_NAME, a.PHONE_NUMBER, "
 					+ "LANDLINE_NUMBER, b.name EXPRESS_SERVICE_ID, ADDRESS, a.REMARK, BATCH_NUMBER, '' OUT_BATCH_NUMBER, "
-					+ "date_format(OPERA_TIME,'%Y-%c-%d %h:%i:%s') OPERA_TIME,''  OUT_OPERA_TIME, AREA_CODE, SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,1 TYPE "
+					+ "date_format(OPERA_TIME,'%Y-%c-%d %h:%i:%s') OPERA_TIME,''  OUT_OPERA_TIME, a.AREA_CODE, a.SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,1 TYPE "
 					+ "from TF_EXPRESS_INFO a ,TF_EXPRESS_SERVICE_PROVIDER_INFO b");
 			sql.append(" where 1=1 ");
 			sql.append(" and a.EXPRESS_SERVICE_ID = b.id");
-			sql.append(" and SERVICE_SHOP_CODE="+params.get("serviceShopCode"));
+			sql.append(" and a.SERVICE_SHOP_CODE="+params.get("serviceShopCode"));
 			if (params.get("queryParams") != null  &&  !params.get("queryParams").equals("")) {
 				String queryParams = params.get("queryParams");
 				sql.append(" "
@@ -326,11 +326,11 @@ public class LoginDao implements LoginDaoInterface {
 			StringBuilder sql2 = new StringBuilder();
 			sql2.append(" select a.ID, LOGISTICS, a.CODE, RECIPIENT_NAME, a.PHONE_NUMBER, "
 					+ "LANDLINE_NUMBER, b.name EXPRESS_SERVICE_ID, ADDRESS, a.REMARK, BATCH_NUMBER, OUT_BATCH_NUMBER, "
-					+ "date_format(OPERA_TIME,'%Y-%c-%d %h:%i:%s') OPERA_TIME,OUT_OPERA_TIME, AREA_CODE, SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,-1 TYPE "
+					+ "date_format(OPERA_TIME,'%Y-%c-%d %h:%i:%s') OPERA_TIME,OUT_OPERA_TIME, a.AREA_CODE, a.SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,-1 TYPE "
 					+ "from TF_EXPRESS_OUT_STOREHOUSE a ,TF_EXPRESS_SERVICE_PROVIDER_INFO b");
 			sql2.append(" where 1=1 ");
 			sql2.append(" and a.EXPRESS_SERVICE_ID = b.id");
-			sql2.append(" and SERVICE_SHOP_CODE="+params.get("serviceShopCode"));
+			sql2.append(" and a.SERVICE_SHOP_CODE="+params.get("serviceShopCode"));
 			if (params.get("queryParams") != null  &&  !params.get("queryParams").equals("")) {
 				String queryParams = params.get("queryParams");
 				sql2.append(" "
@@ -457,6 +457,42 @@ public class LoginDao implements LoginDaoInterface {
 			sql.append(" order by OPERA_TIME");
 			st = con.prepareStatement(sql.toString());
 
+			rs = st.executeQuery();
+			t = checkResultSet(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			connectionManager.closeResultSet(rs);
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+		return t;
+	}
+	
+	@Override
+	public List<Map<String, Object>> getSimplyConstructedNotOutExpressInfoByCustomerInput(Map<String, String> params) throws SQLException {
+ 		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement st = null;
+		List<Map<String, Object>> t = null;
+		try 
+		{
+			con = connectionManager.getConnection();
+			StringBuilder sql = new StringBuilder();
+			sql.append(" select LOGISTICS,c.NAME PROVIDER_NAME,OPERA_TIME, b.NAME SHOP_NAME from TF_EXPRESS_INFO "
+					+ " left join tf_shop_info b on a.SERVICE_SHOP_CODE = b.SHOP_CODE  "
+					+ " left join tf_express_service_provider_info c on a.EXPRESS_SERVICE_ID = c.ID");
+			sql.append(" where 1=1 ");
+			if (params.get("queryParams") != null  &&  !params.get("queryParams").equals("")) {
+				String queryParams = params.get("queryParams");
+				sql.append(" "
+						+ "	and (RECIPIENT_NAME like '%"+queryParams+"%'"
+						+ "	or substring(PHONE_NUMBER, 8, 4) = '"+queryParams+"'"
+						+ "	or trim(LOGISTICS) = '"+queryParams+"'"
+						+ "	or PHONE_NUMBER = '"+queryParams+"')");
+			}
+			sql.append(" order by OPERA_TIME");
+			st = con.prepareStatement(sql.toString());
 			rs = st.executeQuery();
 			t = checkResultSet(rs);
 		} catch (SQLException e) {
@@ -948,8 +984,15 @@ public class LoginDao implements LoginDaoInterface {
 	
 	private Signature MapToSignatureEntity(Map<String, Object> t){
 		Signature sign = new Signature();
-		sign.setId(Integer.valueOf(t.get("ID").toString()));
-		sign.setSignatureImg(checkNull(t.get("SIGNATURE_IMG")));
+		try 
+		{
+			sign.setId(Integer.valueOf(t.get("ID").toString()));
+			sign.setSignatureImg(checkNull(t.get("SIGNATURE_IMG")));
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}catch (NullPointerException e) {
+			sign.setRemark(e.getMessage());
+		}
 		return sign;
 	}
 	

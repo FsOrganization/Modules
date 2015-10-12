@@ -282,6 +282,29 @@ public class SystemDao implements SystemDaoInterface {
 	}
 	
 	@Override
+	public void modifyUserPassWord(SystemUser user)	throws SQLException {
+		Connection con = null;
+		PreparedStatement st = null;
+		String sql = "update tf_system_user set PASSWORD = ? where LOGIN_NAME=?";
+		con = connectionManager.getConnection();
+        st=con.prepareStatement(sql);
+		st.setString(1,user.getPassword());
+//		st.setString(2,user.getNickName());
+//		st.setString(3,user.getPhoneNumber());
+		st.setString(2, user.getLoginName());
+		try 
+		{
+				st.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+		
+	}
+	
+	@Override
 	public void modifyUserInfo(SystemUser user,String tag)
 			throws SQLException {
 		Connection con = null;
