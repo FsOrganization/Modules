@@ -403,7 +403,7 @@ public class PageToolsController extends SuperController{
 	@RequestMapping("/pages/system/downShopInAndSendGroupCount.light")
 	public ModelAndView downShopInAndSendGroupCount(
 			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+//		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		String type = request.getParameter("down_type");
 		String code = request.getParameter("down_code");
 		String startDate = request.getParameter("down_startDate");

@@ -12,6 +12,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,7 +36,6 @@ import org.sword.wechat4j.common.Config;
 import org.sword.wechat4j.token.TokenProxy;
 
 import com.fla.common.base.SuperController;
-import com.fla.common.entity.SystemUser;
 import com.fla.common.service.interfaces.CustomerServiceInterface;
 import com.fla.common.service.interfaces.LoginServiceInterface;
 import com.fla.common.weixin.util.WechatProcess;
@@ -107,6 +108,18 @@ public class WeiXinController extends SuperController{
 
 	}
 	
+	/**
+	 * 手机座机号码验证
+	 * @param input
+	 * @return 当条件满足时，将返回true，否则返回false
+	 */
+	private static boolean checkCustomerInput(String input) {
+		  Pattern pattern = Pattern.compile("[0]([0-9]{2,3})?[0-9]{7,8}|(^[1][345678][0-9]{9}$)");
+		  Matcher matcher = pattern.matcher(input);
+		  boolean b= matcher.matches();
+		  return b;
+	}
+	
 	@ResponseBody
 	@RequestMapping("/pages/system/weixin.light")
 	public void wechatServlet(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
@@ -123,7 +136,6 @@ public class WeiXinController extends SuperController{
 		
 		//key
 //		String key = request.getParameter("key");
-		
 		String[] str = { token, timestamp, nonce };
 		Arrays.sort(str); // 字典序排序
 		String bigStr = str[0] + str[1] + str[2];
@@ -183,6 +195,29 @@ public class WeiXinController extends SuperController{
 				case "WECHAT_EXPRESS_INQUIRY_1":
 					break;
 				default:
+					String phoneNumberOrLogistics = rxe.getContent();
+					if(checkCustomerInput(phoneNumberOrLogistics)) {
+						Map<String,String> params = new HashMap<String,String>();
+						params.put("queryParams", phoneNumberOrLogistics);
+						JSONArray ja = loginServiceInterface.getSimplyConstructedNotOutExpressInfoByCustomerInput(params);
+						String ss = new String("尊敬的客户,你有来至；"+"\n");
+						StringBuilder sub = new StringBuilder();
+						String SHOP_NAME = null;
+						for (Object obj : ja) {
+							JSONObject j = JSONObject.fromObject(obj);
+							String LOGISTICS = j.get("LOGISTICS").toString();
+							String PROVIDER_NAME = j.get("PROVIDER_NAME").toString();
+							String OPERA_TIME = j.get("OPERA_TIME").toString();
+							SHOP_NAME  =  j.get("SHOP_NAME").toString();
+							String ff = PROVIDER_NAME+" 的快递："+LOGISTICS+" 收件时间："+OPERA_TIME+"\n";
+							sub.append(ff);
+						}
+						String mmms = ss + sub.toString()+"请尽快到 "+SHOP_NAME+" 幸福快递网点领取!";
+						sendMessage(accessToken, mmms, rxe.getFromUserName());
+					} else {
+						String m = "输入快递运单号或手机号码查询";
+						sendMessage(accessToken, m, rxe.getFromUserName());
+					}
 					break;
 				}
 			} catch (IOException e) {

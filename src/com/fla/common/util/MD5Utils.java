@@ -16,6 +16,17 @@ public class MD5Utils {
 	 return md5.encodePassword(str, slat);
 	 }
 	 
+	 /**
+		 * Md5加密
+		 * @param str
+		 * @param slat
+		 * @return
+		 */
+		 public static String encodeMd5(String str) {
+		 Md5PasswordEncoder md5 = new Md5PasswordEncoder();
+		 return md5.encodePassword(str,null);
+		 }
+	 
 	
 		/**
 		 * SHA加密

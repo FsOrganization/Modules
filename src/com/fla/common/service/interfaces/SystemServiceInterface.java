@@ -33,6 +33,8 @@ public interface SystemServiceInterface {
 	
 	public JSONObject modifyUserInfo(SystemUser user) throws SQLException;
 	
+	public JSONObject modifyUserPassWord(SystemUser user) throws SQLException;
+	
 	public JSONObject modifyUserInfo(SystemUser user,String tag) throws SQLException;
 	
 	public JSONObject insertAreaInfo(SystemArea area,Map<String,String> params) throws SQLException;

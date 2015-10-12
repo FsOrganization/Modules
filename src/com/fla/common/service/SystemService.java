@@ -226,6 +226,17 @@ public class SystemService implements SystemServiceInterface{
 	}
 	
 	@Override
+	public JSONObject modifyUserPassWord(SystemUser user) {
+		try 
+		{
+			systemDao.modifyUserPassWord(user);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@Override
 	public JSONObject modifyUserInfo(SystemUser user,String tag) {
 		try 
 		{

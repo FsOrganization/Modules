@@ -73,6 +73,14 @@ public interface LoginDaoInterface {
 		public List<Map<String, Object>> getSimplyConstructedNotOutExpressInfoByFilter(int rowSize, int pageSize, Map<String, String> params) throws SQLException ;
 		
 		/**
+		 * 微信客户端查询
+		 * @param params
+		 * @return
+		 * @throws SQLException
+		 */
+		public List<Map<String, Object>> getSimplyConstructedNotOutExpressInfoByCustomerInput(Map<String, String> params) throws SQLException;
+		
+		/**
 		 * 
 		 * @param rs
 		 * @return

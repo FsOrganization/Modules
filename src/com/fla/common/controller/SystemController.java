@@ -43,9 +43,6 @@ public class SystemController extends SuperController{
 	@Autowired
 	private LoginDao loginDao;
 	
-//	@Autowired
-//	public SystemUser s;
-	
 	@Autowired
 	private SystemServiceInterface systemServiceInterface;
 	
@@ -70,7 +67,7 @@ public class SystemController extends SuperController{
             printWriter = response.getWriter();
             printWriter.write(jsonArray.toString());
 		} catch(IOException e) {
-			
+			e.printStackTrace();
 		} finally { 
 			printWriter.flush();
 			printWriter.close();
@@ -81,7 +78,7 @@ public class SystemController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getAreaInfoForSelect.light")
 	public ModelAndView getAreaInfoForSelect(HttpServletRequest request,HttpServletResponse response) {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+//		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		Map<String,String> params = new HashMap<String,String>();
 		JSONArray jsonArray = systemServiceInterface.getAreaInfoForSelect(params);
 		PrintWriter printWriter =null;
@@ -332,12 +329,7 @@ public class SystemController extends SuperController{
 			su.setAreaCode(code);
 			systemServiceInterface.insertUserInfo(su, null);
 		} catch (NullPointerException e) {
-			response.setCharacterEncoding("utf-8");
-			response.setContentType("text/html; charset=utf-8");
-			PrintWriter printWriter = response.getWriter();
-			printWriter.write("NEED_LOGIN");
-			printWriter.flush();
-			printWriter.close();
+			e.printStackTrace();
 		}
 		json.put("msg", "保存成功");
 		response.setCharacterEncoding("utf-8");          
@@ -382,6 +374,35 @@ public class SystemController extends SuperController{
         printWriter.flush();
         printWriter.close(); 
 		return null;
+		
+	}
+	
+	@ResponseBody
+	@RequestMapping("/pages/system/modifyUserPassWord.light")
+	public void modifyUserPassWord(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
+		JSONObject json = new JSONObject();
+		SystemUser user= new SystemUser();
+		try 
+		{
+			String loginName = request.getParameter("loginName");
+			String password = request.getParameter("password");
+			String confirmPw = request.getParameter("confirmPw");
+			if (password.equals(confirmPw)) {
+				user.setLoginName(loginName);
+				user.setPassword(MD5Utils.encodeMd5(password, loginName));
+				systemServiceInterface.modifyUserPassWord(user);
+			}
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			json.put("msg", e.getMessage());
+		}
+		json.put("msg", "保存成功");
+		response.setCharacterEncoding("utf-8");          
+		response.setContentType("text/html; charset=utf-8");
+		PrintWriter printWriter = response.getWriter();
+		printWriter.write(json.toString()); 
+        printWriter.flush();
+        printWriter.close(); 
 		
 	}
 	

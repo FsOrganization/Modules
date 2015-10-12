@@ -1,3 +1,4 @@
+
 package com.fla.common.controller;
 
 import java.io.IOException;
@@ -70,12 +71,7 @@ public class CustomerController extends SuperController{
 			customer = jsonToCustomerEntity(request);
 			customerService.modifyCustomerInfo(customer);
 		} catch (NullPointerException e) {
-			response.setCharacterEncoding("utf-8");
-			response.setContentType("text/html; charset=utf-8");
-			PrintWriter printWriter = response.getWriter();
-			printWriter.write("NEED_LOGIN");
-			printWriter.flush();
-			printWriter.close();
+			e.printStackTrace();
 		}
 		json.put("msg", "保存成功");
 		response.setCharacterEncoding("utf-8");          
@@ -95,13 +91,8 @@ public class CustomerController extends SuperController{
 		{
 			customer = jsonToCustomerEntityByWechat(request);
 			customerService.registerCustomerByOpenId(customer);
-		} catch (NullPointerException e) {
-			response.setCharacterEncoding("utf-8");
-			response.setContentType("text/html; charset=utf-8");
-			PrintWriter printWriter = response.getWriter();
-			printWriter.write("NEED_LOGIN");
-			printWriter.flush();
-			printWriter.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		json.put("msg", "注册成功");
 		response.setCharacterEncoding("utf-8");          
@@ -129,19 +120,14 @@ public class CustomerController extends SuperController{
 	@RequestMapping("/pages/system/addCustomer.light")
 	public void addCustomer(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
 		JSONObject json = new JSONObject();
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+//		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		CustomerInfo customer=null;
 		try 
 		{
 			customer = jsonToCustomerEntity(request);
 			customerService.modifyCustomerInfo(customer);
 		} catch (NullPointerException e) {
-			response.setCharacterEncoding("utf-8");
-			response.setContentType("text/html; charset=utf-8");
-			PrintWriter printWriter = response.getWriter();
-			printWriter.write("NEED_LOGIN");
-			printWriter.flush();
-			printWriter.close();
+			e.printStackTrace();
 		}
 		json.put("msg", "保存成功");
 		response.setCharacterEncoding("utf-8");          

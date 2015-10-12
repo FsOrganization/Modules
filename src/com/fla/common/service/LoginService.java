@@ -243,6 +243,16 @@ public class LoginService implements LoginServiceInterface{
 		return ja;
 	}
 	
+	@Override
+	public JSONArray getSimplyConstructedNotOutExpressInfoByCustomerInput(Map<String, String> params) throws SQLException {
+		List<Map<String, Object>> rowMap = loginDao.getSimplyConstructedNotOutExpressInfoByCustomerInput(params);
+		JSONArray ja = new JSONArray();
+		if (rowMap !=null) {
+			makeJSONArray(rowMap, ja);
+		}
+		return ja;
+	}
+	
 	private void makeJSONArray(List<Map<String, Object>> rowMap, JSONArray ja) {
 		for (Map<String, Object> map : rowMap) {
 			JsonValueProcessor jv = new FlaJsonValueProcessor();

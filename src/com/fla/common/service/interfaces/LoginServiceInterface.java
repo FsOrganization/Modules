@@ -47,6 +47,8 @@ public interface LoginServiceInterface {
 	
 	public JSONArray getSimplyConstructedNotOutExpressInfoByFilter(int rowSize,int pageSize, Map<String, String> params) throws SQLException ;
 	
+	public JSONArray getSimplyConstructedNotOutExpressInfoByCustomerInput(Map<String, String> params) throws SQLException;
+	
 	public Pagination getNotOutExpressInfoByFilterConditions(final int rowSize, final int pageSize,Map<String,String> params) throws SQLException ;
 	
 	public JSONObject insertSignature(Signature sign) throws SQLException;

@@ -1,16 +1,55 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/"
+	debug="false">
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<param name="Threshold" value="INFO" />
+		<param name="Target" value="System.out" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"			     
+				value="[RUNDLE]%d{yyyy-MM-dd HH:mm:ss} %p [%t] %c{1} |%X{login}|%X{actions}|%X{doWhat}|%X{summary}|%m%n" />
+			<!--[RUNDLE]%d{yyyy-MM-dd HH:mm:ss} %p [%t] %c{1} |%X{login}|%X{actions}|%X{doWhat}|%X{summary}|%m%n-->
+			<!--
+				<param name="ConversionPattern" value="[BODA] %p [%t] %c{1} | %m%n"
+				/>
+			-->
+		</layout>
+	</appender>
+<!--  %d{yyyy-MM-dd HH:mm:ss} %p [%t] %c{1}
+	<appender name="JDBC_Postgresql"
+		class="net.sweet.log.appender.JDBCPoolAppender">
+		 <param name="Threshold" value="ERROR" />		 
+		 <param name="dsjndi" value="java:/jdbc/postgreSQLAids42" />		
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="INSERT INTO Log4J_Log 
+				(Login, Actions, DoWhat, Summary, Message,CreateDate, Priority, Category, Thread)
+				 VALUES
+			    ('%X{login}', '%X{actions}', '%X{doWhat}', '%X{summary}', '%m', '%d{yyyy-MM-dd HH:mm:ss}', '%p', '%p', '%t')" />
+		</layout>
+    </appender>
+	 -->
 
-<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
-  <appender name="console" class="org.apache.log4j.ConsoleAppender"> 
-    <param name="Target" value="System.out"/> 
-    <layout class="org.apache.log4j.PatternLayout"> 
-      <param name="ConversionPattern" value="%-5p %c{1} - %m%n"/> 
-    </layout> 
-  </appender> 
-
-  <root> 
-    <priority value ="info" /> 
-    <appender-ref ref="console" /> 
-  </root>
+	<!--<appender name="JDBC_POOL_MYSQL" class="net.sweet.log.appender.JDBCPoolAppender">		
+		<param name="Threshold" value="SERVICE"/>	
+		<param name="driver" value="org.postgresql.Driver" />	
+		<param name="dsjndi" value="java:/jdbc/postgreSQLAids42" />		
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="INSERT INTO Log4J_Log 
+				(Login, Actions, DoWhat, Summary, Message,CreateDate, Priority, Category, Thread)
+				 VALUES
+			    ('%X{login}', '%X{actions}', '%X{doWhat}', '%X{summary}', '%m', '%d{yyyy-MM-dd HH:mm:ss}', '%p', '%p', '%t')" />
+		</layout>
+	</appender> -->
+	<!-- Buffer events and log them asynchronously -->
+	<appender name="ASYNC" class="org.apache.log4j.AsyncAppender">
+		<param name="BufferSize" value="512" />
+		<appender-ref ref="CONSOLE" />
+		<!--<appender-ref ref="JDBC_Postgresql" />-->
+	</appender>
+	<!--  -->
+	<root>
+		<appender-ref ref="ASYNC" />
+	</root>
 </log4j:configuration>

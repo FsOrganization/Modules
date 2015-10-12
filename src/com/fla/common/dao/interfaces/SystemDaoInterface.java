@@ -29,6 +29,8 @@ public interface SystemDaoInterface {
 	
 	public void modifyUserInfo(SystemUser user) throws SQLException;
 	
+	public void modifyUserPassWord(SystemUser user) throws SQLException;
+	
 	public void modifyUserInfo(SystemUser user,String tag) throws SQLException;
 	
 	public void insertAreaInfoList(SystemArea area,Map<String,String> params) throws SQLException;
