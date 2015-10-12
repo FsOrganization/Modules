@@ -16,6 +16,7 @@ function initShopNameMap() {
 		url : contextPath + "/pages/system/pageconfig/getServiceShopName.light",
 		type : "POST",
 		dataType : 'json',
+		sync:false,
 		data : {
 			"shop_code" : ""
 		},

@@ -113,41 +113,6 @@ label:hover:before {
        	&nbsp;&nbsp;用户信息：<input id="queryParams" name="queryParams" style="width: 150px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="登陆名">
 	</div>
 	<table id="userGrid" class="easyui-datagrid" style="height: auto;"></table>
-	<div id="detail" class="easyui-dialog" title="Complex Toolbar on Dialog" style="width:400px;height:200px;padding:10px;"
-            data-options="
-                iconCls: 'icon-save',
-                toolbar: '#dlg-toolbar',
-                buttons: '#dlg-buttons',closed: true">
-    <form id="ff" action="<%=contextPath%>/pages/system/editDataById.light" method="post" style="height: inherit;">
-	    <table class="contacts" cellspacing="0">
-			<tr>
-				<td class="contact" width="25%">id:</td>
-				<td class="contact" width="60%"><input type="text" id="id" /></td>
-			</tr>
-			<tr>
-				<td class="contact" width="25%">name:</td>
-				<td class="contact" width="60%"><input type="input" id="name" class="contactinput"/></td>
-			</tr>
-		</table>     
-	</form>
-    </div>
-    <div id="dlg-toolbar" style="padding:2px 0">
-        <table cellpadding="0" cellspacing="0" style="width:100%">
-            <tr>
-                <td style="padding-left:2px">
-                    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">Edit</a>
-                    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-help',plain:true">Help</a>
-                </td>
-                <td style="text-align:right;padding-right:2px">
-                    <input class="easyui-searchbox" data-options="prompt:'Please input somthing'" style="width:150px"></input>
-                </td>
-            </tr>
-        </table>
-    </div>
-    <div id="dlg-buttons">
-        <a id="submitBtn" class="easyui-linkbutton">Save</a>
-        <a id="close" class="easyui-linkbutton" onclick="javascript:$('#detail').dialog('close')">Close</a>
-    </div>
     <div id="addUser" class="container" style="min-height: 300px;overflow:hidden;">
 			<section class="af-wrapper">
 	            <h1></h1>
@@ -209,32 +174,5 @@ label:hover:before {
 				</div>
 			</section>
         </div>
-	<!-- 条码显示 -->
-    <div id="imgDetail" class="easyui-dialog" title="Complex Toolbar on Dialog" style="width:400px;height:200px;padding:10px;"
-            data-options="buttons: '#dlg-buttons',closed: true">
-            <div style="margin: 20px 30px;">
-            	<img id="barimg" src=""></img>
-                <span id="fileName" style="margin: 0px 80px;font-weight: 300;font-size: 18px;"></span>
-            </div>
-                
-    </div>
-    <div id="dlg-buttons">
-        <a id="submitBtn" class="easyui-linkbutton">打印条码</a>
-        <a id="close" class="easyui-linkbutton" onclick="javascript:$('#imgDetail').dialog('close')">Close</a>
-    </div>
-    
-    <!-- 显示签名 -->
-    <div id="signatureDetail" class="easyui-dialog" title="Complex Toolbar on Dialog" style="width:600px;height:430px;padding:10px;overflow: hidden;"
-            data-options="buttons: '#dlg-buttons',closed: true">
-            <div style="margin: 8px 5px;">
-            	<img id="signatureImg" src=""></img>
-                <span id="fileName" style="margin: 0px 80px;font-weight: 300;font-size: 18px;"></span>
-            </div>
-                
-    </div>
-    <div id="dlg-buttons">
-        <a id="submitBtn" class="easyui-linkbutton">打印签名</a>
-        <a id="close" class="easyui-linkbutton" onclick="javascript:$('#signatureDetail').dialog('close')">Close</a>
-    </div>
 </body>
 </html>

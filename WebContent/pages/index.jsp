@@ -8,6 +8,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <link rel="stylesheet" type="text/css" href="<%=contextPath%>/pages/css/main.css" />
 <link rel="stylesheet" href="<%=contextPath%>/pages/menuStyle/style.css" type="text/css" />
+
 <style type="text/css">
 .speli {
 	margin: 2px 25px;
@@ -56,6 +57,10 @@
 }
 #slideout:hover #slideout_inner {
 			right: 0;
+}
+
+.pwModfiy *{
+	font: 12px Open Sans,Arial,sans-serif;
 }
 
 </style>
@@ -245,15 +250,46 @@
     <form action="<%=contextPath%>/pages/system/welcome.light" method="post">
 		<div style="margin: 5px 5px;">你好：${loginName}</div>
 		<input type="submit" style="height: 30px;width: 60px;" class="l-btn-text" value="退出系统">
-		<input type="button" style="height: 30px;width: 60px;" class="l-btn-text" value="修改密码">
+		<input id="modfiyPassWord" type="button" style="height: 30px;width: 60px;" class="l-btn-text" value="修改密码">
 	</form>
   </div>
 </div>
-
-<!-- <div id="slideout_2"> -->
-<%--   <img src="<%=contextPath%>/pages/images/feedback.png" alt="Feedback" /> --%>
-<!--   <div id="slideout_inner_2"> -->
-<!-- </div> -->
-<!-- </div> -->
+<div id="modfiyPassWordWindow" class="container" style="min-height: 150px;overflow:hidden;">
+	<input type="hidden" name="loginName" id="loginName" value="${loginName}">
+	<div style="margin: 10px 10px;text-align:center;" class="pwModfiy">
+			<table>
+				<tr>
+					<td align="right">
+							<label for="pw">新密码：</label>
+							<input type='password' id="pw" name="pw" style="width: 210px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="新密码">
+					</td>
+					
+				<tr>
+				<tr>
+					<td align="right">
+						<label for="confirmPw">确认新密码：</label>
+							<input type="password" name="confirmPw" id="confirmPw" style="width: 210px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="确认新密码">
+					</td>
+				</tr>
+<!-- 				<tr> -->
+<!-- 					<td align="right"> -->
+<!-- 							<label for="nickName">昵称：</label> -->
+<!-- 							<input id="nickName" name="nickName" style="width: 210px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder=""> -->
+<!-- 					</td> -->
+					
+<!-- 				<tr> -->
+<!-- 				<tr> -->
+<!-- 					<td align="right"> -->
+<!-- 						<label for="phoneNumber">联系电话：</label> -->
+<!-- 							<input type="text" name="phoneNumber" id="phoneNumber" style="width: 210px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder=""> -->
+<!-- 					</td> -->
+<!-- 				</tr> -->
+			</table>
+	</div>
+	<div style="text-align:center;margin: 15px 0px;">
+	  	<input id="saveBtn" type="button" value="保存" style="height: 30px;width: 49px;"/>
+		<input id="cancelBtn" type="button" value="关闭" style="height: 30px;width: 49px;"/>
+	</div>
+</div>
 
 </html>
