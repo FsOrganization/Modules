@@ -567,15 +567,18 @@ function generateMedicine(){
  */
 function addTab(title, href, icon, id,iframeId) {
 	var content;
-	if(id == undefined ){
+	if(id == undefined )
+	{
 		id = "tabs" ;
 	}
 	var tt = $('#' + id);
-	if(tt.length == 0){
-		var paDocument = parent.document;
-		tt = $(paDocument).find('#' + id);
+	if(tt.length == 0)
+	{
+		var parentDocument = parent.document;
+		tt = $(parentDocument).find('#' + id);
 	}
-	if (tt.tabs('exists', title)) {//如果tab已经存在,则选中并刷新该tab          
+	if (tt.tabs('exists', title)) 
+	{//如果tab已经存在,则选中并刷新该tab          
 		tt.tabs('select', title);
 		refreshTab({
 			tabTitle : title,
@@ -608,16 +611,6 @@ function addTab(title, href, icon, id,iframeId) {
 			content : content,
 			iconCls : icon || 'icon-default'
 		});
-//		if(tt.tabs('tabs').length>5){
-//			var msg = "当前页面打开过多，为保证您的工作流畅，请关闭暂时不需要的页面！";
-//				//msgShow(null,msg);
-//				$.messager.show({
-//			        title:'提示',
-//			        msg:msg,
-//			        timeout:5000,
-//			        showType:'slide'
-//			  });
-//		}
 		return tt.tabs("getTab", title);
 	}
 }
