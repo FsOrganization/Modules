@@ -423,37 +423,20 @@ public class LoginDao implements LoginDaoInterface {
 		List<Map<String, Object>> t = null;
 		try 
 		{
-			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
+			con = connectionManager.getConnection();
 			StringBuilder sql = new StringBuilder();
-			sql.append(" select ID, LOGISTICS, CODE, RECIPIENT_NAME, PHONE_NUMBER, "
-					+ "LANDLINE_NUMBER, EXPRESS_SERVICE_ID, ADDRESS, REMARK, BATCH_NUMBER, '' OUT_BATCH_NUMBER, "
-					+ "OPERA_TIME, AREA_CODE, SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,1 TYPE "
-					+ "from TF_EXPRESS_INFO");
+			sql.append(" select ID, LOGISTICS, RECIPIENT_NAME, PHONE_NUMBER, "
+					+ " EXPRESS_SERVICE_ID,OPERA_TIME, AREA_CODE, SERVICE_SHOP_CODE, EXPRESS_lOCATION"
+					+ " from TF_EXPRESS_INFO");
 			sql.append(" where 1=1 ");
-//			sql.append(" and SERVICE_SHOP_CODE="+params.get("serviceShopCode"));
 			if (params.get("queryParams") != null  &&  !params.get("queryParams").equals("")) {
 				String queryParams = params.get("queryParams");
 				sql.append(" "
-						+ "	and (RECIPIENT_NAME like '%"+queryParams+"%'"
+						+ "	and (RECIPIENT_NAME = '"+queryParams+"'"
 						+ "	or substring(PHONE_NUMBER, 8, 4) = '"+queryParams+"'"
 						+ "	or trim(LOGISTICS) = '"+queryParams+"'"
 						+ "	or PHONE_NUMBER = '"+queryParams+"')");
 			}
-//			if (params.get("expressService") != null && !params.get("expressService").equals("")) {
-//				String expressService  =params.get("expressService");
-//				sql.append(" and EXPRESS_SERVICE_ID = "+expressService);
-//			}
-//			if (!BaseUtil.checkAllNull(params.get("startDate")) && !BaseUtil.checkAllNull(params.get("endDate"))) {
-//				String startDate = params.get("startDate");
-//				String endDate = params.get("endDate");
-//				sql.append(" and OPERA_TIME between '"+startDate+"' and '"+endDate+"'");
-//			} else  if(!BaseUtil.checkAllNull(params.get("startDate"))){
-//				String startDate = params.get("startDate");
-//				sql.append(" and OPERA_TIME >= '"+startDate+"'");
-//			} else  if(!BaseUtil.checkAllNull(params.get("endDate"))){
-//				String endDate = params.get("endDate");
-//				sql.append(" and OPERA_TIME <='"+endDate+"'");
-//			}
 			sql.append(" order by OPERA_TIME");
 			st = con.prepareStatement(sql.toString());
 
@@ -479,19 +462,21 @@ public class LoginDao implements LoginDaoInterface {
 		{
 			con = connectionManager.getConnection();
 			StringBuilder sql = new StringBuilder();
-			sql.append(" select LOGISTICS,c.NAME PROVIDER_NAME,OPERA_TIME, b.NAME SHOP_NAME from TF_EXPRESS_INFO "
+			sql.append(" select LOGISTICS,trim(c.NAME) PROVIDER_NAME,OPERA_TIME, trim(b.NAME) SHOP_NAME "
+					+ " from TF_EXPRESS_INFO a "
 					+ " left join tf_shop_info b on a.SERVICE_SHOP_CODE = b.SHOP_CODE  "
 					+ " left join tf_express_service_provider_info c on a.EXPRESS_SERVICE_ID = c.ID");
 			sql.append(" where 1=1 ");
 			if (params.get("queryParams") != null  &&  !params.get("queryParams").equals("")) {
 				String queryParams = params.get("queryParams");
 				sql.append(" "
-						+ "	and (RECIPIENT_NAME like '%"+queryParams+"%'"
-						+ "	or substring(PHONE_NUMBER, 8, 4) = '"+queryParams+"'"
-						+ "	or trim(LOGISTICS) = '"+queryParams+"'"
-						+ "	or PHONE_NUMBER = '"+queryParams+"')");
+						+ "	and (a.RECIPIENT_NAME = '"+queryParams+"'"
+						+ "	or substring(a.PHONE_NUMBER, 8, 4) = '"+queryParams+"'"
+						+ "	or trim(a.LOGISTICS) = '"+queryParams+"'"
+						+ "	or a.PHONE_NUMBER = '"+queryParams+"')");
 			}
 			sql.append(" order by OPERA_TIME");
+//			System.out.println(sql);
 			st = con.prepareStatement(sql.toString());
 			rs = st.executeQuery();
 			t = checkResultSet(rs);

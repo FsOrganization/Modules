@@ -36,6 +36,7 @@ import org.sword.wechat4j.common.Config;
 import org.sword.wechat4j.token.TokenProxy;
 
 import com.fla.common.base.SuperController;
+import com.fla.common.entity.SystemUser;
 import com.fla.common.service.interfaces.CustomerServiceInterface;
 import com.fla.common.service.interfaces.LoginServiceInterface;
 import com.fla.common.weixin.util.WechatProcess;
@@ -86,7 +87,6 @@ public class WeiXinController extends SuperController{
 	@RequestMapping("/pages/system/getSimplyConstructedNotOutExpressInfoByFilter.light")
 	public void  getSimplyConstructedNotOutExpressInfoByFilter(String queryParams,int tag,
 			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-//		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		if (tag == 1) {
 			final int rowSize=10;
 			final int pageSize=1;
@@ -115,6 +115,13 @@ public class WeiXinController extends SuperController{
 	 */
 	private static boolean checkCustomerInput(String input) {
 		  Pattern pattern = Pattern.compile("[0]([0-9]{2,3})?[0-9]{7,8}|(^[1][345678][0-9]{9}$)");
+		  Matcher matcher = pattern.matcher(input);
+		  boolean b= matcher.matches();
+		  return b;
+	}
+	
+	private static boolean checkCustomerInputNumber(String input) {
+		  Pattern pattern = Pattern.compile("^[0-9]*$");
 		  Matcher matcher = pattern.matcher(input);
 		  boolean b= matcher.matches();
 		  return b;
@@ -170,8 +177,8 @@ public class WeiXinController extends SuperController{
 				}
 //				String responseXml =  getRegisterPageXml(rxe);
 				String funcKey =  rxe.getEventKey();
-				switch (funcKey) {
-				case "WECHAT_USER_REGISTRATION_1":
+				if (funcKey.equals("WECHAT_USER_REGISTRATION_1")) {
+//					System.out.println("WECHAT_USER_REGISTRATION_1:"+funcKey);
 					JSONObject jo = checkWechatOpenId(rxe.getFromUserName(), null, null);
 					boolean tag =  (boolean) jo.get("tag");
 					String msg = null;
@@ -186,43 +193,51 @@ public class WeiXinController extends SuperController{
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					break;
-				case "WECHAT_YX_ASPECT_1":
-					sendMessage(accessToken, "建设中...", rxe.getFromUserName());
-					break;
-				case "WECHAT_EXPRESS_SITE_1":
-					break;
-				case "WECHAT_EXPRESS_INQUIRY_1":
-					break;
-				default:
+				} else if (funcKey.equals("WECHAT_YX_ASPECT_1")) {
+//					System.out.println("WECHAT_YX_ASPECT_1:"+funcKey);
+						sendMessage(accessToken, "建设中...", rxe.getFromUserName());
+				}else if (funcKey.equals("http://121.41.76.133/Express/pages/system/getShopMapQueryPage.light")) {
+//					System.out.println("no funcKey:"+funcKey);
+				}else if (funcKey.equals("http://121.41.76.133/Express/pages/system/getSimplyConstructedQueryPage.light")) {
+//					System.out.println("no funcKey:"+funcKey);
+				} else  {
 					String phoneNumberOrLogistics = rxe.getContent();
-					if(checkCustomerInput(phoneNumberOrLogistics)) {
+					if(checkCustomerInput(phoneNumberOrLogistics) || checkCustomerInputNumber(phoneNumberOrLogistics)) {
 						Map<String,String> params = new HashMap<String,String>();
 						params.put("queryParams", phoneNumberOrLogistics);
 						JSONArray ja = loginServiceInterface.getSimplyConstructedNotOutExpressInfoByCustomerInput(params);
-						String ss = new String("尊敬的客户,你有来至；"+"\n");
-						StringBuilder sub = new StringBuilder();
-						String SHOP_NAME = null;
-						for (Object obj : ja) {
-							JSONObject j = JSONObject.fromObject(obj);
-							String LOGISTICS = j.get("LOGISTICS").toString();
-							String PROVIDER_NAME = j.get("PROVIDER_NAME").toString();
-							String OPERA_TIME = j.get("OPERA_TIME").toString();
-							SHOP_NAME  =  j.get("SHOP_NAME").toString();
-							String ff = PROVIDER_NAME+" 的快递："+LOGISTICS+" 收件时间："+OPERA_TIME+"\n";
-							sub.append(ff);
+						if (ja == null || ja.size() == 0) {
+							String m = "当前没有您的快递!";
+							sendMessage(accessToken, m, rxe.getFromUserName());
+						} else {
+//							System.out.println("ja:"+ja);
+							String ss = new String("尊敬的客户！您有来至:"+"\n");
+							StringBuilder sub = new StringBuilder();
+							String SHOP_NAME = null;
+							for (Object obj : ja) {
+								JSONObject json = JSONObject.fromObject(obj);
+								System.out.println("json:"+json+",ja.size()"+ja.size());
+								String LOGISTICS = json.get("LOGISTICS").toString();
+								String PROVIDER_NAME = json.get("PROVIDER_NAME").toString();
+								String OPERA_TIME = json.get("OPERA_TIME").toString();
+								SHOP_NAME  =  json.get("SHOP_NAME").toString();
+								String ff = PROVIDER_NAME+" 的快递："+LOGISTICS+" 收件时间："+OPERA_TIME+"\n";
+								sub.append(ff);
+								sub.append("- - - - - - - - - - - - - - - - - - - ");
+								sub.append("\n");
+							}
+							String mmms = ss + sub.toString()+"请尽快到 "+SHOP_NAME+" 幸福快递网点领取!";
+							sendMessage(accessToken, mmms, rxe.getFromUserName());
 						}
-						String mmms = ss + sub.toString()+"请尽快到 "+SHOP_NAME+" 幸福快递网点领取!";
-						sendMessage(accessToken, mmms, rxe.getFromUserName());
 					} else {
 						String m = "输入快递运单号或手机号码查询";
 						sendMessage(accessToken, m, rxe.getFromUserName());
 					}
-					break;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
 		}
 	}
 	
