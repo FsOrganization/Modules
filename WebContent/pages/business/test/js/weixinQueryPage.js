@@ -19,15 +19,7 @@ $.fn.extend({
 });
 
 $(document).ready(function(){
-		$('#id').prop('readonly', true);
-		$("#name").bind("keydown",function(e){
-			var keycode = e.which;
-			//输入回车判定
-			if(keycode == 13){
-				submitForm();
-				e.preventDefault();
-			}
-		});
+		initExpressServiceProviders();
 		
 		//输入框按回车
 		$("#queryParams").bind("keydown",function(e){
@@ -38,7 +30,7 @@ $(document).ready(function(){
 			}
 		});	
 
-		initExpressServiceProviders();
+		
 		
 		$('#areaCodeGrid').datagrid({
 			dataType : 'json',

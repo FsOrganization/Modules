@@ -44,7 +44,7 @@ td.contact {
 		<div style="margin: 4px;">
 		       	&nbsp;&nbsp;批次号：<input id="query_batchNumber" name="query_batchNumber" style="width: 150px;height:30px;border-style: solid;border-color: antiquewhite;">
 		</div>
-		<table id="infinishedGrid" class="easyui-datagrid" style="height: auto;"></table>
+		<table id="infinishedGrid" style="height: auto;"></table>
 		<div id="detail" class="easyui-dialog" title="修改快件信息" style="width:460px;height:350px;padding:10px;overflow: hidden;"
 	            data-options="
 	                iconCls: 'icon-save',

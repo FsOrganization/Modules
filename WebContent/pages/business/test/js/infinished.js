@@ -36,8 +36,9 @@ function openWindow(rowIndex, rowData) {
 
 function queryData() {
 	$('#infinishedGrid').datagrid({
+		url : contextPath + '/pages/system/getExpressByBatchNumber.light',
 		queryParams: {
-			"batchNumber": $('#query_batchNumber').val()
+			"batchNumber": $('#batchNumber').val()
 		}
 	});
 	batchNumber = $('#query_batchNumber').val();
@@ -236,7 +237,7 @@ $(document).ready(function() {
 	
 	$('#infinishedGrid').datagrid({
 		dataType : 'json',
-		url : contextPath + '/pages/system/getExpressByBatchNumber.light',
+//		url : contextPath + '/pages/system/getExpressByBatchNumber.light',
 		width : $(window).width() * 1,
 		height :($(window).height()-30)*0.99,
 		singleSelect : true,
@@ -458,7 +459,9 @@ function modifyExpress() {
 		dataType:'json',
 		data:{"id":$('#id').val(),"logistics":$('#modify_logistics').val(),"recipientName":$('#modify_recipientName').val(),"phoneNumber":$('#modify_phoneNumber').val(),"expressLocation":$('#modify_expressLocation').val()},
 		success : function(data) {
-			$('#infinishedGrid').datagrid('reload');
+			$('#infinishedGrid').datagrid({
+ 				url : contextPath + '/pages/system/getExpressByBatchNumber.light'
+			});
 			$.messager.show({
                 title:'提示',
                 msg:'<div class="messager-icon messager-info"></div>'+data.msg,
@@ -554,12 +557,14 @@ var submitForm = function() {
 			"batchNumber":$('#batchNumber').val()
 		},
 		success : function(data) {
-			$('#infinishedGrid').datagrid({
+			sendRemindersToCustomer(phoneNumber,$('#logistics').val(),$('#expressServiceId').combo('getText'));
+ 			$('#infinishedGrid').datagrid({
+ 				url : contextPath + '/pages/system/getExpressByBatchNumber.light',
 				queryParams: {
 					"batchNumber": $('#batchNumber').val()
 				}
 			});
-			$('#infinishedGrid').datagrid("reload");
+//			$('#infinishedGrid').datagrid("reload");
 			$('#phoneNumber').combobox('reload',contextPath + "/pages/system/getCustomeInfoList.light");
 			$.messager.show({
                 title:'提示',
@@ -571,6 +576,7 @@ var submitForm = function() {
 			clearOneType(expressType);
 			$('#logistics').focus();
 			unblock("presentSelfForm");
+			
 		},
 		error : function(data) {
 			$.messager.show({
@@ -583,6 +589,22 @@ var submitForm = function() {
 		}
 	});
 };
+
+function sendRemindersToCustomer(phoneNumber,LOGISTICS,EXPRESS_SERVICE) {
+	$.ajax({
+		url : contextPath+"/pages/system/sms/sendRemindersToCustomer.light",
+		type: "POST",
+		sync:true,
+		dataType:'json',
+		data:{"PHONE_NUMBER":phoneNumber,"SHOP_CODE":'',"LOGISTICS":LOGISTICS,"EXPRESS_SERVICE":EXPRESS_SERVICE},
+		success : function(data) {
+//			unblock("presentSelfForm");
+		},
+		error : function(data) {
+//			unblock("presentSelfForm");
+		}
+	});
+}
 
 var clearFormData = function(){
 	$('#logistics').val("");
@@ -670,8 +692,6 @@ function signComplete(){
 			"type" : "0"
 		},
 		success : function(result){
-//			$('#infinishedGrid').datagrid('clearSelections');
-//			$('#infinishedGrid').datagrid("reload");
 			$('#infinishedGrid').datagrid('loadData', { total: 0, rows: [] });//DateGrid 
 			$('#signatureRegion').window('close');
 			closeSignatureRegion();

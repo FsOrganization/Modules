@@ -185,7 +185,7 @@
 									</li>
 									<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("用户设置", "<%=contextPath%>/pages/business/systemSetUp/userSetUp.jsp","icon-sz",undefined,"infinished");'>用户设置</a></li>
 									<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("快递服务商设置", "<%=contextPath%>/pages/business/systemSetUp/expressServiceProviderSetUp.jsp","icon-sz",undefined,"infinished");'>快递服务商设置</a></li>
-									
+									<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("短信监控配置", "http://sms.sms.cn/login.php","icon-sz",undefined,"infinished");'>短信监控配置</a></li>
 								</ul>
 					</center>
 				</div>
