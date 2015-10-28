@@ -56,24 +56,28 @@ td.contact {
 								<label for="modify_logistics">快件运单号:</label>
 								<input type="text" name="modify_logistics" id="modify_logistics" style="width: 220px;margin:-10px 0px;" readonly="readonly">
 								<input type="hidden" id="id" />
+								<span style="color:red;"> (*必填项)</span>
 							</div>
 				</div>
 				<div class="af-outer">
 							<div class="af-inner">
 								<label for="modify_recipientName">收件人姓名:</label>
 								<input type="text" name="modify_recipientName" id="modify_recipientName" style="width: 220px;margin:-10px 0px;">
+								<span style="color:red;"> (*必填项)</span>
 							</div>
 				</div>
 				<div class="af-outer">
 							<div class="af-inner">
 								<label for="modify_phoneNumber">手机号码:</label>
 								<input type="text" name="modify_phoneNumber" id="modify_phoneNumber" style="width: 220px;margin:-10px 0px;">
+								<span style="color:red;"> (*必填项)</span>
 							</div>
 				</div>
 				<div class="af-outer">
 							<div class="af-inner">
 								<label for="modify_expressLocation">货位:</label>
 								<input type="text" name="modify_expressLocation" id="modify_expressLocation" style="width: 220px;margin:-10px 0px;">
+								<span style="color:red;"> (*必填项)</span>
 							</div>
 				</div>
 			</form>
@@ -98,12 +102,14 @@ td.contact {
 								                width:280,
 								                height: 35,
 								                formatter: formatItem" />
+								                <span style="color:red;"> (*必填项)</span>
 						</div>
 					</div>
 					<div class="af-outer">
 						<div class="af-inner">
 							<label for="logistics">快件运单号:</label>
 							<input type="text" name="logistics" id="logistics" style="width: 279px;">
+							<span style="color:red;"> (*必填项)</span>
 						</div>
 					</div>
 				
@@ -111,6 +117,7 @@ td.contact {
 						<div class="af-inner">
 							<label for="phoneNumberphoneNumber">收件人手机号码:</label>
 							<input type="text" name="phoneNumber" id="phoneNumber" style="width: 279px;">
+							<span style="color:red;"> (*必填项)</span>
 						</div>
 					</div>
 					
@@ -118,6 +125,7 @@ td.contact {
 						<div class="af-inner">
 							<label for="recipientName">收件人姓名:</label>
 							<input type="text" name="recipientName" id="recipientName" style="width: 279px;"/>
+							<span style="color:red;"> (*必填项)</span>
 						</div>
 					</div>
 					
@@ -130,6 +138,7 @@ td.contact {
 <!-- 								<input type="radio" name="expressType" value="X" id="X"/> 小件 -->
 <!-- 								<input type="radio" name="expressType" value="Q" id="Q"/> 其他 -->
 								<span style="  margin: 0px 20px;font-weight: 900;">货位号：<span id="expressLocationTitle" style="font-size: 22px;"></span></span>
+<!-- 								<span style="color:red;"> (*必填项)</span> -->
 							</div>
 							<input type="hidden" name="expressLocation" id="expressLocation" style="width: 279px;">
 						</div>
@@ -146,6 +155,7 @@ td.contact {
 						<div class="af-inner">
 						  <label for="input-catname">批次号:</label>
 						  <input type="text" name="batchNumber" id="batchNumber" style="width: 279px;">
+						  <span style="color:red;"> (*必填项)</span>
 						</div>
 					</div>
 				</form>

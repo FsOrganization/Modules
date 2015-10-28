@@ -1,20 +1,27 @@
 var operatingTag=null;
+var operatingContactsTag=null;
+var loginName = null;
+var textMsg = null;
 $(document).ready(function() {
-		$('#id').prop('readonly', true);
-		$("#name").bind("keydown",function(e){
-			var keycode = e.which;
-			//输入回车判定
-			if(keycode == 13){
-				submitForm();
-				e.preventDefault();						
-			}
-		});
-		
+		loginName = getUrlParam("loginName");
+		if (loginName === 'admin') {
+			textMsg = "新增服务商";
+		} else {
+			textMsg = "普通工号无法新增或修改服务商基础信息";
+		}
 		$("#saveBtn").click(function() {
 			if (operatingTag) {
 				modifyForm();
 			} else {
 				saveForm();
+			}
+		});
+		
+		$("#saveContactsBtn").click(function() {
+			if (operatingContactsTag) {
+				modifyContactsForm();
+			} else {
+				saveContactsForm();
 			}
 		});
 		
@@ -28,10 +35,26 @@ $(document).ready(function() {
 		    top:30,
 		    onBeforeClose:function(){
 		    }
-		}); 
+		});
+
+		$('#addServiceProviderContacts').window({
+			title:'新增联系人',
+		    width:580,
+		    height:302,
+		    modal:true,
+		    closed:true,
+		    left:340,    
+		    top:30,
+		    onBeforeClose:function(){
+		    }
+		});
 		
 		$("#cancelBtn").click(function(){
 			$('#addExpressServiceProvider').window('close');
+		});
+		
+		$("#cancelContactsBtn").click(function(){
+			$('#addServiceProviderContacts').window('close');
 		});
 		
 		//输入框按回车
@@ -41,6 +64,64 @@ $(document).ready(function() {
 				searchExpressInfo();
 				e.preventDefault();						
 			}
+		});
+		
+		$('#expressServiceProviderContactsGrid').datagrid({
+			dataType : 'json',
+//			url : contextPath + '/pages/system/getExpressServiceProviderList.light',
+			width : $(window).width() * 0.33,
+			height :($(window).height()) * 0.27,
+			singleSelect : true,
+			rownumbers : true,
+			pagination : true,
+			striped : true,
+			idField : 'ID',
+			pageSize : 20,
+			toolbar: [
+	        {
+				text:'新增联系人',
+				iconCls: 'icon-search',
+				handler: function(){
+					clearContactsFormData();
+					addServiceProviderContacts();
+					operatingContactsTag = false;
+				}
+			}],
+			columns : [ [{
+				field : 'NAME',
+				title : '联系人',
+				width : 110,
+				align : 'center'
+			},{
+				field : 'PHONE_NUMBER',
+				title : '联系电话',
+				width : 120,
+				align : 'center',
+			},{
+				field : 'REMARK',
+				title : '备注',
+				width : 240,
+				align : 'center'
+			},{
+				field : 'opara',
+				title : '删除',
+				width : 60,
+				align : 'center',
+				formatter : function(value, row, index) {
+					return "<button style='width: inherit;' id='deleteContacts' onclick=\"deleteProviderContactsById('"+row.ID+"')\">删除</button>";
+				}
+			}] ],
+			onLoadSuccess : function(data) {
+
+			},
+			onLoadError : function() {
+				parent.location.href=contextPath+'/pages/system/welcome.light';
+			},
+			onDblClickRow : function(rowIndex, rowData) {
+				openWindowwithContacts(rowIndex, rowData);
+				operatingContactsTag = true;
+			},
+			loadFilter : pagerFilter
 		});
 		
 		$('#expressServiceProviderGrid').datagrid({
@@ -59,12 +140,14 @@ $(document).ready(function() {
 			},
 			toolbar: [
 	        {
-				text:'新增服务商',
+				text:textMsg,
 				iconCls: 'icon-search',
 				handler: function(){
-					clearFormData();
-					addExpressServiceProvider();
-					operatingTag = false;
+					if (loginName === 'admin') {
+						clearFormData();
+						addExpressServiceProvider();
+						operatingTag = false;
+					} 
 				}
 			}],
 			columns : [ [{
@@ -107,6 +190,16 @@ $(document).ready(function() {
 						return "<img title='未启用' style='width: 22px;' src='"+contextPath+"/pages/images/icon/unCheck.png'/>";
 					}
 				}
+			},{
+				field : 'opara',
+				title : '联系人',
+				width : 120,
+				align : 'center',
+				hidden : false,
+				formatter : function(value, row, index) {
+					return "<button style='width: inherit;' id='contacts' onclick=\"getContacts('"+row.ID+"','"+row.NAME+"')\">查看联系人信息</button>";
+
+				}
 			}] ],
 			onLoadSuccess : function(data) {
 
@@ -115,8 +208,11 @@ $(document).ready(function() {
 				parent.location.href=contextPath+'/pages/system/welcome.light';
 			},
 			onDblClickRow : function(rowIndex, rowData) {
-				openWindow(rowIndex, rowData);
-				operatingTag = true;
+				if (loginName === 'admin') {
+					openWindow(rowIndex, rowData);
+					operatingTag = true;
+				}
+				
 			},
 			loadFilter : pagerFilter
 		});
@@ -130,6 +226,55 @@ function clearFormData() {
 	$('#orderBy').val('');
 	$('#remark').val('');
 	$("input[id='isCheck']").prop("checked",true);
+}
+
+function clearContactsFormData() {
+//	$('#providerId').val('');
+	$('#providerContacts').val('');
+	$('#providerPhoneNumber').val('');
+	$('#providerRemark').val('');
+}
+
+function deleteProviderContactsById(id) {
+	$.ajax({
+		url : contextPath + "/pages/system/deleteProviderContactsById.light",
+		type : "POST",
+		dataType : 'json',
+		data : {
+			"id" : id,
+		},
+		success : function(data) {
+			$('#expressServiceProviderContactsGrid').datagrid("reload");
+		},
+		error : function(data) {
+		}
+	});
+}
+
+function getContacts(providerId,name) {
+	$('#expressServiceProviderContacts').show();
+//	block("expressServiceProviderContactsGrid",null);
+	$('#expressServiceProviderContactsGrid').datagrid({
+		url : contextPath+ "/pages/system/queryExpressServiceProviderContactsList.light",
+		queryParams: {
+			providerId: providerId
+		}
+	});
+	
+	$('#providerId').val(providerId);
+	$('#expressServiceProviderContacts').window({
+		title:name+'->联系人列表',
+	    width:580,
+	    height:302,
+	    modal:true,
+	    closed:true,
+	    left:340,    
+	    top:30,
+	    onBeforeClose:function(){
+	    }
+	});
+	$('#expressServiceProviderContacts').window('open');
+//	unblock("expressServiceProviderContactsGrid");
 }
 
 function getBarCode(LOGISTICS, RECIPIENT_NAME) {
@@ -242,6 +387,21 @@ function openWindow(rowIndex, rowData) {
 	}
 	$('#remark').val(remark);
 	$('#addExpressServiceProvider').window('open');
+	
+}
+
+function openWindowwithContacts(rowIndex, rowData) {
+	clearContactsFormData();
+	var id = rowData.ID;
+	var name = rowData.NAME;
+	var remark = rowData.REMARK;
+	var phoneNumber = rowData.PHONE_NUMBER;
+
+	$('#expressServiceProviderContactsId').val(id);
+	$('#providerContacts').val(name);
+	$('#providerPhoneNumber').val(phoneNumber);
+	$('#providerRemark').val(remark);
+	$('#addServiceProviderContacts').window('open');
 }
 
 function getShopCode() {
@@ -290,6 +450,63 @@ function modifyForm() {
 		success : function(data) {
 			$('#expressServiceProviderGrid').datagrid("reload");
 			$('#addExpressServiceProvider').window('close');
+			$.messager.show({
+                title:'提示',
+                msg:'<div class="messager-icon messager-info"></div>'+data.msg,
+                timeout:1500,
+                showType:'slide'
+			});
+			clearFormData();
+		},
+		error : function(data) {
+			$.messager.show({
+                title:'提示',
+                msg:'<div class="messager-icon messager-info"></div>'+data.msg,
+                timeout:1500,
+                showType:'slide'
+		  });
+		  }
+	});
+	
+}
+
+function modifyContactsForm() {
+	var id = $('#expressServiceProviderContactsId').val();
+	var providerContacts = $('#providerContacts').val();
+	var providerPhoneNumber = $('#providerPhoneNumber').val();
+	var providerRemark = $('#providerRemark').val();
+	if ($.trim(providerContacts).length == 0) {
+		$.messager.show({
+            title:'提示',
+            msg:'<div class="messager-icon messager-info"></div>'+'请填写联系人姓名',
+            timeout:3800,
+            showType:'slide'
+		});
+		return;
+	}
+	if (!isPhoneNmuber(providerPhoneNumber)) {
+		$.messager.show({
+            title:'提示',
+            msg:'<div class="messager-icon messager-info"></div>'+'手机或座机号码填写不正确',
+            timeout:3800,
+            showType:'slide'
+		});
+		return;
+	}
+	$.ajax({
+		url : contextPath+"/pages/system/modifyServiceProviderContacts.light",
+		type: "POST",
+		dataType:'json',
+		data:
+		{
+			"id":id,
+			"providerContacts":providerContacts,
+			"providerPhoneNumber":providerPhoneNumber,
+			"providerRemark":providerRemark
+		},
+		success : function(data) {
+			$('#expressServiceProviderContactsGrid').datagrid("reload");
+			$('#addServiceProviderContacts').window('close');
 			$.messager.show({
                 title:'提示',
                 msg:'<div class="messager-icon messager-info"></div>'+data.msg,
@@ -362,6 +579,64 @@ function saveForm() {
 	
 }
 
+function saveContactsForm() {
+	var providerContacts = $('#providerContacts').val();
+	var providerPhoneNumber = $('#providerPhoneNumber').val();
+	var providerRemark = $('#providerRemark').val();
+	var providerId = $('#providerId').val();
+	if ($.trim(providerContacts).length == 0) {
+		$.messager.show({
+            title:'提示',
+            msg:'<div class="messager-icon messager-info"></div>'+'请填写联系人姓名',
+            timeout:3800,
+            showType:'slide'
+		});
+		return;
+	}
+	if (!isPhoneNmuber(providerPhoneNumber)) {
+		$.messager.show({
+            title:'提示',
+            msg:'<div class="messager-icon messager-info"></div>'+'手机或座机号码填写不正确',
+            timeout:3800,
+            showType:'slide'
+		});
+		return;
+	}
+	
+	$.ajax({
+		url : contextPath+"/pages/system/addServiceProviderContacts.light",
+		type: "POST",
+		dataType:'json',
+		data:
+		{
+			"providerContacts":providerContacts,
+			"providerPhoneNumber":providerPhoneNumber,
+			"providerRemark":providerRemark,
+			"providerId":providerId
+		},
+		success : function(data) {
+			$('#expressServiceProviderContactsGrid').datagrid("reload");
+			$('#addServiceProviderContacts').window('close');
+			$.messager.show({
+                title:'提示',
+                msg:'<div class="messager-icon messager-info"></div>'+data.msg,
+                timeout:1500,
+                showType:'slide'
+			});
+			clearContactsFormData();
+		},
+		error : function(data) {
+			$.messager.show({
+                title:'提示',
+                msg:'<div class="messager-icon messager-info"></div>'+data.msg,
+                timeout:1500,
+                showType:'slide'
+		  });
+		  }
+	});
+	
+}
+
 function searchExpressInfo() {
 	var queryParams = $("#queryParams").val();
 	queryParams = encodeURI(queryParams);
@@ -370,7 +645,7 @@ function searchExpressInfo() {
 	};
 	$('#expressServiceProviderGrid').datagrid("loadData", []);
 	$('#expressServiceProviderGrid').datagrid("clearSelections");
-	//		
+	//
 	$('#expressServiceProviderGrid').datagrid({
 		url : contextPath+ "/pages/system/queryShopInfos.light?queryParams="+ queryParams 
 	});
@@ -384,6 +659,10 @@ function searchExpressInfo() {
 
 function addExpressServiceProvider() {
 	$('#addExpressServiceProvider').window('open');
+}
+
+function addServiceProviderContacts() {
+	$('#addServiceProviderContacts').window('open');
 }
 
 function formatItem(row){

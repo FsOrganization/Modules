@@ -37,7 +37,7 @@ $(document).ready(function() {
 		});
 		
 		$('#customerGrid').datagrid({
-//			dataType : 'json',
+			dataType : 'json',
 			url : contextPath + '/pages/system/customer/getCustomerList.light',
 			width : $(window).width() * 1,
 			height :($(window).height()-30)*0.99,
@@ -49,7 +49,7 @@ $(document).ready(function() {
 			idField : 'ID',
 			pageSize : 20,
 			queryParams: {
-				batchNumber: ''
+				queryParams: ''
 			},
 //			toolbar: [
 //	        {
@@ -342,7 +342,10 @@ function searchExpressInfo() {
 	$('#customerGrid').datagrid("clearSelections");
 	//		
 	$('#customerGrid').datagrid({
-		url : contextPath+ "/pages/system/customer/getCustomerList.light?queryParams="+ queryParams 
+		url : contextPath+ "/pages/system/customer/getCustomerList.light",
+		queryParams: {
+			queryParams: queryParams
+		}
 	});
 
 	var paper = $('#customerGrid').datagrid('getPager');

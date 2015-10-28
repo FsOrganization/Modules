@@ -105,13 +105,11 @@ label:hover:before {
 }
 </style>
 <script type="text/javascript">
+	
 </script>
 </head>
 <body style="background: white;">
-<!-- 	<div style="margin: 4px;"> -->
-<!--        	&nbsp;&nbsp;服务商名称：<input id="queryParams" name="queryParams" style="width: 150px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="名称"> -->
-<!-- 	</div> -->
-	<table id="expressServiceProviderGrid" class="easyui-datagrid" style="height: auto;"></table>
+	<table id="expressServiceProviderGrid" style="height: auto;"></table>
     <div id="addExpressServiceProvider" class="container" style="min-height: 300px;overflow:hidden;">
 			<section class="af-wrapper">
 	            <h1></h1>
@@ -123,6 +121,7 @@ label:hover:before {
 						<div class="af-inner">
 							<label for="shopName">服务商名称:</label>
 							<input type="text" name="name" id="name" style="width: 279px;">
+							<span style="color:red;"> (*必填项)</span>
 						</div>
 					</div>
 					<div class="af-outer" style="display: none;">
@@ -160,6 +159,45 @@ label:hover:before {
 				<div style="text-align:center;">
 				  	<input id="saveBtn" type="button" value="保存" style="height: 30px;width: 49px;"/>
 					<input id="cancelBtn" type="button" value="关闭" style="height: 30px;width: 49px;"/>
+				</div>
+			</section>
+        </div>
+        <div id="expressServiceProviderContacts" class="container" style="min-height: 300px;overflow:hidden;display: none;">
+       		<table id="expressServiceProviderContactsGrid" style="height: auto;"></table>
+        </div>
+        
+        <div id="addServiceProviderContacts" class="container" style="min-height: 300px;overflow:hidden;">
+        <section class="af-wrapper">
+	            <h1></h1>
+	            <label for="showreqContacts" class="af-show" style="margin: -15px 40px;">*突出必填项</label>
+				<input id="showreqContacts" class="af-show-input" type="checkbox" name="showreqContacts"/>
+				<input type="hidden" name="providerId" id="providerId">
+				<input type="hidden" name="expressServiceProviderContactsId" id="expressServiceProviderContactsId">
+				<form class="af-form" id="af-form" novalidate style="margin: 16px -15px;">
+					<div class="af-outer af-required">
+						<div class="af-inner">
+							<label for="shopContacts">联系人:</label>
+							<input type="text" name="providerContacts" id="providerContacts" style="width: 279px;"/>
+							<span style="color:red;"> (*必填项)</span>
+						</div>
+					</div>
+					<div class="af-outer af-required">
+						<div class="af-inner">
+							<label for="shopContacts">联系电话:</label>
+							<input type="text" name="providerPhoneNumber" id="providerPhoneNumber" style="width: 279px;"/>
+							<span style="color:red;"> (*必填项)</span>
+						</div>
+					</div>
+					<div class="af-outer">
+						<div class="af-inner">
+							<label for="shopContacts">备注:</label>
+							<input type="text" name="providerRemark" id="providerRemark" style="width: 279px;"/>
+						</div>
+					</div>
+				</form>
+				<div style="text-align:center;">
+				  	<input id="saveContactsBtn" type="button" value="保存" style="height: 30px;width: 49px;"/>
+					<input id="cancelContactsBtn" type="button" value="关闭" style="height: 30px;width: 49px;"/>
 				</div>
 			</section>
         </div>

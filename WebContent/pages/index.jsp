@@ -155,7 +155,7 @@
 								<input type="checkbox" id="css3menu-switcher" class="switchbox">
 								<label onclick="" class="switch" for="css3menu-switcher"></label>	
 								<li class="topmenu"><a href="#" style="width:125px;height:25px;line-height:25px;cursor:default;"><img src="<%=contextPath%>/pages/menuStyle/users.png" alt=""/>客户管理</a></li>
-								<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("客户信息管理", "<%=contextPath%>/pages/business/customer/customerInfo.jsp","icon-sz",undefined,"infinished");'>客户信息管理</a></li>
+								<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("客户信息管理", "<%=contextPath%>/pages/business/customer/customerInfo.jsp","icon-sz",undefined,"customer");'>客户信息管理</a></li>
 							</ul>
 					</center>
 				</div>
@@ -173,20 +173,30 @@
 				
 				<div align="center" id="configSeting">
 					<center>
-					<ul id="css3menu1" class="topmenu">
-									<input type="checkbox" id="css3menu-switcher" class="switchbox">
-									<label onclick="" class="switch" for="css3menu-switcher"></label>	
-									<li class="topmenu"><a href="#" style="width:125px;height:25px;line-height:25px;cursor:default;"><img src="<%=contextPath%>/pages/menuStyle/process1.png" alt=""/>系统设置</a></li>
-									<li class="topmenu"><a href="#" style="width:125px;text-align: center;"><span>区域&网点设置</span></a>
-										<ul>
-											<li><a href="javascript:void(0);" onclick='addTab("区域设置", "<%=contextPath%>/pages/business/systemSetUp/areaSetUp.jsp","icon-sz",undefined,"infinished");'>区域设置</a></li>
-											<li><a style="font-weight: 100;" href="javascript:void(0);" onclick='addTab("网点设置", "<%=contextPath%>/pages/business/systemSetUp/shopSetUp.jsp","icon-sz",undefined,"infinished");'>网点设置</a></li>
-										</ul>
-									</li>
-									<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("用户设置", "<%=contextPath%>/pages/business/systemSetUp/userSetUp.jsp","icon-sz",undefined,"infinished");'>用户设置</a></li>
-									<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("快递服务商设置", "<%=contextPath%>/pages/business/systemSetUp/expressServiceProviderSetUp.jsp","icon-sz",undefined,"infinished");'>快递服务商设置</a></li>
-									<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("短信监控配置", "http://sms.sms.cn/login.php","icon-sz",undefined,"infinished");'>短信监控配置</a></li>
+						<ul id="css3menu1" class="topmenu">
+							<input type="checkbox" id="css3menu-switcher" class="switchbox">
+							<label onclick="" class="switch" for="css3menu-switcher"></label>	
+							<li class="topmenu"><a href="#" style="width:125px;height:25px;line-height:25px;cursor:default;"><img src="<%=contextPath%>/pages/menuStyle/process1.png" alt=""/>系统设置</a></li>
+							<li class="topmenu"><a href="#" style="width:125px;text-align: center;"><span>区域&网点设置</span></a>
+								<ul>
+									<li><a href="javascript:void(0);" onclick='addTab("区域设置", "<%=contextPath%>/pages/business/systemSetUp/areaSetUp.jsp","icon-sz",undefined,"infinished");'>区域设置</a></li>
+									<li><a style="font-weight: 100;" href="javascript:void(0);" onclick='addTab("网点设置", "<%=contextPath%>/pages/business/systemSetUp/shopSetUp.jsp","icon-sz",undefined,"shopSet");'>网点设置</a></li>
 								</ul>
+							</li>
+							<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("用户设置", "<%=contextPath%>/pages/business/systemSetUp/userSetUp.jsp","icon-sz",undefined,"systemSet");'>用户设置</a></li>
+<%-- 							<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("快递服务商设置", "<%=contextPath%>/pages/business/systemSetUp/expressServiceProviderSetUp.jsp","icon-sz",undefined,"infinished");'>快递服务商设置</a></li> --%>
+							<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("短信监控配置", "http://sms.sms.cn/login.php","icon-sz",undefined,"sms");'>短信监控配置</a></li>
+						</ul>
+					</center>
+				</div>
+				<div align="center">
+					<center>
+						<ul id="css3menu1" class="topmenu">
+							<input type="checkbox" id="css3menu-switcher" class="switchbox">
+							<label onclick="" class="switch" for="css3menu-switcher"></label>	
+							<li class="topmenu"><a href="#" style="width:125px;height:25px;line-height:25px;cursor:default;"><img src="<%=contextPath%>/pages/menuStyle/process1.png" alt=""/>参数设置</a></li>
+							<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("快递服务商设置", "<%=contextPath%>/pages/business/systemSetUp/expressServiceProviderSetUp.jsp?loginName=${loginName}","icon-sz",undefined,"provider");'>快递服务商设置</a></li>
+						</ul>
 					</center>
 				</div>
 			</td>

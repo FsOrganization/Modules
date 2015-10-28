@@ -69,6 +69,7 @@ td.contact {
 								                width:280,
 								                height: 35,
 								                formatter: formatItem" />
+								                <span style="color:red;"> (*必填项)</span>
 						</div>
 					</div>
 <!-- 					<div class="af-outer af-required"> -->
@@ -87,6 +88,7 @@ td.contact {
 						<div class="af-inner">
 							<label for="input-name">寄件人手机号码:</label>
 							<input type="text" name="senderNumber" id="senderNumber" style="width: 279px;">
+							<span style="color:red;"> (*必填项)</span>
 						</div>
 					</div>
 					
@@ -94,6 +96,7 @@ td.contact {
 						<div class="af-inner">
 							<label for="input-name">寄件人姓名:</label>
 							<input type="text" name="senderName" id="senderName" style="width: 279px;"/>
+							<span style="color:red;"> (*必填项)</span>
 						</div>
 					</div>
 <!-- 					<div class="af-outer af-required"> -->
@@ -106,24 +109,27 @@ td.contact {
 						<div class="af-inner">
 							<label for="input-title">快件运单号:</label>
 							<input type="text" name="logistics" id="logistics" style="width: 279px;">
+							<span style="color:red;"> (*必填项)</span>
 						</div>
 					</div>
 					<div class="af-outer af-required">
 						<div class="af-inner">
 							<label for="input-name">收件人手机号码:</label>
 							<input type="text" name="phoneNumber" id="phoneNumber" style="width: 279px;">
+							<span style="color:red;"> (*必填项)</span>
 						</div>
 					</div>
 					<div class="af-outer af-required">
 						<div class="af-inner">
 						  <label for="input-country">物品:</label>
 						  <input type="text" name="res" id="res" style="width: 279px;">
+						  <span style="color:red;"> (*必填项)</span>
 						</div>
 					</div>
 					<div class="af-outer af-required">
 						<div class="af-inner">
 						  <label for="input-country">价格:</label>
-						  <input type="text" name="price" id="price" style="width: 279px;" placeholder="￥"> (￥)
+						  <input type="text" name="price" id="price" style="width: 279px;" placeholder="￥ 没有可填写的价格请填 0"> (￥)
 						</div>
 					</div>
 				</form>

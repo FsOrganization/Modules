@@ -17,7 +17,7 @@ $(document).ready(function() {
 	if ( loginName != 'admin') {
 		$('#statistics').hide();
 		$('#configSeting').hide();
-		$('#customerSeting').hide();
+//		$('#customerSeting').hide();
 		
 		
 	}

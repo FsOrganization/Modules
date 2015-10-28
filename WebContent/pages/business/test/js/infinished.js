@@ -35,10 +35,14 @@ function openWindow(rowIndex, rowData) {
 };
 
 function queryData() {
+	var bn = $('#batchNumber').val();
+	if (bn == null || bn == '') {
+		bn = $('#query_batchNumber').val();
+	}
 	$('#infinishedGrid').datagrid({
 		url : contextPath + '/pages/system/getExpressByBatchNumber.light',
 		queryParams: {
-			"batchNumber": $('#batchNumber').val()
+			"batchNumber": bn
 		}
 	});
 	batchNumber = $('#query_batchNumber').val();
@@ -97,7 +101,6 @@ function clearOneType(type){
 
 $(document).ready(function() {
 	$("#showBatchNumber").click(function(){
-		toggleSwitchF
 		  $("#batchNumberDiv").toggle(50,
 				  function()
 				  {
@@ -114,7 +117,6 @@ $(document).ready(function() {
 							    height:468,
 						  });
 					  }
-					  
 			  	  }
 		  );
 	});
@@ -298,6 +300,12 @@ $(document).ready(function() {
 			}
 		}],
 		columns : [ [ {
+			field : 'SERVICE_SHOP_CODE',
+			title : 'SERVICE_SHOP_CODE',
+			width : 60,
+			align : 'center',
+			hidden : true
+		},{
 			field : 'BATCH_NUMBER',
 			title : '批次号',
 			width : 60,
@@ -557,7 +565,7 @@ var submitForm = function() {
 			"batchNumber":$('#batchNumber').val()
 		},
 		success : function(data) {
-			sendRemindersToCustomer(phoneNumber,$('#logistics').val(),$('#expressServiceId').combo('getText'));
+			sendRemindersToCustomer(phoneNumber,$('#logistics').val(),formatColumnTitle($('#expressServiceId').combo('getText')));
  			$('#infinishedGrid').datagrid({
  				url : contextPath + '/pages/system/getExpressByBatchNumber.light',
 				queryParams: {
@@ -596,7 +604,12 @@ function sendRemindersToCustomer(phoneNumber,LOGISTICS,EXPRESS_SERVICE) {
 		type: "POST",
 		sync:true,
 		dataType:'json',
-		data:{"PHONE_NUMBER":phoneNumber,"SHOP_CODE":'',"LOGISTICS":LOGISTICS,"EXPRESS_SERVICE":EXPRESS_SERVICE},
+		data:{
+			"PHONE_NUMBER":phoneNumber,
+			"SHOP_CODE":'',
+			"LOGISTICS":LOGISTICS,
+			"EXPRESS_SERVICE":EXPRESS_SERVICE
+		},
 		success : function(data) {
 //			unblock("presentSelfForm");
 		},
