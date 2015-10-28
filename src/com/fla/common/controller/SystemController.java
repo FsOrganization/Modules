@@ -693,21 +693,49 @@ public class SystemController extends SuperController{
 	public ModelAndView addExpressServiceProvider(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
 		JSONObject json = new JSONObject();
 		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (s ==null) {
-			return JumpModelAndView();
-		}
 		ExpressServiceProvider expressServiceProvider=null;
 		try 
 		{
 			expressServiceProvider = jsonToExpressServiceProviderEntity(request);
 			systemServiceInterface.insertExpressServiceProvider(expressServiceProvider, null);			
 		} catch (NullPointerException e) {
-			response.setCharacterEncoding("utf-8");
-			response.setContentType("text/html; charset=utf-8");
-			PrintWriter printWriter = response.getWriter();
-			printWriter.write("NEED_LOGIN");
-			printWriter.flush();
-			printWriter.close();
+			e.printStackTrace();
+		}
+		json.put("msg", "保存成功");
+		response.setCharacterEncoding("utf-8");          
+		response.setContentType("text/html; charset=utf-8");
+		PrintWriter printWriter = response.getWriter();
+		printWriter.write(json.toString()); 
+        printWriter.flush();
+        printWriter.close();
+		return null;
+		
+	}
+	
+	@ResponseBody
+	@RequestMapping("/pages/system/addServiceProviderContacts.light")
+	public ModelAndView addServiceProviderContacts(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
+		JSONObject json = new JSONObject();
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		Map<String,String> params =  new HashMap<String,String>();
+		String areaCode = s.getAreaCode();
+		String shopCode = s.getServiceShopCode();
+		String providerContacts = request.getParameter("providerContacts");
+		String providerPhoneNumber = request.getParameter("providerPhoneNumber");
+		String providerRemark = request.getParameter("providerRemark");
+		String providerId = request.getParameter("providerId");
+		
+		try 
+		{
+			params.put("areaCode", areaCode);
+			params.put("shopCode", shopCode);
+			params.put("providerContacts", providerContacts);
+			params.put("providerPhoneNumber", providerPhoneNumber);
+			params.put("providerRemark", providerRemark);
+			params.put("providerId", providerId);
+			systemServiceInterface.addServiceProviderContacts(params);	
+		} catch (NullPointerException e) {
+			e.printStackTrace();
 		}
 		json.put("msg", "保存成功");
 		response.setCharacterEncoding("utf-8");          
@@ -722,24 +750,16 @@ public class SystemController extends SuperController{
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/modifyExpressServiceProvider.light")
-	public ModelAndView modifyExpressServiceProvider(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
+	public void modifyExpressServiceProvider(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
 		JSONObject json = new JSONObject();
 		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (s ==null) {
-			return JumpModelAndView();
-		}
 		ExpressServiceProvider esp=null;
 		try 
 		{
 			esp = jsonToExpressServiceProviderEntity(request);
 			systemServiceInterface.modifyExpressServiceProvider(esp);
 		} catch (NullPointerException e) {
-			response.setCharacterEncoding("utf-8");
-			response.setContentType("text/html; charset=utf-8");
-			PrintWriter printWriter = response.getWriter();
-			printWriter.write("NEED_LOGIN");
-			printWriter.flush();
-			printWriter.close();
+			e.printStackTrace();
 		}
 		json.put("msg", "保存成功");
 		response.setCharacterEncoding("utf-8");          
@@ -748,8 +768,92 @@ public class SystemController extends SuperController{
 		printWriter.write(json.toString()); 
         printWriter.flush();
         printWriter.close(); 
-		return null;
 		
 	}
-
+	
+	
+	@ResponseBody
+	@RequestMapping("/pages/system/queryExpressServiceProviderContactsList.light")
+	public void queryExpressServiceProviderContactsList(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
+		PrintWriter printWriter = null;
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		try 
+		{
+			String shopCode = s.getServiceShopCode();
+			String providerId = request.getParameter("providerId");
+			JSONArray jsonArray = systemServiceInterface.queryExpressServiceProviderContactsList(providerId,shopCode);
+			response.setCharacterEncoding("utf-8");          
+			response.setContentType("text/html; charset=utf-8");
+            printWriter = response.getWriter();
+            printWriter.write(jsonArray.toString());
+		} finally {
+			printWriter.flush();
+			printWriter.close();
+		}
+	}
+	
+	@ResponseBody
+	@RequestMapping("/pages/system/modifyServiceProviderContacts.light")
+	public void modifyServiceProviderContacts(HttpServletRequest request,HttpServletResponse response)  {
+		JSONObject json = new JSONObject();
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		Map<String,String> params =  new HashMap<String,String>();
+		String id = request.getParameter("id");
+		String providerContacts = request.getParameter("providerContacts");
+		String providerPhoneNumber = request.getParameter("providerPhoneNumber");
+		String providerRemark = request.getParameter("providerRemark");
+		PrintWriter printWriter = null;
+		params.put("id", id);
+		params.put("providerContacts", providerContacts);
+		params.put("providerPhoneNumber", providerPhoneNumber);
+		params.put("providerRemark", providerRemark);
+		try 
+		{
+			systemServiceInterface.modifyServiceProviderContacts(params);
+			json.put("msg", "保存成功");
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("text/html; charset=utf-8");
+			printWriter = response.getWriter();
+			printWriter.write(json.toString());
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			printWriter.flush();
+	        printWriter.close();
+		}
+		
+	}
+	
+	@ResponseBody
+	@RequestMapping("/pages/system/deleteProviderContactsById.light")
+	public void deleteProviderContactsById(HttpServletRequest request,HttpServletResponse response)  {
+		JSONObject json = new JSONObject();
+		Map<String,String> params =  new HashMap<String,String>();
+		String id = request.getParameter("id");
+		PrintWriter printWriter = null;
+		params.put("id", id);
+		try 
+		{
+			systemServiceInterface.deleteProviderContactsById(params);
+			json.put("msg", "删除成功");
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("text/html; charset=utf-8");
+			printWriter = response.getWriter();
+			printWriter.write(json.toString());
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			printWriter.flush();
+	        printWriter.close();
+		}
+		
+	}
 }

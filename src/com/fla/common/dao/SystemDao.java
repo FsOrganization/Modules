@@ -556,6 +556,7 @@ public class SystemDao implements SystemDaoInterface {
 		String newShopCode = temporaryId.toString();
 		String value = StringUtils.leftPad(newShopCode, 4, "0");
 		v.put("newShopCode", value);
+		connectionManager.closeConnection(con);
 		return v;
 	}
 
@@ -570,6 +571,7 @@ public class SystemDao implements SystemDaoInterface {
 		String newAreaCode = temporaryId.toString();
 		String value = StringUtils.leftPad(newAreaCode, 4, "0");
 		v.put("newAreaCode", value);
+		connectionManager.closeConnection(con);
 		return v;
 	}
 	
@@ -718,6 +720,7 @@ public class SystemDao implements SystemDaoInterface {
 		String newShopCode = temporaryId.toString();
 		String value = StringUtils.leftPad(newShopCode, 3, "0");
 		v.put("temporaryId", value);
+		connectionManager.closeConnection(con);
 		return v;
 	}
 	
@@ -1005,6 +1008,125 @@ public class SystemDao implements SystemDaoInterface {
 			connectionManager.closeConnection(con);
 		}
 		return t;
+	}
+	
+	@Override
+	public String getShopNameByCode(Map<String, String> params) throws SQLException {
+		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement st = null;
+		String name = "";
+		try 
+		{
+			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
+			st = con.prepareStatement("select NAME from tf_shop_info where SHOP_CODE=?");
+			st.setString(1, params.get("shopCode"));
+			rs = st.executeQuery();
+			while (rs.next()) {
+				name =rs.getString(1);//index start with 1  
+			}
+		} finally {
+			connectionManager.closeResultSet(rs);
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+		return name;
+	}
+
+	@Override
+	public void addServiceProviderContacts(Map<String, String> params) throws SQLException {
+		Connection con = null;
+		PreparedStatement st = null;
+		con = connectionManager.getConnection();
+		SequenceManager sm = SequenceManager.getInstance();
+		Integer id = sm.getSequenceByName("seq_express_service_provider_contacts_id", con);
+		String insertSQL =
+			"INSERT INTO tf_express_service_provider_contacts(ID, NAME, PHONE_NUMBER, AREA_CODE, SERVICE_SHOP_CODE, TYPE, REMARK,PROVIDER_ID)"+
+			"VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        st=con.prepareStatement(insertSQL);
+		st.setLong(1, id);
+		st.setString(2, params.get("providerContacts"));
+		st.setString(3, params.get("providerPhoneNumber"));
+		st.setString(4, params.get("areaCode"));
+		st.setString(5, params.get("shopCode"));
+		st.setString(6, null);
+		st.setString(7, params.get("providerRemark"));
+		st.setInt(8, Integer.valueOf(params.get("providerId")));
+		try 
+		{
+			st.execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+	}
+
+	@Override
+	public List<Map<String, Object>> queryExpressServiceProviderContactsList(String providerId, String shopCode) {
+		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement st = null;
+		List<Map<String, Object>> t = null;
+		try 
+		{
+			con = connectionManager.getConnection();
+			st = con.prepareStatement("select * from tf_express_service_provider_contacts where PROVIDER_ID = ? and SERVICE_SHOP_CODE = ?");
+			st.setString(1, providerId);
+			st.setString(2, shopCode);
+			rs = st.executeQuery();
+			t = checkResultSet(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			connectionManager.closeResultSet(rs);
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+		return t;
+	}
+
+	@Override
+	public void modifyServiceProviderContacts(Map<String, String> params)
+			throws SQLException {
+		Connection con = null;
+		PreparedStatement st = null;
+		String sql = "update tf_express_service_provider_contacts set NAME = ?, PHONE_NUMBER=?, REMARK=? where ID=?";
+		con = connectionManager.getConnection();
+        st=con.prepareStatement(sql);
+		st.setString(1,params.get("providerContacts"));
+		st.setString(2,params.get("providerPhoneNumber"));
+		st.setString(3, params.get("providerRemark"));
+		st.setInt(4, Integer.parseInt(params.get("id")));
+		try 
+		{
+				st.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+	}
+
+	@Override
+	public void deleteProviderContactsById(Map<String, String> params) throws SQLException {
+		Connection con = null;
+		PreparedStatement st = null;
+		String sql = "delete from tf_express_service_provider_contacts where ID=?";
+		con = connectionManager.getConnection();
+        st=con.prepareStatement(sql);
+		st.setInt(1, Integer.parseInt(params.get("id")));
+		try 
+		{
+				st.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
 	}
 	
 }

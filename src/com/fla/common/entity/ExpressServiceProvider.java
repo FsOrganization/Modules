@@ -72,5 +72,13 @@ public class ExpressServiceProvider implements Serializable{
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
+	@Override
+	public int hashCode() {
+		return super.hashCode()+this.name.hashCode();
+	}
+	@Override
+	public String toString() {
+		return super.toString();
+	}
 
 }

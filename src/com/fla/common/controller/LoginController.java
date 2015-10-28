@@ -145,7 +145,7 @@ public class LoginController extends SuperController{
 			params.put("areaCode", s.getAreaCode());
 			params.put("serviceShopCode", s.getServiceShopCode());
 			JSONArray ja = loginServiceInterface.getExpressByBatchNumber(rowSize, pageSize,params);
-			response.setCharacterEncoding("utf-8");          
+			response.setCharacterEncoding("utf-8");
 			response.setContentType("text/html; charset=utf-8");
 			PrintWriter printWriter = response.getWriter();
 			printWriter.write(ja.toString()); 

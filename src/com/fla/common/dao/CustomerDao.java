@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Map;
 
 import net.sf.json.JSONObject;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fla.common.dao.interfaces.CustomerDaoInterface;
 import com.fla.common.entity.CustomerInfo;
 import com.fla.common.util.Pagination;
-import com.fla.common.util.ResultSetUtils;
 import com.fla.common.util.SequenceManager;
 import com.fla.common.util.connection.ConnectionManager;
 
@@ -62,10 +60,12 @@ public class CustomerDao implements CustomerDaoInterface {
 				+ "	select SENDER_NUMBER,count(1) sCount  "
 				+ " from tf_sent_express_info a group by SENDER_NUMBER) c on a.PHONE_NUMBER = c.SENDER_NUMBER ");
 		if (params.get("queryParams") != null && !params.get("queryParams").equals("")) {
-			sql.append( "	where a.PHONE_NUMBER ='"+params.get("queryParams")+"' or a.NAME = '"+params.get("queryParams")+"'");
+			sql.append( "	where a.PHONE_NUMBER ='"+params.get("queryParams")+"' or substring(a.PHONE_NUMBER, 8, 4) ='"+params.get("queryParams")+"' or a.NAME = '"+params.get("queryParams")+"'");
+			sql.append("  and a.SERVICE_SHOP_CODE="+params.get("shopCode"));
+		} else {
+			sql.append(" where a.SERVICE_SHOP_CODE="+params.get("shopCode"));
 		}
-		sql.append(" order by eCount desc");
-				
+		sql.append(" order by SERVICE_SHOP_CODE,eCount desc");
 		page = new Pagination(sql.toString(), pageSize, rowSize,getJdbcTemplate());
 		return page;
 	}

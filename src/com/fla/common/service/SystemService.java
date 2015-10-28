@@ -493,4 +493,63 @@ public class SystemService implements SystemServiceInterface{
 		return array;
 	}
 	
+	@Override
+	public String getShopNameByCode(String shopCode) {
+		Map<String,String> param = new HashMap<String,String>();
+		param.put("shopCode", shopCode);
+		String name="";
+		try 
+		{
+			name = systemDao.getShopNameByCode(param);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return name;
+	}
+
+	@Override
+	public JSONObject addServiceProviderContacts(Map<String, String> params) {
+		try 
+		{
+			systemDao.addServiceProviderContacts(params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public JSONArray queryExpressServiceProviderContactsList(String providerId, String shopCode) {
+		List<Map<String, Object>> rowMap = systemDao.queryExpressServiceProviderContactsList(providerId, shopCode);
+		JSONArray array = new JSONArray();
+		if (rowMap != null) {
+			makeJSONArray(rowMap, array);
+		}
+		return array;
+	}
+
+	@Override
+	public JSONObject modifyServiceProviderContacts(Map<String, String> params)
+			throws SQLException {
+		try 
+		{
+			systemDao.modifyServiceProviderContacts(params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public JSONObject deleteProviderContactsById(Map<String, String> params)
+			throws SQLException {
+		try 
+		{
+			systemDao.deleteProviderContactsById(params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 }

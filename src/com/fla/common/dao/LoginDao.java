@@ -72,7 +72,7 @@ public class LoginDao implements LoginDaoInterface {
 			sql = "select a.ID,a.LOGISTICS,a.CODE,"
 					+ " a.RECIPIENT_NAME,b.WEIXIN_ID,a.PHONE_NUMBER,a.LANDLINE_NUMBER,"
 					+ " a.EXPRESS_SERVICE_ID,a.ADDRESS,a.REMARK,a.BATCH_NUMBER,"
-					+ " date_format(a.OPERA_TIME,'%Y-%c-%d %h:%i:%s') OPERA_TIME,a.AREA_CODE,a.SERVICE_SHOP_CODE,"
+					+ " date_format(a.OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,a.AREA_CODE,a.SERVICE_SHOP_CODE,"
 					+ " a.OPERATOR,a.EXPRESS_lOCATION,1 TYPE,b.GENDER"
 					+ " from TF_EXPRESS_INFO a left join tf_customer_info b on a.PHONE_NUMBER = b.PHONE_NUMBER where a.SERVICE_SHOP_CODE='"+params.get("serviceShopCode")+"'  order by a.opera_time";
 			page=new Pagination(sql.toString(),pageSize,rowSize,getJdbcTemplate());
@@ -94,7 +94,7 @@ public class LoginDao implements LoginDaoInterface {
 			st = con.prepareStatement("select  ID,LOGISTICS,CODE,"
 					+ "RECIPIENT_NAME,PHONE_NUMBER,LANDLINE_NUMBER,"
 					+ "EXPRESS_SERVICE_ID,ADDRESS,REMARK,BATCH_NUMBER,OUT_BATCH_NUMBER,"
-					+ "date_format(OPERA_TIME,'%Y-%c-%d %h:%i:%s') OPERA_TIME,AREA_CODE,SERVICE_SHOP_CODE,"
+					+ "date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,AREA_CODE,SERVICE_SHOP_CODE,"
 					+ "OPERATOR,EXPRESS_lOCATION,-1 TYPE "
 					+ "from TF_EXPRESS_OUT_STOREHOUSE where AREA_CODE=?  order by opera_time");
 			st.setString(1, params.get("areaCode"));
@@ -128,7 +128,7 @@ public class LoginDao implements LoginDaoInterface {
 			StringBuilder sql = new StringBuilder();
 			sql.append(" select ID, LOGISTICS, CODE, RECIPIENT_NAME, PHONE_NUMBER, "
 					+ "LANDLINE_NUMBER, EXPRESS_SERVICE_ID, ADDRESS, REMARK, BATCH_NUMBER, ' ' OUT_BATCH_NUMBER, "
-					+ "date_format(OPERA_TIME,'%Y-%c-%d %h:%i:%s') OPERA_TIME,' '  OUT_OPERA_TIME, AREA_CODE, SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,1 TYPE "
+					+ "date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,' '  OUT_OPERA_TIME, AREA_CODE, SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,1 TYPE "
 					+ "from TF_EXPRESS_INFO");
 			sql.append(" where 1=1 ");
 			sql.append(" and SERVICE_SHOP_CODE="+params.get("serviceShopCode"));
@@ -158,7 +158,7 @@ public class LoginDao implements LoginDaoInterface {
 			StringBuilder sql2 = new StringBuilder();
 			sql2.append(" select ID, LOGISTICS, CODE, RECIPIENT_NAME, PHONE_NUMBER, "
 					+ "LANDLINE_NUMBER, EXPRESS_SERVICE_ID, ADDRESS, REMARK, BATCH_NUMBER, OUT_BATCH_NUMBER,  "
-					+ "date_format(OPERA_TIME,'%Y-%c-%d %h:%i:%s') OPERA_TIME,OUT_OPERA_TIME, AREA_CODE, SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,-1 TYPE "
+					+ "date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,OUT_OPERA_TIME, AREA_CODE, SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,-1 TYPE "
 					+ "from TF_EXPRESS_OUT_STOREHOUSE");
 			sql2.append(" where 1=1 ");
 			sql2.append(" and SERVICE_SHOP_CODE="+params.get("serviceShopCode"));
@@ -208,7 +208,7 @@ public class LoginDao implements LoginDaoInterface {
 			StringBuilder sql = new StringBuilder();
 			sql.append(" select ID, LOGISTICS, CODE, RECIPIENT_NAME, PHONE_NUMBER, "
 					+ "LANDLINE_NUMBER, EXPRESS_SERVICE_ID, ADDRESS, REMARK, BATCH_NUMBER, '' OUT_BATCH_NUMBER, "
-					+ "date_format(OPERA_TIME,'%Y-%c-%d %h:%i:%s') OPERA_TIME,''  OUT_OPERA_TIME, AREA_CODE, SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,1 TYPE "
+					+ "date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,''  OUT_OPERA_TIME, AREA_CODE, SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,1 TYPE "
 					+ "from TF_EXPRESS_INFO");
 			sql.append(" where 1=1 ");
 			sql.append(" and SERVICE_SHOP_CODE="+params.get("serviceShopCode"));
@@ -239,7 +239,7 @@ public class LoginDao implements LoginDaoInterface {
 			StringBuilder sql2 = new StringBuilder();
 			sql2.append(" select ID, LOGISTICS, CODE, RECIPIENT_NAME, PHONE_NUMBER, "
 					+ "LANDLINE_NUMBER, EXPRESS_SERVICE_ID, ADDRESS, REMARK, BATCH_NUMBER, OUT_BATCH_NUMBER, "
-					+ "date_format(OPERA_TIME,'%Y-%c-%d %h:%i:%s') OPERA_TIME,OUT_OPERA_TIME, AREA_CODE, SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,-1 TYPE "
+					+ "date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,OUT_OPERA_TIME, AREA_CODE, SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,-1 TYPE "
 					+ "from TF_EXPRESS_OUT_STOREHOUSE");
 			sql2.append(" where 1=1 ");
 			sql2.append(" and SERVICE_SHOP_CODE="+params.get("serviceShopCode"));
@@ -294,7 +294,7 @@ public class LoginDao implements LoginDaoInterface {
 			StringBuilder sql = new StringBuilder();
 			sql.append(" select a.ID, LOGISTICS, a.CODE, RECIPIENT_NAME, a.PHONE_NUMBER, "
 					+ "LANDLINE_NUMBER, b.name EXPRESS_SERVICE_ID, ADDRESS, a.REMARK, BATCH_NUMBER, '' OUT_BATCH_NUMBER, "
-					+ "date_format(OPERA_TIME,'%Y-%c-%d %h:%i:%s') OPERA_TIME,''  OUT_OPERA_TIME, a.AREA_CODE, a.SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,1 TYPE "
+					+ "date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,''  OUT_OPERA_TIME, a.AREA_CODE, a.SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,1 TYPE "
 					+ "from TF_EXPRESS_INFO a ,TF_EXPRESS_SERVICE_PROVIDER_INFO b");
 			sql.append(" where 1=1 ");
 			sql.append(" and a.EXPRESS_SERVICE_ID = b.id");
@@ -326,7 +326,7 @@ public class LoginDao implements LoginDaoInterface {
 			StringBuilder sql2 = new StringBuilder();
 			sql2.append(" select a.ID, LOGISTICS, a.CODE, RECIPIENT_NAME, a.PHONE_NUMBER, "
 					+ "LANDLINE_NUMBER, b.name EXPRESS_SERVICE_ID, ADDRESS, a.REMARK, BATCH_NUMBER, OUT_BATCH_NUMBER, "
-					+ "date_format(OPERA_TIME,'%Y-%c-%d %h:%i:%s') OPERA_TIME,OUT_OPERA_TIME, a.AREA_CODE, a.SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,-1 TYPE "
+					+ "date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,OUT_OPERA_TIME, a.AREA_CODE, a.SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,-1 TYPE "
 					+ "from TF_EXPRESS_OUT_STOREHOUSE a ,TF_EXPRESS_SERVICE_PROVIDER_INFO b");
 			sql2.append(" where 1=1 ");
 			sql2.append(" and a.EXPRESS_SERVICE_ID = b.id");
@@ -378,7 +378,7 @@ public class LoginDao implements LoginDaoInterface {
 			StringBuilder sql = new StringBuilder();
 			sql.append(" select a.ID, a.LOGISTICS, a.CODE,b.WEIXIN_ID,a.RECIPIENT_NAME, a.PHONE_NUMBER,"
 					+ "a.LANDLINE_NUMBER, a.EXPRESS_SERVICE_ID, a.ADDRESS, a.REMARK, a.BATCH_NUMBER,"
-					+ "date_format(a.OPERA_TIME,'%Y-%c-%d %h:%i:%s') OPERA_TIME, a.AREA_CODE, a.SERVICE_SHOP_CODE, a.OPERATOR, a.EXPRESS_lOCATION,1 TYPE "
+					+ "date_format(a.OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME, a.AREA_CODE, a.SERVICE_SHOP_CODE, a.OPERATOR, a.EXPRESS_lOCATION,1 TYPE "
 					+ "from TF_EXPRESS_INFO a left join tf_customer_info b on a.PHONE_NUMBER = b.PHONE_NUMBER");
 			sql.append(" where 1=1 ");
 			sql.append(" and a.SERVICE_SHOP_CODE="+params.get("serviceShopCode"));

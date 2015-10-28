@@ -129,6 +129,14 @@ public class CustomerInfo implements Serializable{
 	public void setWhetherHaveCar(String whetherHaveCar) {
 		this.whetherHaveCar = whetherHaveCar;
 	}
+	@Override
+	public int hashCode() {
+		return super.hashCode()+this.phoneNumber.hashCode();
+	}
+	@Override
+	public String toString() {
+		return super.toString();
+	}
 	
 	
 }

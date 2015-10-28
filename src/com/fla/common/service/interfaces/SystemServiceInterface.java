@@ -68,7 +68,7 @@ public interface SystemServiceInterface {
 	public JSONArray getExpressServiceProviderList(String areaCode,String shopCode) throws SQLException ;
 	
 	public JSONObject insertExpressServiceProvider(ExpressServiceProvider esp,Map<String,String> params) throws SQLException;
-	
+
 	public JSONObject modifyExpressServiceProvider(ExpressServiceProvider esp) throws SQLException;
 	
 	public JSONArray getExpressStatisticalArea(String areaCode) throws SQLException;
@@ -76,5 +76,15 @@ public interface SystemServiceInterface {
 	public JSONArray getShopNumberOfPeopleGroupCount(String type,String code) throws SQLException;
 	
 	public JSONArray getShopInAndSendExpressGroupCount(String type,String code,String startDate,String endDate) throws SQLException ;
+	
+	public String getShopNameByCode(String shopCode) ;
+	
+	public JSONObject addServiceProviderContacts(Map<String,String> params);
+	
+	public JSONArray queryExpressServiceProviderContactsList(String providerId,String shopCode);
+	
+	public JSONObject modifyServiceProviderContacts(Map<String,String> params) throws SQLException;
+	
+	public JSONObject deleteProviderContactsById(Map<String,String> params) throws SQLException;
 	
 }

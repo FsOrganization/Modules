@@ -57,7 +57,7 @@ public class ExpressDao implements ExpressDaoInterface {
 			sql.append("select ID,LOGISTICS,CODE,"
 					+ " RECIPIENT_NAME,PHONE_NUMBER,LANDLINE_NUMBER,SENDER_NAME,SENDER_NUMBER,"
 					+ " DESTINATION,EXPRESS_SERVICE_ID,ADDRESS,REMARK,SENDER_LANDLINE_NUMBER,"
-					+ " date_format(OPERA_TIME,'%Y-%c-%d %h:%i:%s') OPERA_TIME,AREA_CODE,SERVICE_SHOP_CODE,RES,"
+					+ " date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,AREA_CODE,SERVICE_SHOP_CODE,RES,"
 					+ " OPERATOR,EXPRESS_lOCATION,TYPE,PRICE"
 					+ " from tf_sent_express_info ");
 			sql.append(" where 1=1 ");

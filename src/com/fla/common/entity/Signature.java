@@ -84,5 +84,13 @@ public class Signature {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+	@Override
+	public int hashCode() {
+		return super.hashCode()+this.operator.hashCode()+this.batchNumber.hashCode();
+	}
+	@Override
+	public String toString() {
+		return super.toString();
+	}
 
 }

@@ -173,4 +173,16 @@ public class ExpressInfo implements Serializable{
 		this.type = type;
 	}
 
+	@Override
+	public int hashCode() {
+		return super.hashCode()+this.phoneNumber.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return super.toString();
+	}
+	
+	
+
 }

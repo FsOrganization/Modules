@@ -175,6 +175,14 @@ public class SentExpressInfo implements Serializable{
 	public void setPrice(float  price) {
 		this.price = price;
 	}
+	@Override
+	public int hashCode() {
+		return super.hashCode()+this.operaTime.hashCode();
+	}
+	@Override
+	public String toString() {
+		return super.toString();
+	}
 
 	
 }
