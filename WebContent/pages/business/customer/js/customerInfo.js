@@ -3,7 +3,13 @@ var genderMap = {};
 var whetherHaveCarMap = {};
 var ageSectionMap = {};
 var shopNameMap = {};
-$(document).ready(function() {
+$(document).ready(function(){
+		loginName = getUrlParam("loginName");
+		if (loginName === 'admin') {
+			$('#shopSpan').show();
+		} else {
+			$('#shopSpan').hide();
+		}
 		initShopNameMap();
 		initGender();
 		initWhetherHaveCar();
@@ -51,15 +57,6 @@ $(document).ready(function() {
 			queryParams: {
 				queryParams: ''
 			},
-//			toolbar: [
-//	        {
-//				text:'新增客户',
-//				iconCls: 'icon-search',
-//				handler: function(){
-//					addUser();
-//					operatingTag = false;
-//				}
-//			}],
 			columns : [ [ {
 				field : 'NAME',
 				title : '姓名',
@@ -145,6 +142,30 @@ $(document).ready(function() {
 				openWindow(rowIndex, rowData);
 				operatingTag = true;
 			}
+		});
+		
+		$('#expressServiceId').combobox({
+			url : contextPath + "/pages/system/getShopInfoForSelect.light",
+			valueField : "id",
+			textField : "text",
+			panelWitdh : 180,
+			panelHeight : 260,
+			width : 180,
+			height : 30,
+			value : "",
+			formatter :  function(row){
+				var ip = $("#expressServiceId").parent().find('.combo').children().eq(1);
+				var comb = $(this).combobox('options');
+				$(ip).click(function(){
+					$('#expressServiceId').combo('showPanel');	
+				});
+			    var s = '<span style="font-weight:bold">' + row.text + '</span><br/>' +
+			            '<span style="color:#888">' + row.desc + '</span>';
+			    return s;
+			},
+			onSelect: function(row){
+				searchExpressInfo();
+	        }
 		});
 
 });
@@ -309,6 +330,7 @@ function openWindow(rowIndex, rowData) {
 	var gender = rowData.GENDER;
 	var ageSection = rowData.AGE_SECTION;
 	var whetherHaveCar = rowData.WHETHER_HAVE_CAR;
+	var address = rowData.ADDRESS;
 //	var isCheck = rowData.TYPE;
 	var phoneNumber = rowData.PHONE_NUMBER;
 	$('#customerId').val(id);
@@ -318,6 +340,7 @@ function openWindow(rowIndex, rowData) {
 	
 	$('#name').val(name);
 	$('#phoneNumber').val(phoneNumber);
+	$('#address').val(address);
 	$('#addUser').window('open');
 	
 }
@@ -335,16 +358,18 @@ function clearFormData() {
 function searchExpressInfo() {
 	var queryParams = $("#queryParams").val();
 	queryParams = encodeURI(queryParams);
-	var obj = {
-		"queryParams" : queryParams
-	};
+//	var obj = {
+//		"queryParams" : queryParams
+//	};
 	$('#customerGrid').datagrid("loadData", []);
 	$('#customerGrid').datagrid("clearSelections");
-	//		
+	var shopCode = $("#expressServiceId").combobox('getText');
+//	alert(shopCode);
 	$('#customerGrid').datagrid({
 		url : contextPath+ "/pages/system/customer/getCustomerList.light",
 		queryParams: {
-			queryParams: queryParams
+			queryParams: queryParams,
+			shopCode: shopCode
 		}
 	});
 
