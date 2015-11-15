@@ -216,14 +216,14 @@ public class WeiXinController extends SuperController{
 							String SHOP_NAME = null;
 							for (Object obj : ja) {
 								JSONObject json = JSONObject.fromObject(obj);
-								System.out.println("json:"+json+",ja.size()"+ja.size());
+//								System.out.println("json:"+json+",ja.size()"+ja.size());
 								String LOGISTICS = json.get("LOGISTICS").toString();
 								String PROVIDER_NAME = json.get("PROVIDER_NAME").toString();
 								String OPERA_TIME = json.get("OPERA_TIME").toString();
 								SHOP_NAME  =  json.get("SHOP_NAME").toString();
-								String ff = PROVIDER_NAME+" 的快递："+LOGISTICS+" 收件时间："+OPERA_TIME+"\n";
+								String ff = PROVIDER_NAME+" 的快递："+LOGISTICS+" 到达时间："+OPERA_TIME+"\n";
 								sub.append(ff);
-								sub.append("- - - - - - - - - - - - - - - - - - - ");
+								sub.append("- - - - - - - - - - - - - - - - - -  ");
 								sub.append("\n");
 							}
 							String mmms = ss + sub.toString()+"请尽快到 "+SHOP_NAME+" 幸福快递网点领取!";
