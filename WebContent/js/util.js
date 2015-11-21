@@ -159,51 +159,6 @@ function validateUnderInputByTd(myForm){
 		}
 	});
 	
-	//验证最小长度
-	/*$.each(tds, function(i, td){
-		var inputs = $(td).find(":enabled[name].aids-minlen");
-		
-		var tdFlag = true;
-		$.each(inputs, function(j,input){
-			var length = inputs.attr("minlen");
-			
-			var inputValue = null;
-			if("text" == input.type){
-				
-				inputValue = input.value;
-				if(inputValue.indexOf(" ") > -1){
-					flag = false;
-					tdFlag = false;	
-				}else{
-					if(inputValue.length < length){
-						flag = false;
-						tdFlag = false;	
-					}
-				}
-				
-			}
-		});
-		//下面未完成
-		if(tdFlag == true){
-			$(td).find("span.required").remove();
-		}else{
-			var hasWrapperLength = $(td).has(".wrap").length;
-			var text = $(td).prev().html();
-			if(hasWrapperLength == 0){
-				$(td).wrapInner(function(){
-					return "<div class='wrap'/>";
-				});
-				$(td).append("<span class='required' style='color:red'>" + text + "的长度应该小于</span>");
-			}else{
-				var spanRequiredLength = $(td).has("span.required").length;
-				if(spanRequiredLength ==0 ){
-					$(td).append("<span class='required' style='color:red'>请填写: " +text + "</span>");
-				}
-			}
-		}
-	});*/
-	
-	
 	$.each(tds, function(i, td){
 		var isLegal = $(td).find("span.required,span.number");
 		if(isLegal.length == 0){
@@ -494,68 +449,6 @@ function deleteRowClientSide(button, tableId){
 	    }    
 	});
 	
-}
-/**
- * 普通药品处方下拉选择药品列表渲染
- * @param id 页面元素id
- * @param valueFieldFunction 定义omCombo的值得函数, 不传则为默认
- */
-function generateMedicine(){
-	var id = arguments[0];
-	var valueFieldFunction = arguments[1];
-	 $('#'+ id).omCombo({
-	 	dataSource:contextPath+'/pages/system/getMedListJson.do',
-        //让下拉框宽度与输入框宽度可以不一样
-        listAutoWidth:true,
-        //让下拉框不出现垂直滚动条，有多高就显示多高
-        listMaxHeight:'300',
-        width:'400',
-        //选择记录后回填时把记录的name值回填到输入框里
-        inputField : function(data,index){
-     	   return data.medName+'(' + data.medCode+')';
-    	},        
-        //选择记录后回填时虽然输入框里显示的是name值，但是实际上getValue时得到的是shortName值
-        valueField : valueFieldFunction == null? function(data,index){
-        	   return data.id+'&'+ data.medCode+'&' + data.dose+'&'+data.doseUnit+'&'+data.smallUnit;
-        } : valueFieldFunction,
-        //所有记录按下面的方法的算法渲染到下拉框里面
-        listProvider : function(container,records){        	
-            var html='<table cellpadding="3" cellspacing="0" class="easyui-datagrid">'
-                        +'<thead><tr><th width="100">拼音代码</th><th width="100">药品代码</th><th width="150">药品名称</th><th>单价</th><th>单位</th><th width="80">每次用量</th><th width="80">用量单位</th><th>规格</th></tr></thead>'
-                        +'<tbody>';
-            $(records).each(function(){
-            	html += '<tr><td>' + this.PYCode + '</td><td>'
-                + this.medCode + '</td><td>'
-                + this.medName + '</td><td>'
-                + this.retPrice + '</td><td>'
-                + this.smallUnit + '</td><td>'
-                + this.dose + '</td><td>'
-                + this.doseUnit + '</td><td>'
-                + this.standard + '</td></tr>';
-            });
-            html +=      '</tbody>'
-                     +'</table>';
-            $(html).appendTo(container);
-            container.addClass("combZindex");
-            //只有tbody里的tr可以选择和高亮，其它的都不可以
-            return container.find('tbody>tr');
-        },
-        //输入框里输入任意字符时用下面的方法进行过滤
-        filterStrategy:function(text1,record){
-            //只要type或name或shortName中包含输入的字符串就可以。（比较时忽略大小写）
-            var text=text1.toLowerCase();
-            return record.PYCode.toLowerCase().indexOf(text)>-1 || record.medCode.toLowerCase().indexOf(text)>-1 || record.medName.toLowerCase().indexOf(text)>-1;
-        },
-        //选择任意记录后在输入框右边打印出选择的值（注意是valueField表示的那个shortName属性的值，而不是输入框里显示出来的inputField的值）
-        onValueChange:function(target, newValue, oldValue,event){
-        	var value = newValue.split("&");
-        	$('#medId').val(value[0]);
-            $('#medCode').val(value[1]);
-            $('#dose').val(value[2]);
-            $('#doseUnit').val(value[3]);
-            $('#smallUnit').val(value[4]);
-        }
-    });
 }
 
 /**
@@ -866,3 +759,4 @@ var autoSetHeight = function(iframe, flag){
 function isEmpty(v, allowBlank) {
 	return v === null || v === undefined || (!allowBlank ? v === "" : false);
 }
+
