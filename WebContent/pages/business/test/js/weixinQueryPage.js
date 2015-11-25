@@ -143,27 +143,36 @@ $(document).ready(function(){
 			dataType:'json',
 			success : function(data){
 				var mainDiv = $("#mainDiv");
-				 $.each(data, function(i,val){
+				if (data.length == 0) {
 					var content = document.createElement('div');
 					content.setAttribute("class","content");
-					var imgDiv = document.createElement('div');
-					var imgSrc = $('<img/>');
-					imgSrc.attr("src",contextPath+"/mobile-style/images/box.png");
-					imgDiv.setAttribute("class","list_img");
-					imgSrc.appendTo(imgDiv);
-//					content.innerHTML = val.LOGISTICS;
-					content.appendChild(imgDiv)
-					
-					var h2 = document.createElement('h2');
-					h2.setAttribute("class","style");
-					h2.innerHTML = "<H1 style='text-align:center;font-size: 1.6em;'>"+formatColumnTitle(val.EXPRESS_SERVICE_ID)+" 运单号:"+val.LOGISTICS+" 货位:"+val.EXPRESS_lOCATION+"</H1>";
-					var h3 = document.createElement('h3');
-					h3.setAttribute("class","style");
-					h3.innerHTML = "收件人:"+val.RECIPIENT_NAME+"  收件时间:"+val.OPERA_TIME+"";
-					content.appendChild(h2);
-					content.appendChild(h3);
+					var h1 = document.createElement('h1');
+					h1.innerHTML = "<H1 style='text-align:center;font-size: 1.6em;'>亲，包裹尚未到达幸福驿站！请稍后查询</H1>";
+					content.appendChild(h1);
 					mainDiv.append(content);
-				 });
+				} else {
+					$.each(data, function(i,val){
+						var content = document.createElement('div');
+						content.setAttribute("class","content");
+						var imgDiv = document.createElement('div');
+						var imgSrc = $('<img/>');
+						imgSrc.attr("src",contextPath+"/mobile-style/images/box.png");
+						imgDiv.setAttribute("class","list_img");
+						imgSrc.appendTo(imgDiv);
+//						content.innerHTML = val.LOGISTICS;
+						content.appendChild(imgDiv)
+						
+						var h2 = document.createElement('h2');
+						h2.setAttribute("class","style");
+						h2.innerHTML = "<H1 style='text-align:center;font-size: 1.6em;'>"+formatColumnTitle(val.EXPRESS_SERVICE_ID)+" 运单号:"+val.LOGISTICS+" 货位:"+val.EXPRESS_lOCATION+"</H1>";
+						var h3 = document.createElement('h3');
+						h3.setAttribute("class","style");
+						h3.innerHTML = "收件人:"+val.RECIPIENT_NAME+"  收件时间:"+val.OPERA_TIME+"";
+						content.appendChild(h2);
+						content.appendChild(h3);
+						mainDiv.append(content);
+					 });
+				}
 				 unblock("queryBody");
 			},
 			error : function(data){

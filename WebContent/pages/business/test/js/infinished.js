@@ -252,15 +252,6 @@ $(document).ready(function() {
 			batchNumber: $('#batchNumber').val()
 		},
 		toolbar: [
-//		{
-//            text: 
-//            	'&nbsp;&nbsp;批次号：<input id="query_batchNumber" name="query_batchNumber" style="width: 150px;height:25px;border-style: solid;border-color: antiquewhite;">&nbsp;&nbsp;',
-//            	handler: function(){
-//            		$('#query_batchNumber').parent.parent.parent.onclick(function(){
-//						return false;
-//					});
-//    			}
-//        },
         {
 			text:'查询',
 			iconCls: 'icon-search',
@@ -366,6 +357,12 @@ $(document).ready(function() {
 			width : 200,
 			align : 'center',
 			hidden : true
+		},{
+			field : 'WEIXIN_ID',
+			title : '备注',
+			width : 200,
+			align : 'center',
+			hidden : true
 		},{  
 			field : 'showBarCode', 
 			title : '查看条码',
@@ -459,7 +456,6 @@ function modifyExpress() {
             showType:'slide'
 		});
 		return;
-		return;
 	}
 	$.ajax({
 		url : contextPath+"/pages/system/editDataById.light",
@@ -534,7 +530,6 @@ var submitForm = function() {
 		unblock("presentSelfForm");
 		return;
 	}
-	
 	if (!isPhoneNmuber(phoneNumber)) {
 		unblock("presentSelfForm");
 		$.messager.show({
@@ -545,7 +540,6 @@ var submitForm = function() {
 		});
 		return;
 	}
-	
 	$.ajax({
 		url : contextPath+"/pages/system/addExpressInfo.light",
 		type: "POST",
@@ -565,26 +559,39 @@ var submitForm = function() {
 			"batchNumber":$('#batchNumber').val()
 		},
 		success : function(data) {
-			sendRemindersToCustomer(phoneNumber,$('#logistics').val(),formatColumnTitle($('#expressServiceId').combo('getText')));
- 			$('#infinishedGrid').datagrid({
- 				url : contextPath + '/pages/system/getExpressByBatchNumber.light',
-				queryParams: {
-					"batchNumber": $('#batchNumber').val()
-				}
-			});
-//			$('#infinishedGrid').datagrid("reload");
-			$('#phoneNumber').combobox('reload',contextPath + "/pages/system/getCustomeInfoList.light");
-			$.messager.show({
-                title:'提示',
-                msg:'<div class="messager-icon messager-info"></div>'+data.msg,
-                timeout:3800,
-                showType:'slide'
-			});
-			clearFormData();
-			clearOneType(expressType);
-			$('#logistics').focus();
-			unblock("presentSelfForm");
-			
+			if (data.msg == -1) {
+				$.messager.show({
+	                title:'提示',
+	                msg:'<div class="messager-icon messager-info"></div>存在重复货位，请重新获取！',
+	                timeout:3800,
+	                showType:'slide'
+				});
+				clearOneType(expressType);
+				unblock("presentSelfForm");
+				return;
+			} else {
+				var expServiceName = formatColumnTitle($('#expressServiceId').combo('getText'));
+				sendRemindersToCustomer(phoneNumber,$('#logistics').val(),expServiceName);
+				pushWechatNotification(phoneNumber,expServiceName,$('#logistics').val());
+	 			$('#infinishedGrid').datagrid({
+	 				url : contextPath + '/pages/system/getExpressByBatchNumber.light',
+					queryParams: {
+						"batchNumber": $('#batchNumber').val()
+					}
+				});
+//				$('#infinishedGrid').datagrid("reload");
+				$('#phoneNumber').combobox('reload',contextPath + "/pages/system/getCustomeInfoList.light");
+				$.messager.show({
+	                title:'提示',
+	                msg:'<div class="messager-icon messager-info"></div>'+data.msg,
+	                timeout:3800,
+	                showType:'slide'
+				});
+				clearFormData();
+				clearOneType(expressType);
+				$('#logistics').focus();
+				unblock("presentSelfForm");
+			}
 		},
 		error : function(data) {
 			$.messager.show({
@@ -725,4 +732,24 @@ function saveSignature(){
 //	   var imgStr = "<img src='"+stream+"' />";
 //	   $('#sssff').attr("src", 'data:image/jpg;base64,'+stream);
 	   return stream;
+}
+
+function pushWechatNotification(phoneNumber,expServiceName,logistics){
+	var msg = '尊敬的客户 您的快递'+logistics+'('+expServiceName+')'+'已于['+'@operaTime'+']到达 '+'@shopName'+' 幸福快递网点 请尽快领取';
+	$.ajax({
+		url : contextPath + "/pages/system/wechat/sendWechatMsgAutomatic.light",
+		type : "POST",
+		dataType : 'json',
+		data : {
+			"msg" : msg,
+			"phoneNumber":phoneNumber,
+			"expServiceName":expServiceName,
+			"logistics":logistics
+		},
+		success : function(data){
+		},
+		error : function(data) {
+		}
+	});
+
 }

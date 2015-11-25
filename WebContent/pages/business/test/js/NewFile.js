@@ -1,4 +1,4 @@
-
+var isBind=false;
 var obj;
 var tempIds;
 var expressServiceMap = {};
@@ -6,6 +6,50 @@ var shopNameMap = {};
 function queryData() {
 	searchExpressInfo();
 }
+$.extend($.fn.datagrid.methods, {
+	keyCtrl : function (jq) {
+        return jq.each(function () {
+            var grid = $(this);
+            var gridObject = grid.datagrid('getPanel').panel('panel').attr('tabindex', 1);
+			if (!isBind) {
+				gridObject.bind('keydown', function(e) {
+					switch (e.keyCode) {
+					case 38: // up
+						var selected = grid.datagrid('getSelected');
+						if (selected) {
+							var index = grid.datagrid('getRowIndex', selected);
+							if (index == 0) {
+								var rows = grid.datagrid('getRows');
+								grid.datagrid('selectRow', rows.length - 1);
+							} else {
+								grid.datagrid('selectRow', index - 1);
+							}
+						} else {
+							var rows = grid.datagrid('getRows');
+							grid.datagrid('selectRow', rows.length - 1);
+						}
+						break;
+					case 40: // down
+						var selected = grid.datagrid('getSelected');
+						if (selected) {
+							var index = grid.datagrid('getRowIndex', selected);
+							var rows = grid.datagrid('getRows');
+							if (index == rows.length - 1) {
+								grid.datagrid('selectRow', 0);
+							} else {
+								grid.datagrid('selectRow', index + 1);
+							}
+						} else {
+							grid.datagrid('selectRow', 0);
+						}
+						break;
+					}
+				});
+				isBind=true;
+			} 
+        });
+    }
+});
 
 function formatShopCodeColumnTitle(value){
 	return shopNameMap[value];
@@ -31,6 +75,15 @@ function initShopNameMap() {
 }
 
 function modifyExpress() {
+	if (!isPhoneNmuber($('#modify_phoneNumber').val())) {
+		$.messager.show({
+            title:'提示',
+            msg:'<div class="messager-icon messager-info"></div>'+'手机或座机号码填写不正确',
+            timeout:3800,
+            showType:'slide'
+		});
+		return;
+	}
 	$.ajax({
 		url : contextPath+"/pages/system/editDataById.light",
 		type: "POST",
@@ -90,6 +143,20 @@ $(document).ready(function(){
 			}
 		});
 		
+//		var moveRow = function(target){
+//		    var options = $(target).datagrid('options');
+//		    if(options.moveRow){
+//		        var dmr = new DatagridMoveRow(target);
+//		        $(document).on('keydown.datagridrow',function(e){
+//		            if(e.keyCode == 38){ //up
+//		                dmr.moveUp();
+//		            }else if(e.keyCode == 40) {// down
+//		                dmr.moveDown();
+//		            }
+//		        });
+//		    }
+//		}
+		
 		initShopNameMap();
 		
 		$("#submitBtn").click(function(){
@@ -128,7 +195,7 @@ $(document).ready(function(){
 			url : contextPath + '/pages/system/getExpressInfoList.light',
 			width : $(window).width() * 0.97,
 			height :($(window).height()-30)*0.99,
-			singleSelect : false,
+			singleSelect:true,
 			rownumbers : true,
 			pagination : true,
 			striped : true,
@@ -255,7 +322,7 @@ $(document).ready(function(){
 				title : '推送微信通知',
 				width : 100, 
 				align : 'center',
-				hidden : false,
+				hidden : true,
 				formatter : function(value,row,index) {
 					if (row.WEIXIN_ID === '' || row.WEIXIN_ID ==null) {
 						return value;
@@ -272,7 +339,9 @@ $(document).ready(function(){
 					return "<button onclick=\"getBarCode("+row.LOGISTICS+",'"+row.RECIPIENT_NAME+"')\">查看条码</button>";
 				}
 			}] ],
-			onLoadSuccess : function(data){
+			onLoadSuccess : function(){
+				$('#areaCodeGrid').datagrid('clearSelections');
+				$('#areaCodeGrid').datagrid("keyCtrl");
 				$('#expressServiceId').combobox({
 					url : contextPath + "/pages/system/getExpressServiceProviderInfo.light",
 					valueField : "id",
@@ -297,12 +366,31 @@ $(document).ready(function(){
 				$("#queryParams").bind("click",function(e){
 					$("#queryParams").focus();
 				});
+				
 			},
 			onLoadError : function() {
 				parent.location.href=contextPath+'/pages/system/welcome.light';
 			},
-			onDblClickRow : function(rowIndex, rowData) {
-				openWindow(rowIndex, rowData);
+			onDblClickRow : function(index,row) {
+				openWindow(index,row);
+			},
+			onClickRow : function(index,row) {
+				if (index != selectIndexs.firstSelectRowIndex&& !inputFlags.isShiftDown) {
+					selectIndexs.firstSelectRowIndex = index;
+				}
+				if (inputFlags.isShiftDown) {
+					$('#areaCodeGrid').datagrid('clearSelections');
+					selectIndexs.lastSelectRowIndex = index;
+					var tempIndex = 0;
+					if (selectIndexs.firstSelectRowIndex > selectIndexs.lastSelectRowIndex) {
+						tempIndex = selectIndexs.firstSelectRowIndex;
+						selectIndexs.firstSelectRowIndex = selectIndexs.lastSelectRowIndex;
+						selectIndexs.lastSelectRowIndex = tempIndex;
+					}
+					for (var i = selectIndexs.firstSelectRowIndex; i <= selectIndexs.lastSelectRowIndex; i++) {
+						$('#areaCodeGrid').datagrid('selectRow',i);
+					}
+				}
 			}
 		});
 		$('#my-button').bind('click', function(e) {
@@ -579,15 +667,15 @@ $(document).ready(function(){
 				"queryParams":queryParams,
 				"expressService":expressService
 		};
-		$('#areaCodeGrid').datagrid("loadData",[]);
+//		$('#areaCodeGrid').datagrid("loadData",[]);
+		$('#areaCodeGrid').datagrid('loadData', { total: 0, rows: [] })
 		$('#areaCodeGrid').datagrid("clearSelections");
-//		
 		$('#areaCodeGrid').datagrid({
 			url : contextPath + "/pages/system/getNotOutExpressInfoByFilterConditions.light?endDate="+endDate+"&startDate="+startDate+"&queryParams="+queryParams+"&expressService="+expressService
 		});
 		
 //		$("#number").focus();
-		var paper = $('#areaCodeGrid').datagrid('getPager');  
+		var paper = $('#areaCodeGrid').datagrid('getPager');
 		$(paper).pagination('refresh',{ pageNumber: 1 });
 	}
 	//初始化设备
