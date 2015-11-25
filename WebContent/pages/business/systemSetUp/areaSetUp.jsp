@@ -110,7 +110,7 @@ label:hover:before {
 	<div style="margin: 4px;">
        	&nbsp;&nbsp;区域信息：<input id="queryParams" name="queryParams" style="width: 150px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="区域名称">
 	</div>
-	<table id="areaGrid" class="easyui-datagrid" style="height: auto;"></table>
+	<table id="areaGrid" style="height: auto;"></table>
 	<div id="detail" class="easyui-dialog" title="Complex Toolbar on Dialog" style="width:400px;height:200px;padding:10px;"
             data-options="
                 iconCls: 'icon-save',

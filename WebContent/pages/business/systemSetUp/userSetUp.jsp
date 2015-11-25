@@ -112,7 +112,7 @@ label:hover:before {
 	<div style="margin: 4px;">
        	&nbsp;&nbsp;用户信息：<input id="queryParams" name="queryParams" style="width: 150px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="登陆名">
 	</div>
-	<table id="userGrid" class="easyui-datagrid" style="height: auto;"></table>
+	<table id="userGrid" style="height: auto;"></table>
     <div id="addUser" class="container" style="min-height: 300px;overflow:hidden;">
 			<section class="af-wrapper">
 	            <h1></h1>

@@ -84,10 +84,41 @@ td.contact {
 }
 </style>
 <script type="text/javascript">
+	function iEsc() {
+		return false;
+	}
+	function iRec() {
+		return true;
+	}
+	function DisableKeys() {
+		if (event.ctrlKey || event.shiftKey || event.altKey) {
+			window.event.returnValue = false;
+			iEsc();
+		}
+	}
+	document.ondragstart = iEsc;
+	document.onkeydown = DisableKeys;
+	document.oncontextmenu = iEsc;
+	if (typeof document.onselectstart != "undefined")
+		document.onselectstart = iEsc;
+	else {
+		document.onmousedown = iEsc;
+		document.onmouseup = iRec;
+	}
+	function DisableRightClick(qsyzDOTnet) {
+		if (window.Event) {
+			if (qsyzDOTnet.which == 2 || qsyzDOTnet.which == 3)
+				iEsc();
+		} else if (event.button == 2 || event.button == 3) {
+			event.cancelBubble = true
+			event.returnValue = false;
+			iEsc();
+		}
+	}
 </script>
 <script src="<%=contextPath%>/pages/business/test/js/NewFile.js" type="text/javascript"></script>
 </head>
-<body style="overflow-y: hidden;background: white;">
+<body style="overflow-y: hidden;background: white;" onkeydown="javascript:keyPress(event,'areaCodeGrid');" onkeyup="javascript:keyRelease(event,'areaCodeGrid');">
 	<div style="margin: 4px;">
        	&nbsp;&nbsp;客户信息：<input id="queryParams" name="queryParams" style="width: 210px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="手机后四位、客户姓名、快件运单号">
        	&nbsp;&nbsp;快递服务商：<input id="expressServiceId" name="expressServiceId" style="width: 150px;border-style: solid;border-color: antiquewhite;" class="easyui-combobox">
@@ -114,7 +145,7 @@ td.contact {
 			</div>
        	
 	</div>
-	<table id="areaCodeGrid" class="easyui-datagrid" style="height: auto;"></table>
+	<table id="areaCodeGrid" style="height: auto;"></table>
 	<div id="detail" class="easyui-dialog" title="修改快件信息" style="width:460px;height:350px;padding:10px;overflow: hidden;"
 	            data-options="
 	                iconCls: 'icon-save',

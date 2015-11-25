@@ -43,7 +43,7 @@ td.contact {
        	&nbsp;&nbsp;开始日期：<input id="startDateId" name="startDateId" style="width: 120px;height:30px;border-style: solid;border-color: antiquewhite;" onclick="WdatePicker()" >
        	&nbsp;&nbsp;截止日期:<input id="endDateId" name="endDateId"  style="width: 120px;height:30px;border-style: solid;border-color: antiquewhite;" onclick="WdatePicker()" >
 	</div>
-	<table id="areaCodeGrid" class="easyui-datagrid" style="height: auto;"></table>
+	<table id="areaCodeGrid" style="height: auto;"></table>
     <form id="downFile" action="<%=contextPath%>/pages/system/downExpressInfoByFilterConditions.light" method="post" style="height: inherit;display: none;">
     	<input type="hidden" id="down_endDate" name="down_endDate"/>
     	<input type="hidden" id="down_startDate" name="down_startDate"/>

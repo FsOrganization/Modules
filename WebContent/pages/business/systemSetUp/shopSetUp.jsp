@@ -111,25 +111,7 @@ label:hover:before {
 	<div style="margin: 4px;">
        	&nbsp;&nbsp;网点信息：<input id="queryParams" name="queryParams" style="width: 150px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="网点名称">
 	</div>
-	<table id="shopGrid" class="easyui-datagrid" style="height: auto;"></table>
-	<div id="detail" class="easyui-dialog" title="Complex Toolbar on Dialog" style="width:400px;height:200px;padding:10px;"
-            data-options="
-                iconCls: 'icon-save',
-                toolbar: '#dlg-toolbar',
-                buttons: '#dlg-buttons',closed: true">
-    <form id="ff" action="<%=contextPath%>/pages/system/editDataById.light" method="post" style="height: inherit;">
-	    <table class="contacts" cellspacing="0">
-			<tr>
-				<td class="contact" width="25%">id:</td>
-				<td class="contact" width="60%"><input type="text" id="id" /></td>
-			</tr>
-			<tr>
-				<td class="contact" width="25%">name:</td>
-				<td class="contact" width="60%"><input type="input" id="name" class="contactinput"/></td>
-			</tr>
-		</table>     
-	</form>
-    </div>
+	<table id="shopGrid" style="height: auto;"></table>
     <div id="dlg-toolbar" style="padding:2px 0">
         <table cellpadding="0" cellspacing="0" style="width:100%">
             <tr>
@@ -155,7 +137,7 @@ label:hover:before {
 				<input id="af-showreq" class="af-show-input" type="checkbox" name="showreq"/>
 				<input type="hidden" name="shopCode" id="shopCode">
 				<input type="hidden" name="shopId" id="shopId">
-				<form class="af-form" id="af-form" novalidate style="margin: 16px -15px;">
+				<form class="af-form" id="af-form" style="margin: 16px -15px;">
 					<div class="af-outer af-required">
 						<div class="af-inner">
 						  <label for="arceCodeList">所属区域:</label>
@@ -189,7 +171,18 @@ label:hover:before {
 							<input type="text" name="shopContacts" id="shopContacts" style="width: 279px;"/>
 						</div>
 					</div>
-					
+<!-- 					<div class="af-outer"> -->
+<!-- 						<div class="af-inner"> -->
+<!-- 							<label for="shopContacts">经度:</label> -->
+<!-- 							<input type="text" name="longitude" id="longitude" style="width: 279px;"/> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 					<div class="af-outer"> -->
+<!-- 						<div class="af-inner"> -->
+<!-- 							<label for="shopContacts">纬度:</label> -->
+<!-- 							<input type="text" name="latitude" id="latitude" style="width: 279px;"/> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
 					<div class="af-outer af-required">
 						<div class="af-inner">
 						  <label for="isCheck">是否启用:</label>
@@ -204,33 +197,5 @@ label:hover:before {
 				</div>
 			</section>
         </div>
-    
-	<!-- 条码显示 -->
-    <div id="imgDetail" class="easyui-dialog" title="Complex Toolbar on Dialog" style="width:400px;height:200px;padding:10px;"
-            data-options="buttons: '#dlg-buttons',closed: true">
-            <div style="margin: 20px 30px;">
-            	<img id="barimg" src=""></img>
-                <span id="fileName" style="margin: 0px 80px;font-weight: 300;font-size: 18px;"></span>
-            </div>
-                
-    </div>
-    <div id="dlg-buttons">
-        <a id="submitBtn" class="easyui-linkbutton">打印条码</a>
-        <a id="close" class="easyui-linkbutton" onclick="javascript:$('#imgDetail').dialog('close')">Close</a>
-    </div>
-    
-    <!-- 显示签名 -->
-    <div id="signatureDetail" class="easyui-dialog" title="Complex Toolbar on Dialog" style="width:600px;height:430px;padding:10px;overflow: hidden;"
-            data-options="buttons: '#dlg-buttons',closed: true">
-            <div style="margin: 8px 5px;">
-            	<img id="signatureImg" src=""></img>
-                <span id="fileName" style="margin: 0px 80px;font-weight: 300;font-size: 18px;"></span>
-            </div>
-                
-    </div>
-    <div id="dlg-buttons">
-        <a id="submitBtn" class="easyui-linkbutton">打印签名</a>
-        <a id="close" class="easyui-linkbutton" onclick="javascript:$('#signatureDetail').dialog('close')">Close</a>
-    </div>
 </body>
 </html>

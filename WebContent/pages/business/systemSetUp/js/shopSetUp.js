@@ -21,7 +21,7 @@ $(document).ready(function() {
 		$('#addShop').window({
 			title:'新增网点',
 		    width:580,
-		    height:462,
+		    height:412,
 		    modal:true,
 		    closed:true,
 		    left:340,    
