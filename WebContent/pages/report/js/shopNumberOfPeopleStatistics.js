@@ -113,7 +113,7 @@ function compute(colName) {
 }
 
 function exportQueryDataWithExcel(type, code) {
-	if(type==''&& code=='') {
+	if(type=='' || code=='') {
 		$.messager.show({
 			title : '提示',
 			msg : '<div class="messager-icon messager-info"></div>'+'请选择查询条件',

@@ -41,25 +41,44 @@ $.extend($.fn.datagrid.methods, {statistics : function(jq) {
 }
 });
 $(document).ready(function() {
-		$('#id').prop('readonly', true);
-		$("#name").bind("keydown",function(e){
-			var keycode = e.which;
-			//输入回车判定
-			if(keycode == 13){
-				submitForm();
-				e.preventDefault();						
-			}
-		});
 		$("#queryBtu").click(function(){
-			var startDate = $('#startDateId').val();
-	    	var endDate = $('#endDateId').val();
-			searchExpressInfo(tempType, tempCode,startDate,endDate);
+	    	if (tempCode == null) {
+				return;
+			} else {
+				var year = geCurrYear();
+				var limitTime = $('#limitTime').val();
+				var paramDate = year + "-" + limitTime;
+				if (limitTime == '' || limitTime.length ==0) {
+					$.messager.show({
+						title : '提示',
+						msg : '<div class="messager-icon messager-info"></div>'+'请选择统计周期',
+						timeout : 3800,
+						showType : 'slide'
+					});
+				} else {
+					searchExpressInfo(tempCode,paramDate);
+				}
+				
+			}
+			
 		});
 		
 		$("#exportQueryExcelBtu").click(function(){
-			var startDate = $('#startDateId').val();
-	    	var endDate = $('#endDateId').val();
-	    	exportQueryDataWithExcel(tempType, tempCode,startDate,endDate);
+			var year = geCurrYear();
+			var limitTime = $('#limitTime').val();
+			var paramDate = year + "-" + limitTime;
+			var shopName = $('#down_shopName').val();
+			if (limitTime == '' || limitTime.length ==0) {
+				$.messager.show({
+					title : '提示',
+					msg : '<div class="messager-icon messager-info"></div>'+'请选择统计周期',
+					timeout : 3800,
+					showType : 'slide'
+				});
+			} else {
+				exportQueryDataWithExcel(tempCode,paramDate,paramDate,shopName);
+			}
+	    	
 		});
 		
 		
@@ -72,25 +91,53 @@ $(document).ready(function() {
 			height : 30,
 		    data: [{
 		    	"id":1,
-		    	"text":"周",
-		    	"desc":"按周统计"
+		    	"text":"1月",
+		    	"desc":"01"
 		    },{
 		    	"id":2,
-		    	"text":"月",
-		    	"desc":"按月统计"
+		    	"text":"2月",
+		    	"desc":"02"
 		    },{
 		    	"id":3,
-		    	"text":"季度",
-		    	"selected":true,
-		    	"desc":"按季度统计"
+		    	"text":"3月",
+//		    	"selected":true,
+		    	"desc":"03"
 		    },{
 		    	"id":4,
-		    	"text":"年",
-		    	"desc":"统计当年"
+		    	"text":"4月",
+		    	"desc":"04"
 		    },{
 		    	"id":5,
-		    	"text":"自定义",
-		    	"desc":"自定义日期"
+		    	"text":"5月",
+		    	"desc":"05"
+		    },{
+		    	"id":6,
+		    	"text":"6月",
+		    	"desc":"06"
+		    },{
+		    	"id":7,
+		    	"text":"7月",
+		    	"desc":"07"
+		    },{
+		    	"id":8,
+		    	"text":"8月",
+		    	"desc":"08"
+		    },{
+		    	"id":9,
+		    	"text":"9月",
+		    	"desc":"09"
+		    },{
+		    	"id":10,
+		    	"text":"10月",
+		    	"desc":"10"
+		    },{
+		    	"id":11,
+		    	"text":"11月",
+		    	"desc":"11"
+		    },{
+		    	"id":12,
+		    	"text":"12月",
+		    	"desc":"12"
 		    }],
 		    formatter :  function(row){
 				var ip = $("#dateStyle").parent().find('.combo').children().eq(1);
@@ -103,48 +150,7 @@ $(document).ready(function() {
 			    return s;
 			},
 			onSelect: function(row){
-				if (row.id===5) {
-					$('#speDate').show();
-					$('#speQueryBtu').show();
-					$('#startDateId').val('');
-					$('#endDateId').val('');
-					$('#startDateId').removeAttr("disabled");
-					$('#endDateId').removeAttr("disabled");
-				} else {
-					if (row.id === 1) {
-						$('#speDate').show();
-						$('#speQueryBtu').hide();
-						$('#startDateId').val(getWeekStartDate());
-						$('#endDateId').val(getWeekEndDate());
-						$('#startDateId').attr("disabled","disabled");
-						$('#endDateId').attr("disabled","disabled");
-					} else if (row.id ===2) {
-						$('#speDate').show();
-						$('#speQueryBtu').hide();
-						$('#startDateId').val(getMonthStartDate());
-						$('#endDateId').val(getMonthEndDate());
-						$('#startDateId').attr("disabled","disabled");
-						$('#endDateId').attr("disabled","disabled");
-					} else if (row.id === 3) {
-						$('#speDate').show();
-						$('#speQueryBtu').hide();
-						$('#startDateId').val(getQuarterStartDate());
-						$('#endDateId').val(getQuarterEndDate());
-						$('#startDateId').attr("disabled","disabled");
-						$('#endDateId').attr("disabled","disabled");
-					} else if (row.id === 4) {
-						$('#speDate').show();
-						$('#speQueryBtu').hide();
-						$('#startDateId').val(getFirstDateByYear());
-						$('#endDateId').val(geEndDateByYear());
-						$('#startDateId').attr("disabled","disabled");
-						$('#endDateId').attr("disabled","disabled");
-					}
-					var startDate = $('#startDateId').val();
-			    	var endDate = $('#endDateId').val();
-					searchExpressInfo(tempType, tempCode,startDate,endDate);
-				}
-				
+				$('#limitTime').val(row.desc);
 	        }
 			
 		});
@@ -169,15 +175,20 @@ $(document).ready(function() {
 			height : 30,
 		    required: true,
 		    onClick: function(node){
-		    	var startDate = $('#startDateId').val();
-		    	var endDate = $('#endDateId').val();
-				searchExpressInfo(node.type, node.code,startDate,endDate);
-				tempType = node.type;
-				tempCode = node.code;
-				$('#speCycle').show();
-				$('#exportQueryExcel').show();
+		    	if (node.type == 'A') {
+		    		$('#statisticalArea').combotree('clear');
+		    		tempCode = null;
+		    		$('#statisticalArea').combotree('showPanel');
+					return false;
+				} else {
+//			    	var limitTime = $('#dateStyle').combobox('getValue');
+					tempCode = node.code;
+					$('#exportQueryExcel').show();
+					$('#speQueryBtu').show();
+					$('#speCycle').show();
+					$('#down_shopName').val(node.text);
+				}
 			}
-
 		});
 		
 	});
@@ -188,39 +199,61 @@ function getSelections() {
 	return rows;
 }
 
-function searchExpressInfo(type,code,startDate,endDate) {
+function searchExpressInfo(shopCode,limitTime) {
 	$('#shopNumberOfPeopleStatisticsGrid').datagrid("loadData",[]);
 	$('#shopNumberOfPeopleStatisticsGrid').datagrid("clearSelections");
 	$('#shopNumberOfPeopleStatisticsGrid').datagrid({
 		dataType : 'json',
-		url : contextPath+ "/pages/system/getShopInAndSendExpressGroupCount.light?type="+ type+"&code="+code+"&startDate="+startDate+"&endDate="+endDate,
+		url : contextPath+ "/pages/system/getShopOutAndSendExpressGroupCount.light",
 		width : $(window).width() * 1,
 		height :($(window).height()-30)*0.99,
 		singleSelect : true,
 		rownumbers : true,
 		pagination : true,
 		striped : true,
-		idField : 'ID',
+		idField : 'TT',
+		method : 'post',
+		queryParams: {
+			shopCode: shopCode,
+			limitTime: limitTime
+		},
 		pageSize : 20,
 		showFooter: true,
 		columns : [ [ {
-			field : 'NAME',
-			title : '网点名称',
+			field : 'TT',
+			title : '日期',
 			width : 150,
-			align : 'center'
+			align : 'center',
+			formatter: function(value,row,index){
+				if (row.TT != '<span style="color:red;" class="subtotal">合计</span>'){
+					var year = geCurrYear();
+					var limitTime = $('#limitTime').val();
+					var paramDate = year + "-" + limitTime;
+					return paramDate + '-' +row.TT;
+				} else {
+					return '<span style="color:red;" class="subtotal">合计</span>';
+				}
+			}
 		},{
-			field : 'ICOUNT',
-			title : '收件',
+			field : 'OUTCOUNT',
+			title : '取件人数',
 			width : 120,
 			sum: 'true',
 			align : 'center',
 			hidden : false
 		},{
-			field : 'SCOUNT',
-			title : '寄件',
+			field : 'SENDCOUNT',
+			title : '寄件人数',
 			width : 120,
 			align : 'center',
-			hidden : false
+			hidden : false,
+			formatter: function(value,row,index){
+				if (row.SENDCOUNT){
+					return row.SENDCOUNT;
+				} else {
+					return 0;
+				}
+			}
 		},{
 			field : 'TOTAL',
 			title : '总数',
@@ -245,9 +278,9 @@ function searchExpressInfo(type,code,startDate,endDate) {
 
 function totalPrice(){
 	$('#shopNumberOfPeopleStatisticsGrid').datagrid('appendRow', {
-		NAME: '<span style="color:red;" class="subtotal">合计</span>',
-        ICOUNT: '<span style="color:red;" class="subtotal">' + compute("ICOUNT") + '</span>',
-        SCOUNT: '<span style="color:red;" class="subtotal">' + compute("SCOUNT") + '</span>',
+		TT: '<span style="color:red;" class="subtotal">合计</span>',
+		OUTCOUNT: '<span style="color:red;" class="subtotal">' + compute("OUTCOUNT") + '</span>',
+		SENDCOUNT: '<span style="color:red;" class="subtotal">' + compute("SENDCOUNT") + '</span>',
         TOTAL: '<span style="color:red;" class="subtotal">' + compute("TOTAL") + '</span>'
     });
 }
@@ -265,8 +298,8 @@ function compute(colName) {
     return total;
 }
 
-function exportQueryDataWithExcel(type, code,startDate,endDate) {
-	if(type=='' || code=='') {
+function exportQueryDataWithExcel(shopCode,paramDate,dateDesc,shopName) {
+	if(shopCode==''|| paramDate=='') {
 		$.messager.show({
 			title : '提示',
 			msg : '<div class="messager-icon messager-info"></div>'+'请选择查询条件',
@@ -275,9 +308,10 @@ function exportQueryDataWithExcel(type, code,startDate,endDate) {
 		});
 		return ;
 	}
-	$("#down_type").val(type);
-	$("#down_code").val(code);
-	$("#down_startDate").val(startDate);
-	$("#down_endDate").val(endDate);
+	$("#down_shop_code").val(shopCode);
+	$("#down_paramDate").val(paramDate);
+	$("#down_dateDesc").val(dateDesc);
+	$("#down_shopName").val(encodeURI(shopName));
+	
 	$("#downFile").submit();
 }
