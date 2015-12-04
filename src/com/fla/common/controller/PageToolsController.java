@@ -93,11 +93,8 @@ public class PageToolsController extends SuperController{
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/getNewAreaCode.light")
-	public ModelAndView getNewAreaCode(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
+	public void getNewAreaCode(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
 		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (s ==null) {
-			return JumpModelAndView();
-		}
 		JSONObject jo = systemServiceInterface.getNewAreaCode(null);
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
@@ -105,16 +102,11 @@ public class PageToolsController extends SuperController{
 		printWriter.write(jo.toString());
 		printWriter.flush();
 		printWriter.close();
-		return null;
 	}
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/getNewShopCode.light")
-	public ModelAndView getNewShopCode(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (s ==null) {
-			return JumpModelAndView();
-		}
+	public void getNewShopCode(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
 		JSONObject jo = systemServiceInterface.getNewShopCode(null);
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
@@ -122,16 +114,11 @@ public class PageToolsController extends SuperController{
 		printWriter.write(jo.toString());//temporaryId
 		printWriter.flush();
 		printWriter.close();
-		return null;
 	}
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/checkLoginNameUniqueness.light")
-	public ModelAndView checkLoginNameUniqueness(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (s ==null) {
-			return JumpModelAndView();
-		}
+	public void checkLoginNameUniqueness(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
 		String name = request.getParameter("loginName");
 		JSONObject json = systemServiceInterface.checkLoginNameUniqueness(name);
 		response.setCharacterEncoding("utf-8");
@@ -140,7 +127,6 @@ public class PageToolsController extends SuperController{
 		printWriter.write(json.toString());
 		printWriter.flush();
 		printWriter.close();
-		return null;
 		
 	}
 	
@@ -151,11 +137,7 @@ public class PageToolsController extends SuperController{
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/getToolTipMsgById.light")
-	public ModelAndView getToolTipMsgById(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (s ==null) {
-			return JumpModelAndView();
-		}
+	public void getToolTipMsgById(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
 		PrintWriter printWriter = null;
 		JSONObject json = new JSONObject();
 		String msg = "签字板功能仅支持IE浏览器，其他业务可使用其他浏览器！";
@@ -172,17 +154,12 @@ public class PageToolsController extends SuperController{
 			printWriter.close();
 			json = null;
 		}
-		return null;
-
 	}
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/getExpressServiceProviderInfo.light")
-	public ModelAndView getExpressServiceProviderInfo(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
+	public void getExpressServiceProviderInfo(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
 		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (s ==null) {
-			return JumpModelAndView();
-		}
 		PrintWriter printWriter = null;
 		String areaCode = null;
 		if (s != null) {
@@ -199,12 +176,11 @@ public class PageToolsController extends SuperController{
 			printWriter.flush();
 			printWriter.close();
 		}
-		return null;
 	}
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/getExpressStatisticalArea.light")
-	public ModelAndView getExpressStatisticalArea(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
+	public void getExpressStatisticalArea(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
 		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		PrintWriter printWriter = null;
 		String areaCode = null;
@@ -222,13 +198,12 @@ public class PageToolsController extends SuperController{
 			printWriter.flush();
 			printWriter.close();
 		}
-		return null;
 	}
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/getShopNumberOfPeopleGroupCount.light")
-	public ModelAndView getShopNumberOfPeopleGroupCount(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+	public void getShopNumberOfPeopleGroupCount(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
+//		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		PrintWriter printWriter = null;
 		String type = request.getParameter("type");
 		String code = request.getParameter("code");
@@ -243,12 +218,11 @@ public class PageToolsController extends SuperController{
 			printWriter.flush();
 			printWriter.close();
 		}
-		return null;
 	}
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/getShopInAndSendExpressGroupCount.light")
-	public ModelAndView getShopInAndSendExpressGroupCount(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
+	public void getShopInAndSendExpressGroupCount(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
 		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		PrintWriter printWriter = null;
 		String type = request.getParameter("type");
@@ -266,12 +240,57 @@ public class PageToolsController extends SuperController{
 			printWriter.flush();
 			printWriter.close();
 		}
-		return null;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/pages/system/getShopOutAndSendExpressGroupCount.light")
+	public void getShopOutAndSendExpressGroupCount(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
+//		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
+		PrintWriter printWriter = null;
+		String shopCode = request.getParameter("shopCode");
+		String limitTime = request.getParameter("limitTime");
+		Map<String, String> params = new HashMap<String, String>(4);
+		params.put("limitTime", limitTime);
+		params.put("shopCode", shopCode);
+		JSONArray jsonArray = systemServiceInterface.getShopOutAndSendExpressGroupCount(params);
+		try 
+		{
+			response.setCharacterEncoding("utf-8");          
+			response.setContentType("text/html; charset=utf-8");
+            printWriter = response.getWriter();
+            printWriter.write(jsonArray.toString());
+		} finally {
+			printWriter.flush();
+			printWriter.close();
+		}
+	}
+	
+	@ResponseBody
+	@RequestMapping("/pages/system/getSendOutExpressByExpressGroup.light")
+	public void getSendOutExpressByExpressGroup(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
+//		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
+		PrintWriter printWriter = null;
+		String shopCode = request.getParameter("shopCode");
+		String limitTime = request.getParameter("limitTime");
+		Map<String, String> params = new HashMap<String, String>(4);
+		params.put("limitTime", limitTime);
+		params.put("shopCode", shopCode);
+		JSONArray jsonArray = systemServiceInterface.getSendOutExpressByExpressGroup(params);
+		try 
+		{
+			response.setCharacterEncoding("utf-8");          
+			response.setContentType("text/html; charset=utf-8");
+            printWriter = response.getWriter();
+            printWriter.write(jsonArray.toString());
+		} finally {
+			printWriter.flush();
+			printWriter.close();
+		}
 	}
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/initExpressServiceProviders.light")
-	public ModelAndView initExpressServiceProviders(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
+	public void initExpressServiceProviders(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
 		PrintWriter printWriter = null;
 		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		String areaCode = null;
@@ -289,7 +308,6 @@ public class PageToolsController extends SuperController{
 			printWriter.flush();
 			printWriter.close();
 		}
-		return null;
 	}
 	
 	/**
@@ -302,7 +320,7 @@ public class PageToolsController extends SuperController{
 	 */
 	@ResponseBody
 	@RequestMapping("/pages/system/getCustomeInfoList.light")
-	public ModelAndView getCustomeInfoList(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
+	public void getCustomeInfoList(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
 		PrintWriter printWriter = null;
 		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		try 
@@ -318,16 +336,12 @@ public class PageToolsController extends SuperController{
 			printWriter.flush();
 			printWriter.close();
 		}
-		return null;
 	}
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/getTemporaryStorage.light")
-	public ModelAndView getTemporaryStorage(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
+	public void getTemporaryStorage(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
 		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (s ==null) {
-			return JumpModelAndView();
-		}
 		JSONObject jo = loginServiceInterface.getTemporaryStorage();
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
@@ -335,17 +349,12 @@ public class PageToolsController extends SuperController{
 		printWriter.write(jo.toString());//temporaryId
 		printWriter.flush();
 		printWriter.close();
-		
-		return null;
 	}
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/getOutStorehouseBatchNumber.light")
-	public ModelAndView getOutStorehouseBatchNumber(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (s ==null) {
-			return JumpModelAndView();
-		}
+	public void getOutStorehouseBatchNumber(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
+//		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		JSONObject jo = loginServiceInterface.getOutStorehouseBatchNumber();
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
@@ -353,16 +362,11 @@ public class PageToolsController extends SuperController{
 		printWriter.write(jo.toString());//temporaryId
 		printWriter.flush();
 		printWriter.close();
-		return null;
 	}
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/getSignatureByBatchNumber.light")
-	public ModelAndView getSignatureByBatchNumber(HttpServletRequest request,HttpServletResponse response, String batchNumber, String type)  throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (s ==null) {
-			return JumpModelAndView();
-		}
+	public void getSignatureByBatchNumber(HttpServletRequest request,HttpServletResponse response, String batchNumber, String type)  throws SQLException, IOException {
 		JSONObject json = null;
 		json = loginServiceInterface.getSignatureByBatchNumber(batchNumber, type);
 		response.setCharacterEncoding("utf-8");
@@ -371,12 +375,11 @@ public class PageToolsController extends SuperController{
 		printWriter.write(json.toString());
 		printWriter.flush();
 		printWriter.close();
-		return null;
 	}
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/downExpressInfoByFilterConditions.light")
-	public ModelAndView downExpressInfoByFilterConditions(
+	public void downExpressInfoByFilterConditions(
 			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		String endDate = request.getParameter("down_endDate");
@@ -395,15 +398,12 @@ public class PageToolsController extends SuperController{
 		ExcelExportTools eet = new ExcelExportTools();
 		eet.exportFile(startDate, endDate, model, file, ja, "TITLE");
 		downFile(request, response, file);
-		return null;
-
 	}
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/downShopInAndSendGroupCount.light")
-	public ModelAndView downShopInAndSendGroupCount(
+	public void downShopInAndSendGroupCount(
 			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-//		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		String type = request.getParameter("down_type");
 		String code = request.getParameter("down_code");
 		String startDate = request.getParameter("down_startDate");
@@ -416,13 +416,55 @@ public class PageToolsController extends SuperController{
 		ExcelExportTools eet = new ExcelExportTools();
 		eet.exportQueryDataWithInAndSend(startDate, endDate, model, file, jsonArray, "TITLE");
 		downFile(request, response, file);
-		return null;
-
 	}
 	
 	@ResponseBody
+	@RequestMapping("/pages/system/downOutAndSendExpressGroupCount.light") 
+	public void downOutAndSendExpressGroupCount(
+			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		String shopCode = request.getParameter("down_shop_code");
+		String paramDate = request.getParameter("down_paramDate");
+		String shopName = request.getParameter("down_shopName");
+		shopName = java.net.URLDecoder.decode(shopName,"UTF-8");
+		String dateDesc = request.getParameter("down_dateDesc");
+		Map<String, String> params = new HashMap<String, String>(4);
+		params.put("limitTime", paramDate);
+		params.put("shopCode", shopCode);
+		JSONArray jsonArray = systemServiceInterface.getShopOutAndSendExpressGroupCount(params);
+		String fileName = "取件寄件人数月报统计.xlsx";
+		String name = getExcelPath(request, fileName);
+		File file = new File(name);
+		File model = new File(getExcelModelPath(request, fileName));
+		ExcelExportTools eet = new ExcelExportTools();
+		eet.exportOutAndSendExpressGroupCount(dateDesc,shopName,model, file, jsonArray, "TITLE");
+		downFile(request, response, file);
+	}
+	
+	@ResponseBody
+	@RequestMapping("/pages/system/downShopOutAndSendExpressGroup.light") 
+	public void downShopOutAndSendExpressGroup(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		String shopCode = request.getParameter("down_shop_code");
+		String paramDate = request.getParameter("down_paramDate");
+		String shopName = request.getParameter("down_shopName");
+		shopName = java.net.URLDecoder.decode(shopName,"UTF-8");
+		String dateDesc = request.getParameter("down_dateDesc");
+		Map<String, String> params = new HashMap<String, String>(4);
+		params.put("limitTime", paramDate);
+		params.put("shopCode", shopCode);
+		JSONArray jsonArray = systemServiceInterface.getSendOutExpressByExpressGroup(params);
+		String fileName = "收寄件分组统计.xlsx";
+		String name = getExcelPath(request, fileName);
+		File file = new File(name);
+		File model = new File(getExcelModelPath(request, fileName));
+		ExcelExportTools eet = new ExcelExportTools();
+		eet.exportSendOutExpressByExpressGroup(dateDesc,shopName,model, file, jsonArray, "TITLE");
+		downFile(request, response, file);
+	}
+	
+	
+	@ResponseBody
 	@RequestMapping("/pages/system/downShopCustomerCount.light")
-	public ModelAndView downShopCustomerCount(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+	public void downShopCustomerCount(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		String type = request.getParameter("down_type");
 		String code = request.getParameter("down_code");
@@ -434,8 +476,6 @@ public class PageToolsController extends SuperController{
 		ExcelExportTools eet = new ExcelExportTools();
 		eet.exportQueryDataWithCustomerCount(model, file, jsonArray, "TITLE");
 		downFile(request, response, file);
-		return null;
-
 	}
 	
 }
