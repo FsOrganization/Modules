@@ -36,9 +36,9 @@ import org.sword.wechat4j.common.Config;
 import org.sword.wechat4j.token.TokenProxy;
 
 import com.fla.common.base.SuperController;
-import com.fla.common.entity.SystemUser;
 import com.fla.common.service.interfaces.CustomerServiceInterface;
 import com.fla.common.service.interfaces.LoginServiceInterface;
+import com.fla.common.util.Automatic.AutomaticMsgUtils;
 import com.fla.common.weixin.util.WechatProcess;
 import com.fla.common.weixin.util.xml.ReceiveXmlEntity;
 
@@ -243,7 +243,7 @@ public class WeiXinController extends SuperController{
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/getWechatRegisterPage.light")
-	public ModelAndView testRegisterPage(String openId) {
+	public ModelAndView getWechatRegisterPage(String openId) {
 		InternalResourceView iv = new InternalResourceView("/pages/business/wechat/wechatRegisterPage.jsp");
 		ModelAndView model = new ModelAndView(iv);
 		model.addObject("openId", openId);
@@ -263,7 +263,7 @@ public class WeiXinController extends SuperController{
 				obj.put("text", text);
 				obj.put("msgtype", "text");
 				net.sf.json.JSONObject result = WxstoreUtils.httpRequest(url,"POST", obj.toString());
-				System.out.println("微信响应结果："+result);
+				System.out.println("查询响应："+result);
 			} catch (Exception e) {
 				throw new WexinReqException(e);
 			}
@@ -291,7 +291,7 @@ public class WeiXinController extends SuperController{
 				obj.put("text", text);
 				obj.put("msgtype", "text");
 				net.sf.json.JSONObject result = WxstoreUtils.httpRequest(url,"POST", obj.toString());
-				System.out.println("微信响应结果："+result);
+				System.out.println("推送微信信息："+result);
 				response.setCharacterEncoding("utf-8");          
 				response.setContentType("text/html; charset=utf-8");
 				 PrintWriter printWriter = response.getWriter();
@@ -305,6 +305,30 @@ public class WeiXinController extends SuperController{
 			e.printStackTrace();
 		} finally {
 			
+		}
+		
+	}
+	
+	@ResponseBody
+	@RequestMapping("/pages/system/wechat/sendWechatMsgAutomatic.light")
+	public  void sendWechatMsgAutomatic(String msg, String phoneNumber,String expServiceName,String logistics,
+			HttpServletRequest request, HttpServletResponse response) {
+		Map<String,String> params = new HashMap<String,String>(1);
+		params.put("phoneNumber", phoneNumber);
+		JSONObject customerObj =  customerService.getCustomerInfoByPhoneNumber(params);
+		String shopName = customerObj.getString("NAME");
+		String touser = customerObj.getString("WEIXIN_ID");
+		if (touser == null || touser.length() == 0 || touser.trim().equals("")) {
+			System.out.println("1 phoneNumber:"+phoneNumber+",touser:"+touser);
+			return;
+		} else {
+			System.out.println("2 phoneNumber:"+phoneNumber+",touser:"+touser);
+			Map<String,String> paraMap = new HashMap<String,String>();
+			paraMap.put("touser",touser);
+			paraMap.put("phoneNumber",phoneNumber);
+			paraMap.put("shopName",shopName);
+			paraMap.put("msg",msg);
+			AutomaticMsgUtils.sendWechatMsgAutomatic(paraMap);
 		}
 		
 	}

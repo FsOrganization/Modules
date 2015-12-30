@@ -19,6 +19,8 @@ public interface CustomerServiceInterface {
 	
 	public Pagination getCustomerList(final int rowSize, final int pageSize, Map<String,String> params);
 	
+	public JSONObject getCustomerInfoByPhoneNumber(Map<String,String> params);
+	
 	public JSONObject modifyCustomerInfo(CustomerInfo customer) throws SQLException;
 	
 	public JSONObject registerCustomerByOpenId(CustomerInfo customer) throws SQLException;

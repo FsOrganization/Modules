@@ -55,4 +55,6 @@ public interface LoginServiceInterface {
 	
 	public JSONObject getSignatureByBatchNumber(String batchNumber,  String type);
 	
+	public Map<String, Object>  checkExpressLocation(Map<String, String> params);
+	
 }

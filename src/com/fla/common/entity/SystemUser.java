@@ -21,6 +21,9 @@ public class SystemUser implements Serializable{
 	private String phoneNumber;
 	private String type;
 	private String remark;
+	private String userMode;
+	private String isOpenIM;
+	private String createDate;
 	
 	
 	public SystemUser() {
@@ -100,6 +103,30 @@ public class SystemUser implements Serializable{
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getUserMode() {
+		return userMode;
+	}
+
+	public void setUserMode(String userMode) {
+		this.userMode = userMode;
+	}
+
+	public String getIsOpenIM() {
+		return isOpenIM;
+	}
+
+	public void setIsOpenIM(String isOpenIM) {
+		this.isOpenIM = isOpenIM;
+	}
+
+	public String getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(String createDate) {
+		this.createDate = createDate;
 	}
 
 }

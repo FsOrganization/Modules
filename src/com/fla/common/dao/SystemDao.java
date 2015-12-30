@@ -143,7 +143,7 @@ public class SystemDao implements SystemDaoInterface {
 			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
 			st = con.prepareStatement(""
 					+ " select a.ID, a.LOGIN_NAME, a.PASSWORD, a.AREA_CODE, a.NICK_NAME, "
-					+ " a.SERVICE_SHOP_CODE, a.REMARK, a.TYPE,trim(b.NAME) as SERVICE_SHOP_NAME,a.PHONE_NUMBER"
+					+ " a.SERVICE_SHOP_CODE, a.REMARK, a.TYPE,trim(b.NAME) as SERVICE_SHOP_NAME,a.PHONE_NUMBER,CREATE_DATE,OPEN_IM"
 					+" from tf_system_user a,tf_shop_info b where a.SERVICE_SHOP_CODE = b.SHOP_CODE and a.LOGIN_NAME <> 'admin' ");
 //			st.setString(1, areaCode);
 			rs = st.executeQuery();
@@ -258,7 +258,7 @@ public class SystemDao implements SystemDaoInterface {
 			throws SQLException {
 		Connection con = null;
 		PreparedStatement st = null;
-		String sql = "update tf_system_user set PASSWORD = ?, NICK_NAME=?, SERVICE_SHOP_CODE =?, TYPE = ?,PHONE_NUMBER=?,LOGIN_NAME = ? "
+		String sql = "update tf_system_user set PASSWORD = ?, NICK_NAME=?, SERVICE_SHOP_CODE =?, TYPE = ?,PHONE_NUMBER=?,LOGIN_NAME = ?,OPEN_IM=? "
 				+ "where ID=?";
 		con = connectionManager.getConnection();
         st=con.prepareStatement(sql);
@@ -268,7 +268,8 @@ public class SystemDao implements SystemDaoInterface {
 		st.setString(4,user.getType());
 		st.setString(5,user.getPhoneNumber());
 		st.setString(6, user.getLoginName());
-		st.setLong(7, user.getId());
+		st.setString(7, user.getIsOpenIM());
+		st.setLong(8, user.getId());
 		try 
 		{
 				st.executeUpdate();
@@ -309,7 +310,7 @@ public class SystemDao implements SystemDaoInterface {
 			throws SQLException {
 		Connection con = null;
 		PreparedStatement st = null;
-		String sql = "update tf_system_user set NICK_NAME=?, SERVICE_SHOP_CODE =?, TYPE = ?,PHONE_NUMBER=? "
+		String sql = "update tf_system_user set NICK_NAME=?, SERVICE_SHOP_CODE =?, TYPE = ?,PHONE_NUMBER=?,OPEN_IM=? "
 				+ "where ID=?";
 		con = connectionManager.getConnection();
         st=con.prepareStatement(sql);
@@ -317,7 +318,8 @@ public class SystemDao implements SystemDaoInterface {
 		st.setString(2,user.getServiceShopCode());
 		st.setString(3,user.getType());
 		st.setString(4,user.getPhoneNumber());
-		st.setLong(5, user.getId());
+		st.setString(5, user.getIsOpenIM());
+		st.setLong(6, user.getId());
 		try 
 		{
 				st.executeUpdate();
@@ -367,6 +369,7 @@ public class SystemDao implements SystemDaoInterface {
 		List<String> keys = new ArrayList<String>(4);
 		keys.add("seq_locationCodeByExpressType_S");
 		keys.add("seq_locationCodeByExpressType_X");
+		keys.add("seq_locationCodeByExpressType_D");
 		
 		String insertSQL = "INSERT INTO sequence(NAME, CURRENT_VALUE, INCREMENT, MODULE, CYCLE, MAX_VALUE, SHOP_CODE) VALUES(?, ?, ?, ?, ?, ?, ?)";
 		st = con.prepareStatement(insertSQL);
@@ -430,8 +433,8 @@ public class SystemDao implements SystemDaoInterface {
 		PreparedStatement st = null;
 		con = connectionManager.getConnection();
 		String insertSQL =
-			"INSERT INTO tf_system_user(ID, LOGIN_NAME, PASSWORD, AREA_CODE, NICK_NAME, SERVICE_SHOP_CODE, REMARK, TYPE, PHONE_NUMBER)"+
-			"VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			"INSERT INTO tf_system_user(ID, LOGIN_NAME, PASSWORD, AREA_CODE, NICK_NAME, SERVICE_SHOP_CODE, REMARK, TYPE, PHONE_NUMBER,OPEN_IM,CREATE_DATE)"+
+			"VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
         st=con.prepareStatement(insertSQL);
 		st.setLong(1, user.getId());
 		st.setString(2, user.getLoginName());
@@ -442,6 +445,8 @@ public class SystemDao implements SystemDaoInterface {
 		st.setString(7, user.getRemark());
 		st.setString(8, user.getType());
 		st.setString(9, user.getPhoneNumber());
+		st.setString(10, user.getIsOpenIM());
+		st.setString(11, user.getCreateDate());
 		try 
 		{
 			st.execute();
@@ -724,7 +729,7 @@ public class SystemDao implements SystemDaoInterface {
 		return v;
 	}
 	
-	public boolean checkLocationCode(String locationCode,String shopCode) throws SQLException {
+	public synchronized boolean checkLocationCode(String locationCode,String shopCode) throws SQLException {
 		ResultSet rs = null;
 		Connection con = null;
 		PreparedStatement st = null;
@@ -944,8 +949,8 @@ public class SystemDao implements SystemDaoInterface {
 		List<Map<String, Object>> t = null;
 		String sql = new String();
 		String sqlArea = "select c.NAME,"
-				+ "	max(IF(type = 'inExpress',eCount,0)) as 'ICOUNT',"
-				+ " max(IF(type = 'sendExpress',eCount,0)) as 'SCOUNT',"
+				+ "	sum(IF(type = 'inExpress',eCount,0)) as 'ICOUNT',"
+				+ " sum(IF(type = 'sendExpress',eCount,0)) as 'SCOUNT',"
 				+ " sum(eCount) as 'TOTAL' "
 				+ " from ("
 				+ " select b.NAME,count(1) eCount,'inExpress' type"
@@ -964,8 +969,8 @@ public class SystemDao implements SystemDaoInterface {
 				+ "	group by SERVICE_SHOP_CODE ) c group by c.name";
 		
 		String sqlShop = "select c.NAME,"
-				+ " max(IF(type = 'inExpress',eCount,0)) as 'ICOUNT',"
-				+ " max(IF(type = 'sendExpress',eCount,0)) as 'SCOUNT',"
+				+ " sum(IF(type = 'inExpress',eCount,0)) as 'ICOUNT',"
+				+ " sum(IF(type = 'sendExpress',eCount,0)) as 'SCOUNT',"
 				+ " sum(eCount) as 'TOTAL' "
 				+ " from ("
 				+ " select b.NAME,count(1) eCount,'inExpress' type"
@@ -998,6 +1003,164 @@ public class SystemDao implements SystemDaoInterface {
 			st.setString(2, code);
 			st.setString(3, code);
 			st.setString(4, code);
+			rs = st.executeQuery();
+			t = checkResultSet(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			connectionManager.closeResultSet(rs);
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+		return t;
+	}
+	
+	@Override
+	public List<Map<String, Object>> getShopOutAndSendExpressGroupCount(Map<String, String> params) throws SQLException {
+		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement st = null;
+		List<Map<String, Object>> t = null;
+		String sql = new String();
+		
+		sql = "select "
+		+ " c.TT, "
+		+ " sum(IF(type = 'outExpress',eCount,0)) as 'OUTCOUNT',"
+		+ " sum(IF(type = 'sendExpress',eCount,0)) as 'SENDCOUNT'," 
+    + " sum(eCount) as 'TOTAL'  "
+    + " from ( "
+    + " select date_format(OUT_OPERA_TIME,'%d') TT,count(distinct PHONE_NUMBER) eCount,'outExpress' type"
+    + " from tf_express_out_storehouse "
+    + " where SERVICE_SHOP_CODE = ? "
+    + " and date_format(OUT_OPERA_TIME,'%Y-%m') = ? "
+    + " group by TT,SERVICE_SHOP_CODE"
+    + " UNION ALL "
+    + " select date_format(OPERA_TIME,'%d') TT,count(distinct PHONE_NUMBER) eCount,'sendExpress' type"
+    + " from tf_sent_express_info "
+    + " where SERVICE_SHOP_CODE = ? "
+    + " and date_format(OPERA_TIME,'%Y-%m') = ? "
+    + " group by TT,SERVICE_SHOP_CODE "
+    + " ) c group by c.TT";
+		
+		try 
+		{
+			con = connectionManager.getConnection();
+			st = con.prepareStatement(sql);
+			st.setString(1, params.get("shopCode"));
+			st.setString(2, params.get("limitTime"));
+			st.setString(3, params.get("shopCode"));
+			st.setString(4, params.get("limitTime"));
+			rs = st.executeQuery();
+			t = checkResultSet(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			connectionManager.closeResultSet(rs);
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+		return t;
+	}
+	
+	@Override
+	public List<Map<String, Object>> getShopOutAndSendExpressDaily(Map<String, String> params) throws SQLException {
+		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement st = null;
+		List<Map<String, Object>> t = null;
+		String sql = new String();
+		
+		sql = "select "
+		+ " c.TT, "
+		+ " sum(IF(type = 'outExpress',eCount,0)) as 'OUTCOUNT',"
+		+ " sum(IF(type = 'sendExpress',eCount,0)) as 'SENDCOUNT'," 
+    + " sum(eCount) as 'TOTAL'  "
+    + " from ( "
+    + " select date_format(OUT_OPERA_TIME,'%d') TT,count(distinct PHONE_NUMBER) eCount,'outExpress' type"
+    + " from tf_express_out_storehouse "
+    + " where SERVICE_SHOP_CODE = ? "
+    + " and date_format(OUT_OPERA_TIME,'%Y-%m') = ? "
+    + " group by TT,SERVICE_SHOP_CODE"
+    + " UNION ALL "
+    + " select date_format(OPERA_TIME,'%d') TT,count(distinct PHONE_NUMBER) eCount,'sendExpress' type"
+    + " from tf_sent_express_info "
+    + " where SERVICE_SHOP_CODE = ? "
+    + " and date_format(OPERA_TIME,'%Y-%m') = ? "
+    + " group by TT,SERVICE_SHOP_CODE "
+    + " ) c group by c.TT";
+		
+		try 
+		{
+			con = connectionManager.getConnection();
+			st = con.prepareStatement(sql);
+			st.setString(1, params.get("shopCode"));
+			st.setString(2, params.get("limitTime"));
+			st.setString(3, params.get("shopCode"));
+			st.setString(4, params.get("limitTime"));
+			rs = st.executeQuery();
+			t = checkResultSet(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			connectionManager.closeResultSet(rs);
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+		return t;
+	}
+	
+	@Override
+	public List<Map<String, Object>> getSendOutExpressByExpressGroup(Map<String, String> params) throws SQLException {
+		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement st = null;
+		List<Map<String, Object>> t = null;
+		String sql = new String();
+		
+		sql =  "select " 
+		+ "c.TT,  "
+    + "sum(IF(EXPRESS_SERVICE_ID = '2' and type = 'outExpress',eCount,0)) as 'SF', "
+    + "sum(IF(EXPRESS_SERVICE_ID = '3' and type = 'outExpress',eCount,0)) as 'JD', "
+    + "sum(IF(EXPRESS_SERVICE_ID = '4' and type = 'outExpress',eCount,0)) as 'YT', "
+    + "sum(IF(EXPRESS_SERVICE_ID = '5' and type = 'outExpress',eCount,0)) as 'EMS', "
+    + "sum(IF(EXPRESS_SERVICE_ID = '6' and type = 'outExpress',eCount,0)) as 'TTKD', "
+    + "sum(IF(EXPRESS_SERVICE_ID = '7' and type = 'outExpress',eCount,0)) as 'ST', "
+    + "sum(IF(EXPRESS_SERVICE_ID = '8' and type = 'outExpress',eCount,0)) as 'ZT', "
+    + "sum(IF(EXPRESS_SERVICE_ID = '9' and type = 'outExpress',eCount,0)) as 'YD', "
+   + " sum(IF(EXPRESS_SERVICE_ID = '10' and type = 'outExpress',eCount,0)) as 'ZTKY', "
+   + " sum(IF(EXPRESS_SERVICE_ID = '11' and type = 'outExpress',eCount,0)) as 'ZJS', "
+   + " sum(IF(EXPRESS_SERVICE_ID = '12' and type = 'outExpress',eCount,0)) as 'HT', "
+   + " sum(IF(EXPRESS_SERVICE_ID = '13' and type = 'outExpress',eCount,0)) as 'YZ', "
+   + "sum(IF(EXPRESS_SERVICE_ID = '14' and type = 'outExpress',eCount,0)) as 'KJ', "
+    + "sum(IF(EXPRESS_SERVICE_ID = '15' and type = 'outExpress',eCount,0)) as 'YS', " 
+    + "sum(IF(EXPRESS_SERVICE_ID = '16' and type = 'outExpress',eCount,0)) as 'QT', "
+    + "sum(IF(EXPRESS_SERVICE_ID = '17' and type = 'outExpress',eCount,0)) as 'GT', "
+   + " sum(IF(EXPRESS_SERVICE_ID = '18' and type = 'outExpress',eCount,0)) as 'WPH', "
+    + "sum(IF(type = 'outExpress',eCount,0)) as 'TOTAL',"
+    + "sum(IF(type = 'sendExpress',eCount,0)) as 'SENDCOUNT', "
+   + " sum(IF(type = 'sendExpress',price,0))/100 as 'PRICE' "
++ "from (  "
+  + "  select date_format(OUT_OPERA_TIME,'%d') TT,EXPRESS_SERVICE_ID,count(*) eCount,0 price,'outExpress' type "
+  + "  from tf_express_out_storehouse "
+   + " where SERVICE_SHOP_CODE = ? "
+  + "  and date_format(OUT_OPERA_TIME,'%Y-%m') = ? "
+  + "  group by TT,SERVICE_SHOP_CODE,EXPRESS_SERVICE_ID "
+  + "  UNION ALL  "
+   + " select date_format(OPERA_TIME,'%d') TT,EXPRESS_SERVICE_ID,count(*) eCount,price,'sendExpress' type "
+  + "  from tf_sent_express_info  "
+  + "  where SERVICE_SHOP_CODE = ? "
+   + " and date_format(OPERA_TIME,'%Y-%m') = ? "
+   + " group by TT,SERVICE_SHOP_CODE,EXPRESS_SERVICE_ID "
++ ") c group by c.TT";
+		
+		try 
+		{
+			con = connectionManager.getConnection();
+			st = con.prepareStatement(sql);
+			st.setString(1, params.get("shopCode"));
+			st.setString(2, params.get("limitTime"));
+			st.setString(3, params.get("shopCode"));
+			st.setString(4, params.get("limitTime"));
 			rs = st.executeQuery();
 			t = checkResultSet(rs);
 		} catch (SQLException e) {

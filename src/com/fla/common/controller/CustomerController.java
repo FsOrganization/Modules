@@ -43,8 +43,14 @@ public class CustomerController extends SuperController{
 		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		Map<String,String> params = new HashMap<String,String>();
 		String queryParams = request.getParameter("queryParams");
+		String pageShopCode = request.getParameter("shopCode");
 		params.put("queryParams", queryParams);
-		params.put("shopCode", s.getServiceShopCode());
+		if (pageShopCode == null || pageShopCode.trim().length() == 0) {
+			params.put("shopCode", s.getServiceShopCode());
+		} else {
+			params.put("shopCode", pageShopCode);
+		}
+		
 		Pagination data = customerService.getCustomerList(rows, page, params);
 		String d = PaginationUtils.getData(page, rows, data);
 		PrintWriter printWriter =null;

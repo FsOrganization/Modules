@@ -508,6 +508,7 @@ public class SystemController extends SuperController{
 		String password = request.getParameter("password");
 		String phoneNumber = request.getParameter("phoneNumber");
 		String isCheck = request.getParameter("isCheck");
+		String isOpenIM = request.getParameter("isOpenIM");
 		SystemUser su = new SystemUser();
 		String userId  = request.getParameter("id");
 		Integer id =null;
@@ -522,6 +523,7 @@ public class SystemController extends SuperController{
 		su.setPassword(MD5Utils.encodeMd5(password, loginName));
 		su.setPhoneNumber(phoneNumber);
 		su.setServiceShopCode(shopCode);
+		su.setCreateDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 		if ("YES".equalsIgnoreCase(isCheck)) {
 			su.setType("1");
 		} else if ("NO".equalsIgnoreCase(isCheck)) {
@@ -529,7 +531,15 @@ public class SystemController extends SuperController{
 		} else {
 			su.setType("0");
 		}
-
+		
+		if ("YES".equalsIgnoreCase(isOpenIM)) {
+			su.setIsOpenIM("O");
+		} else if ("NO".equalsIgnoreCase(isOpenIM)) {
+			su.setIsOpenIM("C");
+		} else {
+			su.setIsOpenIM("C");
+		}
+		
 		return su;
 	}
 	

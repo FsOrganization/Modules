@@ -47,7 +47,9 @@ public class LoginDao implements LoginDaoInterface {
 		try 
 		{
 			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
-			st = con.prepareStatement("select * from TF_EXPRESS_INFO where BATCH_NUMBER=? and SERVICE_SHOP_CODE=?  order by opera_time");
+			st = con.prepareStatement("select a.*,b.WEIXIN_ID from TF_EXPRESS_INFO a  "
+					+ " left join tf_customer_info b on a.PHONE_NUMBER = b.PHONE_NUMBER "
+					+ " where a.BATCH_NUMBER=? and a.SERVICE_SHOP_CODE=?  order by a.opera_time");
 			st.setString(1, params.get("batchNumber"));
 			st.setString(2, params.get("serviceShopCode"));
 			rs = st.executeQuery();
@@ -63,18 +65,23 @@ public class LoginDao implements LoginDaoInterface {
 
 	}
 
+	/**
+	 * init page query
+	 */
 	@Override
 	public Pagination getInExpressInfoList(int rowSize,int pageSize, Map<String, String> params) throws SQLException {
 		Pagination page =null;
 		String sql = new  String();
 		try 
 		{
-			sql = "select a.ID,a.LOGISTICS,a.CODE,"
+			sql = ""
+					+ " select a.ID,a.LOGISTICS,a.CODE,"
 					+ " a.RECIPIENT_NAME,b.WEIXIN_ID,a.PHONE_NUMBER,a.LANDLINE_NUMBER,"
 					+ " a.EXPRESS_SERVICE_ID,a.ADDRESS,a.REMARK,a.BATCH_NUMBER,"
 					+ " date_format(a.OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,a.AREA_CODE,a.SERVICE_SHOP_CODE,"
 					+ " a.OPERATOR,a.EXPRESS_lOCATION,1 TYPE,b.GENDER"
-					+ " from TF_EXPRESS_INFO a left join tf_customer_info b on a.PHONE_NUMBER = b.PHONE_NUMBER where a.SERVICE_SHOP_CODE='"+params.get("serviceShopCode")+"'  order by a.opera_time";
+					+ " from TF_EXPRESS_INFO a left join tf_customer_info b on a.PHONE_NUMBER = b.PHONE_NUMBER "
+					+ " where a.SERVICE_SHOP_CODE='"+params.get("serviceShopCode")+"'  order by a.opera_time desc";
 			page=new Pagination(sql.toString(),pageSize,rowSize,getJdbcTemplate());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -91,12 +98,13 @@ public class LoginDao implements LoginDaoInterface {
 		try 
 		{
 			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
-			st = con.prepareStatement("select  ID,LOGISTICS,CODE,"
-					+ "RECIPIENT_NAME,PHONE_NUMBER,LANDLINE_NUMBER,"
-					+ "EXPRESS_SERVICE_ID,ADDRESS,REMARK,BATCH_NUMBER,OUT_BATCH_NUMBER,"
-					+ "date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,AREA_CODE,SERVICE_SHOP_CODE,"
-					+ "OPERATOR,EXPRESS_lOCATION,-1 TYPE "
-					+ "from TF_EXPRESS_OUT_STOREHOUSE where AREA_CODE=?  order by opera_time");
+			st = con.prepareStatement(""
+					+ " select  ID,LOGISTICS,CODE,"
+					+ " RECIPIENT_NAME,PHONE_NUMBER,LANDLINE_NUMBER,"
+					+ " EXPRESS_SERVICE_ID,ADDRESS,REMARK,BATCH_NUMBER,OUT_BATCH_NUMBER,"
+					+ " date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,AREA_CODE,SERVICE_SHOP_CODE,"
+					+ " OPERATOR,EXPRESS_lOCATION,-1 TYPE "
+					+ " from TF_EXPRESS_OUT_STOREHOUSE where AREA_CODE=?  order by opera_time");
 			st.setString(1, params.get("areaCode"));
 			rs = st.executeQuery();
 			t = checkResultSet(rs);
@@ -126,10 +134,11 @@ public class LoginDao implements LoginDaoInterface {
 		{
 			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
 			StringBuilder sql = new StringBuilder();
-			sql.append(" select ID, LOGISTICS, CODE, RECIPIENT_NAME, PHONE_NUMBER, "
-					+ "LANDLINE_NUMBER, EXPRESS_SERVICE_ID, ADDRESS, REMARK, BATCH_NUMBER, ' ' OUT_BATCH_NUMBER, "
-					+ "date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,' '  OUT_OPERA_TIME, AREA_CODE, SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,1 TYPE "
-					+ "from TF_EXPRESS_INFO");
+			sql.append(" "
+					+ " select ID, LOGISTICS, CODE, RECIPIENT_NAME, PHONE_NUMBER, "
+					+ " LANDLINE_NUMBER, EXPRESS_SERVICE_ID, ADDRESS, REMARK, BATCH_NUMBER, ' ' OUT_BATCH_NUMBER, "
+					+ " date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,' '  OUT_OPERA_TIME, AREA_CODE, SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,1 TYPE "
+					+ " from TF_EXPRESS_INFO");
 			sql.append(" where 1=1 ");
 			sql.append(" and SERVICE_SHOP_CODE="+params.get("serviceShopCode"));
 			if (params.get("queryParams") != null  &&  !params.get("queryParams").equals("")) {
@@ -156,10 +165,11 @@ public class LoginDao implements LoginDaoInterface {
 				sql.append(" and OPERA_TIME <='"+endDate+"'");
 			}
 			StringBuilder sql2 = new StringBuilder();
-			sql2.append(" select ID, LOGISTICS, CODE, RECIPIENT_NAME, PHONE_NUMBER, "
-					+ "LANDLINE_NUMBER, EXPRESS_SERVICE_ID, ADDRESS, REMARK, BATCH_NUMBER, OUT_BATCH_NUMBER,  "
-					+ "date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,OUT_OPERA_TIME, AREA_CODE, SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,-1 TYPE "
-					+ "from TF_EXPRESS_OUT_STOREHOUSE");
+			sql2.append(" "
+					+ " select ID, LOGISTICS, CODE, RECIPIENT_NAME, PHONE_NUMBER, "
+					+ " LANDLINE_NUMBER, EXPRESS_SERVICE_ID, ADDRESS, REMARK, BATCH_NUMBER, OUT_BATCH_NUMBER,  "
+					+ " date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,OUT_OPERA_TIME, AREA_CODE, SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,-1 TYPE "
+					+ " from TF_EXPRESS_OUT_STOREHOUSE");
 			sql2.append(" where 1=1 ");
 			sql2.append(" and SERVICE_SHOP_CODE="+params.get("serviceShopCode"));
 			if (params.get("queryParams") != null  &&  !params.get("queryParams").equals("")) {
@@ -206,10 +216,11 @@ public class LoginDao implements LoginDaoInterface {
 		{
 			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
 			StringBuilder sql = new StringBuilder();
-			sql.append(" select ID, LOGISTICS, CODE, RECIPIENT_NAME, PHONE_NUMBER, "
-					+ "LANDLINE_NUMBER, EXPRESS_SERVICE_ID, ADDRESS, REMARK, BATCH_NUMBER, '' OUT_BATCH_NUMBER, "
-					+ "date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,''  OUT_OPERA_TIME, AREA_CODE, SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,1 TYPE "
-					+ "from TF_EXPRESS_INFO");
+			sql.append(" "
+					+ " select ID, LOGISTICS, CODE, RECIPIENT_NAME, PHONE_NUMBER, "
+					+ " LANDLINE_NUMBER, EXPRESS_SERVICE_ID, ADDRESS, REMARK, BATCH_NUMBER, '' OUT_BATCH_NUMBER, "
+					+ " date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,''  OUT_OPERA_TIME, AREA_CODE, SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,1 TYPE "
+					+ " from TF_EXPRESS_INFO");
 			sql.append(" where 1=1 ");
 			sql.append(" and SERVICE_SHOP_CODE="+params.get("serviceShopCode"));
 			if (params.get("queryParams") != null  &&  !params.get("queryParams").equals("")) {
@@ -237,10 +248,11 @@ public class LoginDao implements LoginDaoInterface {
 			}
 //			sql.append(" order by OPERA_TIME");
 			StringBuilder sql2 = new StringBuilder();
-			sql2.append(" select ID, LOGISTICS, CODE, RECIPIENT_NAME, PHONE_NUMBER, "
-					+ "LANDLINE_NUMBER, EXPRESS_SERVICE_ID, ADDRESS, REMARK, BATCH_NUMBER, OUT_BATCH_NUMBER, "
-					+ "date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,OUT_OPERA_TIME, AREA_CODE, SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,-1 TYPE "
-					+ "from TF_EXPRESS_OUT_STOREHOUSE");
+			sql2.append(" "
+					+ " select ID, LOGISTICS, CODE, RECIPIENT_NAME, PHONE_NUMBER, "
+					+ " LANDLINE_NUMBER, EXPRESS_SERVICE_ID, ADDRESS, REMARK, BATCH_NUMBER, OUT_BATCH_NUMBER, "
+					+ " date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,OUT_OPERA_TIME, AREA_CODE, SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,-1 TYPE "
+					+ " from TF_EXPRESS_OUT_STOREHOUSE");
 			sql2.append(" where 1=1 ");
 			sql2.append(" and SERVICE_SHOP_CODE="+params.get("serviceShopCode"));
 			if (params.get("queryParams") != null  &&  !params.get("queryParams").equals("")) {
@@ -292,10 +304,11 @@ public class LoginDao implements LoginDaoInterface {
 		{
 			con = connectionManager.getConnection();
 			StringBuilder sql = new StringBuilder();
-			sql.append(" select a.ID, LOGISTICS, a.CODE, RECIPIENT_NAME, a.PHONE_NUMBER, "
-					+ "LANDLINE_NUMBER, b.name EXPRESS_SERVICE_ID, ADDRESS, a.REMARK, BATCH_NUMBER, '' OUT_BATCH_NUMBER, "
-					+ "date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,''  OUT_OPERA_TIME, a.AREA_CODE, a.SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,1 TYPE "
-					+ "from TF_EXPRESS_INFO a ,TF_EXPRESS_SERVICE_PROVIDER_INFO b");
+			sql.append(" "
+					+ " select a.ID, LOGISTICS, a.CODE, RECIPIENT_NAME, a.PHONE_NUMBER, "
+					+ " LANDLINE_NUMBER, b.name EXPRESS_SERVICE_ID, ADDRESS, a.REMARK, BATCH_NUMBER, '' OUT_BATCH_NUMBER, "
+					+ " date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,''  OUT_OPERA_TIME, a.AREA_CODE, a.SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,1 TYPE "
+					+ " from TF_EXPRESS_INFO a ,TF_EXPRESS_SERVICE_PROVIDER_INFO b");
 			sql.append(" where 1=1 ");
 			sql.append(" and a.EXPRESS_SERVICE_ID = b.id");
 			sql.append(" and a.SERVICE_SHOP_CODE="+params.get("serviceShopCode"));
@@ -324,10 +337,11 @@ public class LoginDao implements LoginDaoInterface {
 			}
 //			sql.append(" order by OPERA_TIME");
 			StringBuilder sql2 = new StringBuilder();
-			sql2.append(" select a.ID, LOGISTICS, a.CODE, RECIPIENT_NAME, a.PHONE_NUMBER, "
-					+ "LANDLINE_NUMBER, b.name EXPRESS_SERVICE_ID, ADDRESS, a.REMARK, BATCH_NUMBER, OUT_BATCH_NUMBER, "
-					+ "date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,OUT_OPERA_TIME, a.AREA_CODE, a.SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,-1 TYPE "
-					+ "from TF_EXPRESS_OUT_STOREHOUSE a ,TF_EXPRESS_SERVICE_PROVIDER_INFO b");
+			sql2.append(" "
+					+ " select a.ID, LOGISTICS, a.CODE, RECIPIENT_NAME, a.PHONE_NUMBER, "
+					+ " LANDLINE_NUMBER, b.name EXPRESS_SERVICE_ID, ADDRESS, a.REMARK, BATCH_NUMBER, OUT_BATCH_NUMBER, "
+					+ " date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,OUT_OPERA_TIME, a.AREA_CODE, a.SERVICE_SHOP_CODE, OPERATOR, EXPRESS_lOCATION,-1 TYPE "
+					+ " from TF_EXPRESS_OUT_STOREHOUSE a ,TF_EXPRESS_SERVICE_PROVIDER_INFO b");
 			sql2.append(" where 1=1 ");
 			sql2.append(" and a.EXPRESS_SERVICE_ID = b.id");
 			sql2.append(" and a.SERVICE_SHOP_CODE="+params.get("serviceShopCode"));
@@ -370,16 +384,20 @@ public class LoginDao implements LoginDaoInterface {
 		return t;
 	}
 	
+	/**
+	 * by params query
+	 */
 	@Override
 	public Pagination  getNotOutExpressInfoByFilterConditions(int rowSize, int pageSize, Map<String, String> params)  {
 		Pagination page = null;
 		try 
 		{
 			StringBuilder sql = new StringBuilder();
-			sql.append(" select a.ID, a.LOGISTICS, a.CODE,b.WEIXIN_ID,a.RECIPIENT_NAME, a.PHONE_NUMBER,"
-					+ "a.LANDLINE_NUMBER, a.EXPRESS_SERVICE_ID, a.ADDRESS, a.REMARK, a.BATCH_NUMBER,"
-					+ "date_format(a.OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME, a.AREA_CODE, a.SERVICE_SHOP_CODE, a.OPERATOR, a.EXPRESS_lOCATION,1 TYPE "
-					+ "from TF_EXPRESS_INFO a left join tf_customer_info b on a.PHONE_NUMBER = b.PHONE_NUMBER");
+			sql.append(" "
+					+ " select a.ID, a.LOGISTICS, a.CODE,b.WEIXIN_ID,a.RECIPIENT_NAME, a.PHONE_NUMBER,"
+					+ " a.LANDLINE_NUMBER, a.EXPRESS_SERVICE_ID, a.ADDRESS, a.REMARK, a.BATCH_NUMBER,"
+					+ " date_format(a.OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME, a.AREA_CODE, a.SERVICE_SHOP_CODE, a.OPERATOR, a.EXPRESS_lOCATION,1 TYPE "
+					+ " from TF_EXPRESS_INFO a left join tf_customer_info b on a.PHONE_NUMBER = b.PHONE_NUMBER");
 			sql.append(" where 1=1 ");
 			sql.append(" and a.SERVICE_SHOP_CODE="+params.get("serviceShopCode"));
 			if (params.get("queryParams") != null  &&  !params.get("queryParams").equals("")) {
@@ -388,6 +406,7 @@ public class LoginDao implements LoginDaoInterface {
 						+ "	and (a.RECIPIENT_NAME like '%"+queryParams+"%'"
 						+ "	or substring(a.PHONE_NUMBER, 8, 4) = '"+queryParams+"'"
 						+ "	or trim(a.LOGISTICS) = '"+queryParams+"'"
+						+ "	or b.INITIALS_CODE = '"+queryParams+"'"
 						+ "	or a.PHONE_NUMBER = '"+queryParams+"')");
 			}
 			if (params.get("expressService") != null && !params.get("expressService").equals("")) {
@@ -405,7 +424,7 @@ public class LoginDao implements LoginDaoInterface {
 				String endDate = params.get("endDate");
 				sql.append(" and a.OPERA_TIME <='"+endDate+"'");
 			}
-			sql.append(" order by a.OPERA_TIME");
+			sql.append(" order by a.OPERA_TIME desc");
 			
 			
 			page=new Pagination(sql.toString(),pageSize,rowSize,getJdbcTemplate());
@@ -425,7 +444,8 @@ public class LoginDao implements LoginDaoInterface {
 		{
 			con = connectionManager.getConnection();
 			StringBuilder sql = new StringBuilder();
-			sql.append(" select ID, LOGISTICS, RECIPIENT_NAME, PHONE_NUMBER, "
+			sql.append(" "
+					+ " select ID, LOGISTICS, RECIPIENT_NAME, PHONE_NUMBER, "
 					+ " EXPRESS_SERVICE_ID,OPERA_TIME, AREA_CODE, SERVICE_SHOP_CODE, EXPRESS_lOCATION"
 					+ " from TF_EXPRESS_INFO");
 			sql.append(" where 1=1 ");
@@ -462,7 +482,8 @@ public class LoginDao implements LoginDaoInterface {
 		{
 			con = connectionManager.getConnection();
 			StringBuilder sql = new StringBuilder();
-			sql.append(" select LOGISTICS,trim(c.NAME) PROVIDER_NAME,OPERA_TIME, trim(b.NAME) SHOP_NAME "
+			sql.append(" "
+					+ " select LOGISTICS,trim(c.NAME) PROVIDER_NAME,OPERA_TIME, trim(b.NAME) SHOP_NAME "
 					+ " from TF_EXPRESS_INFO a "
 					+ " left join tf_shop_info b on a.SERVICE_SHOP_CODE = b.SHOP_CODE  "
 					+ " left join tf_express_service_provider_info c on a.EXPRESS_SERVICE_ID = c.ID");
@@ -624,6 +645,31 @@ public class LoginDao implements LoginDaoInterface {
 		
 	}
 	
+	
+	@Override
+	public Map<String, Object> checkExpressLocation(Map<String, String> params)  {
+		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement st = null;
+		Map<String, Object> t = null;
+		try 
+		{
+			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
+			st = con.prepareStatement("select a.express_Location from TF_EXPRESS_INFO a  where a.express_Location=? and service_shop_code=? ");
+			st.setString(1, params.get("expressLocation"));
+			st.setString(2, params.get("shopCode"));
+			rs = st.executeQuery();
+			t = checkOneResultSet(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			connectionManager.closeResultSet(rs);
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+		return t;
+	}
+	
 	@Override
 	public void insertCustomeInfo(CustomerInfo ci) throws Exception {
 		SequenceManager sm = SequenceManager.getInstance();
@@ -632,10 +678,10 @@ public class LoginDao implements LoginDaoInterface {
 		con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
 		Integer id = sm.getSequenceByName("seq_custome_info_id",con);
 		String insertSQL =
-				"INSERT INTO TF_CUSTOMER_INFO("+
-				 "ID, NAME, PHONE_NUMBER ,lANDLINE_NUMBER, WEIXIN_ID, IDENTITY_CARD, GENDER, ADDRESS, AREA_CODE, INITIALS_CODE, SPELLING_CODE,SERVICE_SHOP_CODE)"+
-			"SELECT ?,?,?,?,?,?,?,?,?,?,?,? FROM DUAL "
-			+ "WHERE NOT EXISTS(SELECT NULL  FROM  TF_CUSTOMER_INFO  WHERE PHONE_NUMBER = ?) ";
+				" INSERT INTO TF_CUSTOMER_INFO("+
+				 " ID, NAME, PHONE_NUMBER ,lANDLINE_NUMBER, WEIXIN_ID, IDENTITY_CARD, GENDER, ADDRESS, AREA_CODE, INITIALS_CODE, SPELLING_CODE,SERVICE_SHOP_CODE)"+
+			    " SELECT ?,?,?,?,?,?,?,?,?,?,?,? FROM DUAL "
+			+ " WHERE NOT EXISTS(SELECT NULL  FROM  TF_CUSTOMER_INFO  WHERE PHONE_NUMBER = ?) ";
         st=con.prepareStatement(insertSQL);
 		st.setLong(1, id);
 		st.setString(2, ci.getName());
@@ -677,7 +723,7 @@ public class LoginDao implements LoginDaoInterface {
 	}
 
 	@Override
-	public Integer getOutStorehouseBatchNumber() {
+	public synchronized Integer getOutStorehouseBatchNumber() {
 		SequenceManager sm = SequenceManager.getInstance();
 		Integer temporaryId = null;
 		Connection con = null;

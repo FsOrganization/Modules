@@ -77,6 +77,16 @@ public interface SystemServiceInterface {
 	
 	public JSONArray getShopInAndSendExpressGroupCount(String type,String code,String startDate,String endDate) throws SQLException ;
 	
+	public JSONArray getShopOutAndSendExpressGroupCount(Map<String, String> params) throws SQLException ;
+
+	/**
+	 * 收寄件分组统计
+	 * @param params
+	 * @return
+	 * @throws SQLException
+	 */
+	public JSONArray getSendOutExpressByExpressGroup(Map<String, String> params) throws SQLException;
+
 	public String getShopNameByCode(String shopCode) ;
 	
 	public JSONObject addServiceProviderContacts(Map<String,String> params);

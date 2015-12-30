@@ -194,4 +194,6 @@ public interface LoginDaoInterface {
 
 		public Pagination getExpressInfoPagination(Integer rowSize, Integer pageSize, Map<String, String> params)throws SQLException;
 		
+		public Map<String, Object> checkExpressLocation(Map<String, String> params) ;
+		
 	}

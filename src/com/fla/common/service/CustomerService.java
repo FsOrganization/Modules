@@ -87,6 +87,18 @@ public class CustomerService implements CustomerServiceInterface{
 		}
 		return null;
 	}
+
+	@Override
+	public JSONObject getCustomerInfoByPhoneNumber(Map<String, String> params) {
+		JSONObject json = new JSONObject();
+		try 
+		{
+			json = customerDao.getCustomerInfoByPhoneNumber(params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return json;
+	}
 	
 	
 	

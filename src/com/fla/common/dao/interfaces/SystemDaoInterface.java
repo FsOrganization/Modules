@@ -77,6 +77,12 @@ public interface SystemDaoInterface {
 	
 	public List<Map<String, Object>> getShopInAndSendExpressGroupCount(String type,String code,String startDate,String endDate) throws SQLException;
 	
+	public List<Map<String, Object>> getShopOutAndSendExpressGroupCount(Map<String, String> params) throws SQLException ;
+	
+	public List<Map<String, Object>> getShopOutAndSendExpressDaily(Map<String, String> params) throws SQLException ;
+	
+	public List<Map<String, Object>> getSendOutExpressByExpressGroup(Map<String, String> params) throws SQLException ;
+	
 	public String getShopNameByCode(Map<String, String> params) throws SQLException;
 	
 	public void addServiceProviderContacts(Map<String, String> params) throws SQLException;

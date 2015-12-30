@@ -32,7 +32,7 @@ public class SequenceManager {
 		return sequenceManager;  
     }  
 
-	public Integer getTemporaryStorage(Connection conn,String name) {
+	public synchronized Integer getTemporaryStorage(Connection conn,String name) {
 		PreparedStatement st = null;
 		Integer val = null;
 		ResultSet rs = null;
@@ -60,7 +60,7 @@ public class SequenceManager {
 		return val;
 	}
 	
-	public Integer getTemporaryStorage(Connection conn,String name, String shopCode) {
+	public synchronized Integer getTemporaryStorage(Connection conn,String name, String shopCode) {
 		PreparedStatement st = null;
 		Integer val = null;
 		ResultSet rs = null;
@@ -88,7 +88,7 @@ public class SequenceManager {
 		return val;
 	}
 	 
-	public Integer getSequenceByName(String sequenceName, Connection conn) {
+	public synchronized Integer getSequenceByName(String sequenceName, Connection conn) {
 		PreparedStatement st = null;
 		Integer val = null;
 		ResultSet rs = null;

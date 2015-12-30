@@ -47,6 +47,17 @@ public final class DateUtil {
             return value.toString();
         }
 	}
+	
+	public static String dateToNohmsStr(Date d, String format) {
+		String value = "";
+		if (d == null) {
+			return value;
+		} else if (d instanceof Date) {
+			return sdfNohms.format(d);
+		} else {
+			return value.toString();
+		}
+	}
 
 	/**
 	 * 日期偏移

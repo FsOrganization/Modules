@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +36,7 @@ import com.fla.common.base.SuperController;
 import com.fla.common.entity.ExpressInfo;
 import com.fla.common.entity.SystemUser;
 import com.fla.common.service.interfaces.LoginServiceInterface;
+import com.fla.common.service.interfaces.MsgServiceInterface;
 import com.fla.common.util.MD5Utils;
 
 @Controller
@@ -43,13 +45,13 @@ public class LoginController extends SuperController{
 	private static final long serialVersionUID = -92227420050300172L;
 	
 	@Autowired
-	public SystemUser s;
+	public MsgServiceInterface msgService;
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
 	@Autowired
-	private LoginServiceInterface loginServiceInterface;
+	private LoginServiceInterface loginService;
 	
 	@org.springframework.web.bind.annotation.InitBinder
 	public void InitBinder(HttpServletRequest request, ServletRequestDataBinder binder) {
@@ -72,12 +74,12 @@ public class LoginController extends SuperController{
 		return model;
 	}
 
-	public void jumpLoginView(ModelAndView model, String name) {
-		InternalResourceView iv = new InternalResourceView("/pages/login.jsp");
-		model = new ModelAndView(iv);
-		model.addObject("name", name);
-		model.addObject("time", System.currentTimeMillis());
-	}
+//	public void jumpLoginView(ModelAndView model, String name) {
+//		InternalResourceView iv = new InternalResourceView("/pages/login.jsp");
+//		model = new ModelAndView(iv);
+//		model.addObject("name", name);
+//		model.addObject("time", System.currentTimeMillis());
+//	}
 	
 	private void checkRememberMe(ModelAndView model , String rememberMe, String name){
 		if ("on".equalsIgnoreCase(rememberMe)) {
@@ -89,6 +91,13 @@ public class LoginController extends SuperController{
 		}
 	}
 	
+	/**
+	 * 登录验证&参数初始化
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws SQLException
+	 */
 	@ResponseBody
 	@RequestMapping("/pages/system/login.light")
 	public ModelAndView  login(HttpServletRequest request, HttpServletResponse response) throws SQLException {
@@ -98,19 +107,27 @@ public class LoginController extends SuperController{
 		InternalResourceView iv = new InternalResourceView("/pages/index.jsp");
 		ModelAndView model = new ModelAndView(iv);
 		checkRememberMe(model, rememberMe, name);
-		SystemUser s = loginServiceInterface.checkLoginAction(name);
-		if (s.getLoginName() != null) 
+		SystemUser systemUser = loginService.checkLoginAction(name);
+		if (systemUser.getLoginName() != null) 
 		{
 			String pageCode = MD5Utils.encodeMd5(pd, name);
-//			String dbCode = MD5Utils.encodeMd5(su.getPassword(), su.getLoginName());
-			if (!pageCode.equals(s.getPassword())) {
+			if (!pageCode.equals(systemUser.getPassword())) {
 				iv = new InternalResourceView("/pages/login.jsp");
 				model = new ModelAndView(iv);
 				model.addObject("msg", "用户名或密码错误");
 				model.addObject("msgType", "-1");
 			} else {
 				model.addObject("loginName",name);
-				request.getSession().setAttribute("systemUser", s);
+				model.addObject("nickName",systemUser.getNickName());
+				model.addObject("userMode",systemUser.getUserMode());
+				request.getSession().setAttribute("systemUser", systemUser);
+				HashSet <String>list = msgService.getSendMsgShopStringList(new HashMap<String, String>());
+				if (list.contains(systemUser.getServiceShopCode())) {
+					request.getSession().setAttribute("msgTag", true);
+				}else {
+					request.getSession().setAttribute("msgTag", false);
+				}
+				
 			}
 		} else {
 			iv = new InternalResourceView("/pages/login.jsp");
@@ -144,7 +161,7 @@ public class LoginController extends SuperController{
 			params.put("batchNumber", batchNumber);
 			params.put("areaCode", s.getAreaCode());
 			params.put("serviceShopCode", s.getServiceShopCode());
-			JSONArray ja = loginServiceInterface.getExpressByBatchNumber(rowSize, pageSize,params);
+			JSONArray ja = loginService.getExpressByBatchNumber(rowSize, pageSize,params);
 			response.setCharacterEncoding("utf-8");
 			response.setContentType("text/html; charset=utf-8");
 			PrintWriter printWriter = response.getWriter();
@@ -171,7 +188,7 @@ public class LoginController extends SuperController{
 			ei.setRecipientName(recipientName);
 			ei.setPhoneNumber(phoneNumber);
 			ei.setExpressLocation(expressLocation);
-			JSONObject ja = loginServiceInterface.editDataById(ei);
+			JSONObject ja = loginService.editDataById(ei);
 		    response.setCharacterEncoding("utf-8");          
 		    response.setContentType("text/html; charset=utf-8");
 		    PrintWriter printWriter = response.getWriter();

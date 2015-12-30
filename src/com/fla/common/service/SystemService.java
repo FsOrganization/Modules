@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fla.common.dao.SystemDao;
+import com.fla.common.dao.interfaces.SystemDaoInterface;
 import com.fla.common.entity.ExpressServiceProvider;
 import com.fla.common.entity.SystemArea;
 import com.fla.common.entity.SystemShop;
@@ -29,7 +29,7 @@ import com.fla.common.util.FlaJsonValueProcessor;
 public class SystemService implements SystemServiceInterface{
 
 	@Autowired
-	private SystemDao systemDao;
+	private SystemDaoInterface systemDao;
 
 	public SystemService() {
 	}
@@ -492,6 +492,28 @@ public class SystemService implements SystemServiceInterface{
 		}
 		return array;
 	}
+	
+	@Override
+	public JSONArray getShopOutAndSendExpressGroupCount(Map<String, String> params) throws SQLException {
+		List<Map<String, Object>> rowMap = systemDao.getShopOutAndSendExpressGroupCount(params);
+		JSONArray array = new JSONArray();
+		if (rowMap != null) {
+			makeJSONArray(rowMap, array);
+		}
+		return array;
+	}
+	
+	@Override
+	public JSONArray getSendOutExpressByExpressGroup(Map<String, String> params) throws SQLException {
+		List<Map<String, Object>> rowMap = systemDao.getSendOutExpressByExpressGroup(params);
+		JSONArray array = new JSONArray();
+		if (rowMap != null) {
+			makeJSONArray(rowMap, array);
+		}
+		return array;
+	}
+	
+	
 	
 	@Override
 	public String getShopNameByCode(String shopCode) {

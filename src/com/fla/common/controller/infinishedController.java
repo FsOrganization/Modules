@@ -149,19 +149,20 @@ public class infinishedController extends SuperController{
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/addExpressInfo.light")
-	public ModelAndView addExpressInfo(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+	public void addExpressInfo(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
+		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
 		ExpressInfo ei=null;
 		try 
 		{
-			String ssc = s.getServiceShopCode();
-			String areaCode = s.getAreaCode();
-			String operator = s.getLoginName();
+			String ssc = systemUser.getServiceShopCode();
+			String areaCode = systemUser.getAreaCode();
+			String operator = systemUser.getLoginName();
 			ei = jsonToExpressInfoEntity(request);
 			ei.setServiceShopCode(ssc);
 			ei.setAreaCode(areaCode);
 			ei.setOperator(operator);
 		} catch (NullPointerException e) {
+			e.printStackTrace();
 		}
 		JSONObject jo = loginServiceInterface.addExpressInfo(ei);
 		addCustomeInfo(request, response);
@@ -171,7 +172,6 @@ public class infinishedController extends SuperController{
 		printWriter.write(jo.toString());
 		printWriter.flush();
 		printWriter.close();
-		return null;
 	}
 	
 //	@ResponseBody
@@ -261,7 +261,7 @@ public class infinishedController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/letExpressOutStorehouse.light")
 	public void letExpressOutStorehouse(HttpServletRequest request,HttpServletResponse response, String ids,String signatureImg, Character type)  throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+//		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		List<Integer > idList  = new ArrayList<Integer>();
 		String[] arr = ids.split(",");
 		for (String id : arr) {

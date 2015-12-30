@@ -2,6 +2,7 @@ package com.fla.common.service;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fla.common.dao.LoginDao;
+import com.fla.common.dao.interfaces.LoginDaoInterface;
 import com.fla.common.entity.CustomerInfo;
 import com.fla.common.entity.ExpressInfo;
 import com.fla.common.entity.Signature;
@@ -30,7 +31,7 @@ import com.fla.common.util.Pagination;
 public class LoginService implements LoginServiceInterface{
 
 	@Autowired
-	private LoginDao loginDao;
+	private LoginDaoInterface loginDao;
 
 	public LoginService() {
 	}
@@ -72,13 +73,36 @@ public class LoginService implements LoginServiceInterface{
 		json.put("msg", "保存成功");
 		try 
 		{
-			loginDao.insertExpressInfo(ei);
+			Map<String, String> params = new HashMap<String, String>(2);
+			params.put("expressLocation", ei.getExpressLocation());
+			params.put("shopCode", ei.getServiceShopCode());
+			Map<String, Object> obj  = checkExpressLocation(params);
+			if (obj == null || obj.get("EXPRESS_lOCATION") == null || obj.get("EXPRESS_lOCATION").equals("")) {
+				loginDao.insertExpressInfo(ei);
+			} else {
+				json.put("msg", -1);
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			json.put("msg", e.getMessage());
 		}
 		return json;
 	}
+	
+	@Override
+	public Map<String, Object>  checkExpressLocation(Map<String, String> params) {
+		Map<String, Object> obj = null;
+		try 
+		{
+			obj = loginDao.checkExpressLocation(params);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return obj;
+	}
+	
+	
 
 	@Override
 	public  synchronized  JSONObject getTemporaryStorage() {
@@ -89,7 +113,7 @@ public class LoginService implements LoginServiceInterface{
 	}
 
 	@Override
-	public JSONObject getOutStorehouseBatchNumber() throws SQLException {
+	public synchronized JSONObject  getOutStorehouseBatchNumber() throws SQLException {
 		JSONObject json = new JSONObject();
 		Integer id =  loginDao.getOutStorehouseBatchNumber();
 		json.put("temporaryId", id);
@@ -107,6 +131,8 @@ public class LoginService implements LoginServiceInterface{
 			su.setNickName(m.get("NICK_NAME").toString());
 			su.setPassword(m.get("PASSWORD").toString());
 			su.setServiceShopCode(m.get("SERVICE_SHOP_CODE").toString());
+			String ss = (String) m.get("USER_MODE");
+			su.setUserMode(new String(ss));
 //			su.setRemark(m.get("REMARK").toString());
 		}
 		return su;

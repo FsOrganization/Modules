@@ -41,4 +41,6 @@ public interface CustomerDaoInterface {
 	 */
 	public JSONObject updateCustomerGender(String phoneNumber,String sex) throws SQLException;
 	
+	public JSONObject getCustomerInfoByPhoneNumber(Map<String, String> params) throws SQLException;
+	
 	}

@@ -1,4 +1,4 @@
-package com.fla.common.security;
+package com.fla.common.security.interceptors;
 
 import java.io.PrintWriter;
 
