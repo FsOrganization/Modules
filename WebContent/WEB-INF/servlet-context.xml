@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+	 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+	 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	<!-- Scans the classpath of this application for @Components to deploy as 
+		beans -->
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="true">
+			<!-- 返回成String 时的编码方式 -->
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<constructor-arg value="UTF-8" />
+			</bean>
+			<bean class="org.springframework.http.converter.FormHttpMessageConverter"></bean>
+		</mvc:message-converters>
+		
+	</mvc:annotation-driven>
+	<context:component-scan base-package="com.fla.common.controller">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/pages/system/**" />
+			<mvc:exclude-mapping path="/pages/system/initExpressServiceProviders.light"/>
+			<mvc:exclude-mapping path="/pages/system/getShopInfoForSelectForWechat.light"/>
+			<mvc:exclude-mapping path="/pages/system/registerCustomerByOpenId.light"/>
+			<mvc:exclude-mapping path="/pages/system/getSimplyConstructedNotOutExpressInfoByFilter.light"/>
+			<mvc:exclude-mapping path="/pages/system/getVerificationCode.light"/>
+			<mvc:exclude-mapping path="/pages/system/welcome.light"/>
+			<mvc:exclude-mapping path="/pages/system/login.light"/>
+			<mvc:exclude-mapping path="/EasyUI_1.4.1/*"/>
+			<mvc:exclude-mapping path="/pages/index.jsp" />
+			<mvc:exclude-mapping path="/base/*" />
+			<mvc:exclude-mapping path="/common/*" />
+			<mvc:exclude-mapping path="/css/*" />
+			<mvc:exclude-mapping path="/EasyUI_1.4.1/*" />
+			<mvc:exclude-mapping path="/js/*" />
+			<mvc:exclude-mapping path="/jQueryChatBox/*" />
+			<mvc:exclude-mapping path="/map/*" />
+			<mvc:exclude-mapping path="/mobile-style/*" />
+			<mvc:exclude-mapping path="/themes/*" />
+			<mvc:exclude-mapping path="/mochaui-0.9.7/*" />
+			<mvc:exclude-mapping path="/pages/css/*" />
+			<mvc:exclude-mapping path="/pages/images/*" />
+			<mvc:exclude-mapping path="/pages/menuStyle/*" />
+			
+			<bean class="com.fla.common.security.interceptors.SessionTimeoutInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+</beans>
