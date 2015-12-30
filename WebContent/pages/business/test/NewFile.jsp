@@ -6,8 +6,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<link rel="stylesheet" type="text/css" href="<%=contextPath%>/common/form-style/css/demo.css" />
 	<link rel="stylesheet" type="text/css" href="<%=contextPath%>/common/form-style/css/style3.css" />
-	<link rel="stylesheet" type="text/css" href="<%=contextPath%>/common/jquery.bpopup/css/bpopup-main.css">
-	<link rel="stylesheet" type="text/css" href="<%=contextPath%>/common/jquery.bpopup/css/font.css">
+<%-- 	<link rel="stylesheet" type="text/css" href="<%=contextPath%>/common/jquery.bpopup/css/bpopup-main.css"> --%>
+<%-- 	<link rel="stylesheet" type="text/css" href="<%=contextPath%>/common/jquery.bpopup/css/font.css"> --%>
 	
 	<script type="text/javascript" src="<%=contextPath%>/common/form-style/js/modernizr.custom.04022.js"></script>
 
@@ -118,12 +118,12 @@ td.contact {
 </script>
 <script src="<%=contextPath%>/pages/business/test/js/NewFile.js" type="text/javascript"></script>
 </head>
-<body style="overflow-y: hidden;background: white;" onkeydown="javascript:keyPress(event,'areaCodeGrid');" onkeyup="javascript:keyRelease(event,'areaCodeGrid');">
-	<div style="margin: 4px;">
+<body style="overflow-y: hidden;background: #f2f2f2;" onkeydown="javascript:keyPress(event,'areaCodeGrid');" onkeyup="javascript:keyRelease(event,'areaCodeGrid');">
+	<div style="margin: 4px;background-color: #f2f2f2;">
        	&nbsp;&nbsp;客户信息：<input id="queryParams" name="queryParams" style="width: 210px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="手机后四位、客户姓名、快件运单号">
        	&nbsp;&nbsp;快递服务商：<input id="expressServiceId" name="expressServiceId" style="width: 150px;border-style: solid;border-color: antiquewhite;" class="easyui-combobox">
        	&nbsp;&nbsp;开始日期：<input id="startDateId" name="startDateId" style="width: 120px;height:30px;border-style: solid;border-color: antiquewhite;" onclick="WdatePicker()" >
-       	&nbsp;&nbsp;截止日期:<input id="endDateId" name="endDateId"  style="width: 120px;height:30px;border-style: solid;border-color: antiquewhite;" onclick="WdatePicker()" >
+       	&nbsp;&nbsp;截止日期：<input id="endDateId" name="endDateId"  style="width: 120px;height:30px;border-style: solid;border-color: antiquewhite;" onclick="WdatePicker()" >
             <button style="display: none;" id="my-button"></button>
             <div id="element_to_pop_up" style="display: none;">
     			<span class="button b-close"><span>X</span></span>
@@ -146,6 +146,7 @@ td.contact {
        	
 	</div>
 	<table id="areaCodeGrid" style="height: auto;"></table>
+<!-- 	<div id="grid" style="height: 380px"></div> -->
 	<div id="detail" class="easyui-dialog" title="修改快件信息" style="width:460px;height:350px;padding:10px;overflow: hidden;"
 	            data-options="
 	                iconCls: 'icon-save',

@@ -133,7 +133,7 @@ $(document).ready(function(){
 		$('#sentExpressGrid').datagrid({
 //			dataType : 'json',
 			url : contextPath + '/pages/system/getSentExpressInfo.light',
-			width : $(window).width() * 0.98,
+			width : $(window).width(),
 			height :($(window).height()-32)*0.99,
 			singleSelect : false,
 			rownumbers : true,

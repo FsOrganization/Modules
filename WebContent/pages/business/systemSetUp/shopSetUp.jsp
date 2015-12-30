@@ -107,8 +107,8 @@ label:hover:before {
 <script type="text/javascript">
 </script>
 </head>
-<body style="background: white;">
-	<div style="margin: 4px;">
+<body style="background: #f2f2f2;">
+	<div style="margin: 4px;background: #f2f2f2;">
        	&nbsp;&nbsp;网点信息：<input id="queryParams" name="queryParams" style="width: 150px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="网点名称">
 	</div>
 	<table id="shopGrid" style="height: auto;"></table>

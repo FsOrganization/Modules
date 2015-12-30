@@ -81,3 +81,65 @@ function isPhoneNmuber(phoneNumber) {
 	}
 }
 
+var KEY = { 
+	SHIFT:16, CTRL:17, ALT:18, DOWN:40, RIGHT:39, UP:38, LEFT:37
+};  
+var selectIndexs = {
+	firstSelectRowIndex:0, lastSelectRowIndex:0
+};
+var inputFlags = {
+	isShiftDown:false, isCtrlDown:false, isAltDown:false
+}
+
+/**
+ * 响应键盘按下事件
+ */
+function keyPress(event,gridId) {
+	var e = event || window.event;
+	var code = e.keyCode | e.which | e.charCode;
+	switch (code) {
+	case KEY.SHIFT:
+		inputFlags.isShiftDown = true;
+		$('#'+gridId).datagrid('options').singleSelect = false;
+		break;
+	case KEY.CTRL:
+		inputFlags.isCtrlDown = true;
+		$('#'+gridId).datagrid('options').singleSelect = false;
+		break;
+	/*
+	case KEY.ALT:	
+	  inputFlags.isAltDown = true;
+	  $('#'+gridId).datagrid('options').singleSelect = false;			
+	  break;
+	 */
+	default:
+	}
+}
+/**
+ * 响应键盘按键放开的事件
+ * @param event
+ */
+function keyRelease(event,gridId) { 
+	var e = event || window.event;
+	var code = e.keyCode | e.which | e.charCode;
+	switch (code) {
+	case KEY.SHIFT:
+		inputFlags.isShiftDown = false;
+		selectIndexs.firstSelectRowIndex = 0;
+		$('#'+gridId).datagrid('options').singleSelect = true;
+		break;
+	case KEY.CTRL:
+		inputFlags.isCtrlDown = false;
+		selectIndexs.firstSelectRowIndex = 0;
+		$('#'+gridId).datagrid('options').singleSelect = true;
+		break;
+	/*
+	case KEY.ALT:	
+	  inputFlags.isAltDown = false;
+	  selectIndexs.firstSelectRowIndex = 0;
+	  $('#'+gridId).datagrid('options').singleSelect = true;			
+	  break;
+	 */
+	default:
+	}
+}

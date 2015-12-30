@@ -22,13 +22,16 @@
 <script type="text/javascript" src="<%=contextPath%>/common/jQuery-Plugins/jquery.jqprint-0.3.js"></script>
 
 <!-- page form validate -->
-<script type="text/javascript" src="<%=contextPath%>/common/jQuery-validate/jquery.validate.js"></script>
+<%-- <script type="text/javascript" src="<%=contextPath%>/common/jQuery-validate/jquery.validate.js"></script> --%>
 
 <!-- page block -->
 <script src="<%=contextPath%>/common/JQuery-blockUI/JQuery.blockUI.2.70.0.js"></script>
 
 <!-- business util js -->
 <script src="<%=contextPath%>/pages/js/util.js"></script>
+<!--easyui extend -->
+<%-- <script src="<%=contextPath%>/pages/js/easyuiDatagridMoveRow.js"></script> --%>
+
 <script src="<%=contextPath%>/js/expressDateUtil.js"></script>
 
 

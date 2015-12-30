@@ -12,7 +12,11 @@ ul#css3menu1 li:hover{
 ul#css3menu1{
 	font-size:0;z-index:999;position:relative;display:block;float:left;padding:0;border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;}
 ul#css3menu1>li{
-	margin:0;}
+	margin:0;
+	-webkit-box-shadow:0 0 1px #CFCFCF; 
+  	-moz-box-shadow:0 0 1px #CFCFCF;
+  	box-shadow:0 0 1px #CFCFCF;
+}
 ul#css3menu1 a:active, ul#css3menu1 a:focus{
 	outline-style:none;}
 ul#css3menu1 a{
@@ -38,7 +42,7 @@ ul#css3menu1 ul li:hover>a,ul#css3menu1 ul li a.pressed{
 ul#css3menu1>li>a{
 	padding:5px 10px 5px 10px;}
 ul#css3menu1 li.topmenu>a{
-	background-color:#f0f0f0;border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;padding:5px 10px 5px 10px;color:#000000;}
+	background-color:#f2f2f2;border-radius:4px;-moz-border-radius:4px;-webkit-border-radius:4px;padding:5px 10px 5px 10px;color:#000000;}
 ul#css3menu1 li.topmenu:hover>a,ul#css3menu1 li.topmenu a.pressed{
 	background-color:#333333;color:#FFFFFF;}
 @media screen and (max-width: 768px) {

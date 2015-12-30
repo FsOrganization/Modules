@@ -164,10 +164,10 @@ $(document).ready(function(){
 						
 						var h2 = document.createElement('h2');
 						h2.setAttribute("class","style");
-						h2.innerHTML = "<H1 style='text-align:center;font-size: 1.6em;'>"+formatColumnTitle(val.EXPRESS_SERVICE_ID)+" 运单号:"+val.LOGISTICS+" 货位:"+val.EXPRESS_lOCATION+"</H1>";
+						h2.innerHTML = "<H1 style='text-align:center;font-size: 1.6em;'>"+formatColumnTitle(val.EXPRESS_SERVICE_ID)+" 运单号:"+hideLogistics(val.LOGISTICS)+" 货位:"+val.EXPRESS_lOCATION+"</H1>";
 						var h3 = document.createElement('h3');
 						h3.setAttribute("class","style");
-						h3.innerHTML = "收件人:"+val.RECIPIENT_NAME+"  收件时间:"+val.OPERA_TIME+"";
+						h3.innerHTML = "收件人:"+hideName(val.RECIPIENT_NAME)+"  收件时间:"+val.OPERA_TIME+"";
 						content.appendChild(h2);
 						content.appendChild(h3);
 						mainDiv.append(content);
@@ -185,5 +185,26 @@ $(document).ready(function(){
 				unblock("queryBody");
 			}
 		});
+	}
+	
+	function hideLogistics(logistics) {
+		if (logistics) {
+			var tempStart = logistics.substr(4,4);
+			var tempEnd = logistics.substr(6,logistics.length);
+			return tempStart+"****"+tempEnd;
+		} else {
+			return "";
+		}
+		
+	}
+	
+	function hideName(name) {
+		if (name) {
+			var temp = name.substr(0,1);
+			return temp+"*";
+		} else {
+			return "";
+		}
+		
 	}
 	

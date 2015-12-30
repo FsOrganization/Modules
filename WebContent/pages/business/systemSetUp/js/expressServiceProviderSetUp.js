@@ -69,8 +69,8 @@ $(document).ready(function() {
 		$('#expressServiceProviderContactsGrid').datagrid({
 			dataType : 'json',
 //			url : contextPath + '/pages/system/getExpressServiceProviderList.light',
-			width : $(window).width() * 0.33,
-			height :($(window).height()) * 0.27,
+//			width : $(window).width() * 0.33,
+			height :268,
 			singleSelect : true,
 			rownumbers : true,
 			pagination : true,
@@ -253,7 +253,6 @@ function deleteProviderContactsById(id) {
 
 function getContacts(providerId,name) {
 	$('#expressServiceProviderContacts').show();
-//	block("expressServiceProviderContactsGrid",null);
 	$('#expressServiceProviderContactsGrid').datagrid({
 		url : contextPath+ "/pages/system/queryExpressServiceProviderContactsList.light",
 		queryParams: {

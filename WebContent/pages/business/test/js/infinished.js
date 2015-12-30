@@ -570,7 +570,7 @@ var submitForm = function() {
 				unblock("presentSelfForm");
 				return;
 			} else {
-				var expServiceName = formatColumnTitle($('#expressServiceId').combo('getText'));
+				var expServiceName = formatColumnTitle($('#expressServiceId').combo('getValue'));
 				sendRemindersToCustomer(phoneNumber,$('#logistics').val(),expServiceName);
 				pushWechatNotification(phoneNumber,expServiceName,$('#logistics').val());
 	 			$('#infinishedGrid').datagrid({

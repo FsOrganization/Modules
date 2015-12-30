@@ -108,8 +108,8 @@ label:hover:before {
 </script>
 
 </head>
-<body style="background: white;">
-	<div style="margin: 4px;">
+<body style="background: #f2f2f2;">
+	<div style="margin: 4px;background: #f2f2f2;">
        	&nbsp;&nbsp;用户信息：<input id="queryParams" name="queryParams" style="width: 150px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="登陆名">
 	</div>
 	<table id="userGrid" style="height: auto;"></table>
@@ -165,6 +165,13 @@ label:hover:before {
 						  <label for="isCheck">是否启用:</label>
 						  <input type="checkbox" name="isCheck" value="YES" id="isCheck"/>
 						  <label for="isCheck" style="margin: 8px 15px; font-size:12px;"></label>
+						</div>
+					</div>
+					<div class="af-outer af-required">
+						<div class="af-inner">
+						  <label for="isOpenIM">开通网点间通信:</label>
+						  <input type="checkbox" name="isOpenIM" value="YES" id="isOpenIM"/>
+						  <label for="isOpenIM" style="margin: 8px 15px; font-size:12px;"></label>
 						</div>
 					</div>
 				</form>

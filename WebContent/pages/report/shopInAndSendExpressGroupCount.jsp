@@ -13,8 +13,8 @@
 <script type="text/javascript">
 </script>
 </head>
-<body style="background: white;">
-	<div style="margin: 4px;font-weight: 700;">
+<body style="background: #f2f2f2;">
+	<div style="margin: 4px;font-weight: 700;background: #f2f2f2;">
 		<span>
        		&nbsp;&nbsp;请选择统计区域：<input id="statisticalArea" name="statisticalArea"/>
        	</span>
@@ -24,7 +24,7 @@
        	
        	<span id="speDate" style="display: none;">
        		&nbsp;&nbsp;开始日期：<input id="startDateId" name="startDateId" style="width: 120px;height:30px;border-style: solid;border-color: antiquewhite;" onclick="WdatePicker()" >
-       		&nbsp;&nbsp;截止日期:<input id="endDateId" name="endDateId"  style="width: 120px;height:30px;border-style: solid;border-color: antiquewhite;" onclick="WdatePicker()" >
+       		&nbsp;&nbsp;截止日期：<input id="endDateId" name="endDateId"  style="width: 120px;height:30px;border-style: solid;border-color: antiquewhite;" onclick="WdatePicker()" >
 		</span>
 		<span id="speQueryBtu" style="display: none;">
 			<input id="queryBtu" name="queryBtu" value="查询" type="button" style="margin: 0px 5px;height: 30px;width: 40px;">

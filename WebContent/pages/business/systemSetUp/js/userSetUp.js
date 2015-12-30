@@ -12,7 +12,7 @@ $(document).ready(function() {
 		$('#addUser').window({
 			title:'新增用户',
 		    width:580,
-		    height:460,
+		    height:520,
 		    modal:true,
 		    closed:true,
 		    left:340,    
@@ -58,6 +58,7 @@ $(document).ready(function() {
 				text:'新增用户',
 				iconCls: 'icon-search',
 				handler: function(){
+					clearFormData();
 					addUser();
 					operatingTag = false;
 				}
@@ -95,6 +96,18 @@ $(document).ready(function() {
 			},{
 				field : 'SERVICE_SHOP_NAME',
 				title : '网点名称',
+				width : 120,
+				align : 'center',
+				hidden : false
+			},{
+				field : 'OPEN_IM',
+				title : '是否开通网点间通信',
+				width : 120,
+				align : 'center',
+				hidden : false
+			},{
+				field : 'CREATE_DATE',
+				title : '创建时间',
 				width : 120,
 				align : 'center',
 				hidden : false
@@ -284,6 +297,7 @@ function openWindow(rowIndex, rowData) {
 	var password = rowData.PASSWORD;
 	var phoneNumber = rowData.PHONE_NUMBER;
 	var isCheck = rowData.TYPE;
+	var isOpenIM = rowData.OPEN_IM;
 	
 	$('#userId').val(id);
 	$('#loginName').val(loginName);
@@ -292,6 +306,11 @@ function openWindow(rowIndex, rowData) {
 	$('#phoneNumber').val(phoneNumber);
 	if (isCheck === '1') {
 		$("input[id='isCheck']").prop("checked",true);
+	}
+	if (isOpenIM === 'C') {
+		$("input[id='isOpenIM']").prop("checked",false);
+	} else {
+		$("input[id='isOpenIM']").prop("checked",true);
 	}
 	$('#shopCodeList').combobox('setValue', serviceShopCode);
 	$('#addUser').window('open');
@@ -306,6 +325,7 @@ function clearFormData() {
 	$('#phoneNumber').val('');
 	$('#shopCodeList').combobox('setValue', '');
 	$("input[id='isCheck']").prop("checked",false);
+	$("input[id='isOpenIM']").prop("checked",false);
 }
 
 function searchExpressInfo() {
@@ -368,6 +388,14 @@ function saveForm() {
 	} else {
 		isCheckTemp = $(":checked[name=isCheck]").val();
 	}
+	
+	var isOpenIMTemp = "";
+	if ($(":checked[name=isOpenIM]").val() == undefined) {
+		isOpenIMTemp = "NO";
+	} else {
+		isOpenIMTemp = $(":checked[name=isOpenIM]").val();
+	}
+	
 	if (shopCode == '' || loginName== '' || password == '') {
 		$('#af-showreq').click();  
 		return;
@@ -384,7 +412,8 @@ function saveForm() {
 			"nickName":nickName,
 			"password":password,
 			"phoneNumber":phoneNumber,
-			"isCheck":isCheckTemp
+			"isCheck":isCheckTemp,
+			"isOpenIM":isOpenIMTemp
 		},
 		success : function(data) {
 			$('#userGrid').datagrid("reload");
@@ -434,6 +463,13 @@ function modifyForm() {
 	} else {
 		isCheckTemp = $(":checked[name=isCheck]").val();
 	}
+	
+	var isOpenIMTemp = "";
+	if ($(":checked[name=isOpenIM]").val() == undefined) {
+		isOpenIMTemp = "NO";
+	} else {
+		isOpenIMTemp = $(":checked[name=isOpenIM]").val();
+	}
 	if (shopCode == '' || loginName== '') {
 		$('#af-showreq').click();  
 		return;
@@ -451,7 +487,8 @@ function modifyForm() {
 			"nickName":nickName,
 			"password":password,
 			"phoneNumber":phoneNumber,
-			"isCheck":isCheckTemp
+			"isCheck":isCheckTemp,
+			"isOpenIM":isOpenIMTemp
 		},
 		success : function(data) {
 			$('#userGrid').datagrid("reload");

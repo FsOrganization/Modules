@@ -43,6 +43,12 @@ $.extend($.fn.datagrid.methods, {
 							grid.datagrid('selectRow', 0);
 						}
 						break;
+					case 65:
+						if (e.ctrlKey) {
+							grid.datagrid('selectAll');
+						}
+						
+						break;
 					}
 				});
 				isBind=true;
@@ -143,20 +149,6 @@ $(document).ready(function(){
 			}
 		});
 		
-//		var moveRow = function(target){
-//		    var options = $(target).datagrid('options');
-//		    if(options.moveRow){
-//		        var dmr = new DatagridMoveRow(target);
-//		        $(document).on('keydown.datagridrow',function(e){
-//		            if(e.keyCode == 38){ //up
-//		                dmr.moveUp();
-//		            }else if(e.keyCode == 40) {// down
-//		                dmr.moveDown();
-//		            }
-//		        });
-//		    }
-//		}
-		
 		initShopNameMap();
 		
 		$("#submitBtn").click(function(){
@@ -193,7 +185,7 @@ $(document).ready(function(){
 		$('#areaCodeGrid').datagrid({
 			dataType : 'json',
 			url : contextPath + '/pages/system/getExpressInfoList.light',
-			width : $(window).width() * 0.97,
+			width : $(window).width(),
 			height :($(window).height()-30)*0.99,
 			singleSelect:true,
 			rownumbers : true,
@@ -218,14 +210,16 @@ $(document).ready(function(){
 				handler: function(){
 					batchLetExpressOutStorehouse();
 				}
-			},{
-				text:'打印出库单',
-				iconCls: 'icon-print',
-				handler: function(){
-					var gridView = $(".datagrid-view");
-					$(gridView).jqprint({operaSupport: true});
-				}
-			}],
+			}
+//			,{
+//				text:'打印出库单',
+//				iconCls: 'icon-print',
+//				handler: function(){
+//					var gridView = $(".datagrid-view");
+//					$(gridView).jqprint({operaSupport: true});
+//				}
+//			}
+			],
 			columns : [ [{
 				field : 'ID',
 				title : 'ID',
@@ -413,7 +407,7 @@ $(document).ready(function(){
             });
 
         });
-		
+	
 	});
 
 	function closeBPopup(){
@@ -677,6 +671,7 @@ $(document).ready(function(){
 //		$("#number").focus();
 		var paper = $('#areaCodeGrid').datagrid('getPager');
 		$(paper).pagination('refresh',{ pageNumber: 1 });
+//		$('.datagrid-body').focus();
 	}
 	//初始化设备
 	function initializationSignatureRegion(){

@@ -14,23 +14,20 @@
 		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd"
 	default-lazy-init="false">
 
-	<context:annotation-config />
 	<context:component-scan base-package="com.fla.common.service">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
 	</context:component-scan>
 
-	<context:annotation-config />
-	<context:component-scan base-package="com.fla.common.dao">
-		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
-	</context:component-scan>
-	
-	<context:annotation-config />
 	<context:component-scan base-package="com.fla.common.util.connection">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
 	</context:component-scan>
 	
-	<context:annotation-config />
 	<context:component-scan base-package="com.fla.common.util">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+	
+	<!-- webSocket -->
+	<context:component-scan base-package="com.fla.common.webSocket">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
 	</context:component-scan>
 
@@ -76,9 +73,18 @@
 		<aop:scoped-proxy />
 	</bean>
 	
+	<bean id="msgDao" class="com.fla.common.dao.MsgDao">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
+	
 	<bean id="customerDao" class="com.fla.common.dao.CustomerDao">
           <property name="jdbcTemplate" ref="jdbcTemplate"></property>
  	</bean>
+ 	
+ 	<bean id="merchandiseDao" class="com.fla.common.dao.MerchandiseDao">
+          <property name="jdbcTemplate" ref="jdbcTemplate"></property>
+ 	</bean>
+ 	
  	 
  	<!-- 声明采用@Transactional注解方式使用事务 -->
  	<tx:annotation-driven transaction-manager="transactionManager"/>

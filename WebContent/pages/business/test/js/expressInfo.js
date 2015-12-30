@@ -49,7 +49,7 @@ $(document).ready(function() {
 		$('#areaCodeGrid').datagrid({
 //			dataType : 'json',
 			url : contextPath + '/pages/system/getExpressInfoByFilterConditions.light',//getNotOutExpressInfoByFilterConditions
-			width : $(window).width() * 0.97,
+			width : $(window).width(),
 			height :($(window).height()-30)*0.99,
 			singleSelect : true,
 			rownumbers : true,
@@ -197,7 +197,7 @@ $(document).ready(function() {
 				}
 			}] ],
 			onLoadSuccess : function(data) {
-//				$('.pagination-info').style("margin","0px 180px;");
+				$(".pagination-info").css("margin","-2px 20px");
 			},
 			onDblClickRow : function(rowIndex, rowData) {
 //				openWindow(rowIndex, rowData);

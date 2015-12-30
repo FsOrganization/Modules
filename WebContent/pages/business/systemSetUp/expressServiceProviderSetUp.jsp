@@ -108,7 +108,7 @@ label:hover:before {
 	
 </script>
 </head>
-<body style="background: white;">
+<body style="background: #f2f2f2;">
 	<table id="expressServiceProviderGrid" style="height: auto;"></table>
     <div id="addExpressServiceProvider" class="container" style="min-height: 300px;overflow:hidden;">
 			<section class="af-wrapper">
@@ -167,7 +167,7 @@ label:hover:before {
         </div>
         
         <div id="addServiceProviderContacts" class="container" style="min-height: 300px;overflow:hidden;">
-        <section class="af-wrapper">
+        	<section class="af-wrapper">
 	            <h1></h1>
 	            <label for="showreqContacts" class="af-show" style="margin: -15px 40px;">*突出必填项</label>
 				<input id="showreqContacts" class="af-show-input" type="checkbox" name="showreqContacts"/>

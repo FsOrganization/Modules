@@ -13,8 +13,8 @@
 <script type="text/javascript">
 </script>
 </head>
-<body style="background: white;">
-	<div style="margin: 4px;font-weight: 700;">
+<body style="background: #f2f2f2;">
+	<div style="margin: 4px;font-weight: 700;background: #f2f2f2;">
 		<span>
        		&nbsp;&nbsp;请选择统计区域：<input id="statisticalArea" name="statisticalArea"/>
        	</span>

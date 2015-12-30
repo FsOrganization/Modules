@@ -1,16 +1,15 @@
 $(document).ready(function() {
-	$('#tabs').height(($(window).height()-78)*0.99);
-	$('#tabs').width($(window).width()*0.91);
+	$('#tabs').height(($(window).height()-101)*1);
+	$('#tabs').width(($(window).width()-132)*1);
 	$(window).bind('resize', function(e) {
 			clearTimeout(window.resizeEvt);
-//			alert($(window).height());
 			window.resizeEvt = setTimeout(function() {
-				$('#tabs').height(($(window).height()-78)*0.99);
-				$('#tabs').width($(window).width()*0.91);
-//				$('#searchList').datagrid('resize',{
-//					width : '100%',
-//					height: 180
-//				});
+				$('#tabs').height(($(window).height()-101)*1);
+				$('#tabs').width(($(window).width()-132)*1);
+				$('#searchList').datagrid('resize',{
+					width : '100%',
+					height: 180
+				});
 			}, 30);
 	});
 	var loginName = $('#loginTag').val();
@@ -30,6 +29,47 @@ $(document).ready(function() {
 		modifyForm();
 	});
 	
+	$("#m-close-currentLabel").click(function() {
+		var name = $("#currentName").val();
+		closeTabs(name);
+	});
+	
+	$("#m-close-all").click(function() {
+		closeAllTabs();
+	});
+	
+	$("#m-close-otherlabel").click(function() {
+		var name = $("#currentName").val();
+		closeTabsExcept(name);
+	});
+	
+	$("#m-copyLabelName").click(function(){
+		var name = $("#currentName").val();
+		var userAgent = navigator.userAgent; // 取得浏览器的userAgent字符串
+		if (userAgent.indexOf("Chrome") > -1) {
+			var clip = new ZeroClipboard.Client();    
+            clip.setHandCursor(true);
+            var obj = $(this);
+            var id = $(this).attr("id");  
+            clip.glue(id);
+            clip.setText(name);
+            $.messager.show({
+	            title:'提示',
+	            msg:'<div class="messager-icon messager-info"></div>复制成功',
+	            timeout:3800,
+	            showType:'slide'
+			});
+		} else {
+			window.clipboardData.setData("Text",name);
+			$.messager.show({
+	            title:'提示',
+	            msg:'<div class="messager-icon messager-info"></div>复制成功',
+	            timeout:3800,
+	            showType:'slide'
+			});
+		}
+	});
+	
 	$("#cancelBtn").click(function(){
 		$('#modfiyPassWordWindow').window('close');
 	});
@@ -40,7 +80,8 @@ $(document).ready(function() {
 	    height:180,
 	    modal:true,
 	    closed:true,
-	    left:380,    
+	    left:380,
+	    zIndex:99999999,
 	    top:160,
 	    onBeforeClose:function(){
 	    }
@@ -54,8 +95,59 @@ $(document).ready(function() {
 		$('#confirmPw').css('background-color','white');
 	});
 	
+	$('#tabs').tabs({
+		onContextMenu: function(e, title,index){
+			var _tabs_temp = document.getElementById ('tabs');
+			_tabs_temp.oncontextmenu = function ()
+	        {
+	            return false;
+	        }
+			var target = this;
+			$('#right_menu').menu('show', {
+				hideOnUnhover:true,
+	            left: e.pageX,
+	            top: e.pageY
+	        }).data("tabTitle", title);;
+			$('.menu-line').hide();
+			$('#currentIndex').val(index);
+			$('#currentName').val(title);
+			
+		  }
+	});
 	
 });
+
+var closeTabs = function(name){
+	var opts = $('#tabs').tabs('options');
+	var bc = opts.onBeforeClose;
+	opts.onBeforeClose = function(){
+	};
+	$('#tabs').tabs('close',name);
+	opts.onBeforeClose = bc;
+};
+
+var closeAllTabs = function(){
+	$(".tabs li").each(function(i, n){
+        var title = $(n).text();
+        if (title === '特别说明') {
+        	return true;
+		} else {
+			$('#tabs').tabs('close',title);    
+		}
+        
+    });
+};
+
+var closeTabsExcept = function(name){
+	$(".tabs li").each(function(i, n){
+        var title = $(n).text();
+        if (title === name) {
+        	return true;
+		} else {
+			$('#tabs').tabs('close',title);    
+		}
+    });
+};
 
 function modifyForm() {
 	var loginName = $('#loginName').val();

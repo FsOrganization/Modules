@@ -40,8 +40,8 @@ td.contact {
 <script src="<%=contextPath%>/pages/business/test/js/infinished.js" type="text/javascript"></script>
 </head>
 <body style="overflow-y: hedden;" id="allBodyDiv" >
-	<div style="width: auto; overflow: hidden;background: white;">
-		<div style="margin: 4px;">
+	<div style="width: auto; overflow: hidden;background: #f2f2f2;">
+	<div style="margin: 4px;background: #f2f2f2;">
 		       	&nbsp;&nbsp;批次号：<input id="query_batchNumber" name="query_batchNumber" style="width: 150px;height:30px;border-style: solid;border-color: antiquewhite;">
 		</div>
 		<table id="infinishedGrid" style="height: auto;"></table>
@@ -135,7 +135,7 @@ td.contact {
 							<div style="padding: inherit;margin: -5px 0px;">
 								<input type="radio" name="expressType" value="S" id="S"/> 上层
 								<input type="radio" name="expressType" value="X" id="X"/> 下层
-<!-- 								<input type="radio" name="expressType" value="X" id="X"/> 小件 -->
+								<input type="radio" name="expressType" value="D" id="D"/> 地面
 <!-- 								<input type="radio" name="expressType" value="Q" id="Q"/> 其他 -->
 								<span style="  margin: 0px 20px;font-weight: 900;">货位号：<span id="expressLocationTitle" style="font-size: 22px;"></span></span>
 <!-- 								<span style="color:red;"> (*必填项)</span> -->
