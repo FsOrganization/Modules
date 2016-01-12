@@ -7,12 +7,7 @@
 		<param name="Target" value="System.out" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern"			     
-				value="[RUNDLE]%d{yyyy-MM-dd HH:mm:ss} %p [%t] %c{1} |%X{login}|%X{actions}|%X{doWhat}|%X{summary}|%m%n" />
-			<!--[RUNDLE]%d{yyyy-MM-dd HH:mm:ss} %p [%t] %c{1} |%X{login}|%X{actions}|%X{doWhat}|%X{summary}|%m%n-->
-			<!--
-				<param name="ConversionPattern" value="[BODA] %p [%t] %c{1} | %m%n"
-				/>
-			-->
+				value="[EXPRESS]%d{yyyy-MM-dd HH:mm:ss} %p [%t] %c{1} |%X{login}|%X{actions}|%X{doWhat}|%X{summary}|%m%n" />
 		</layout>
 	</appender>
 <!--  %d{yyyy-MM-dd HH:mm:ss} %p [%t] %c{1}
