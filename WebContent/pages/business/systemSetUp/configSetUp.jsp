@@ -108,7 +108,7 @@ label:hover:before {
 </script>
 
 </head>
-<body style="background: #f2f2f2;">
+<body style="overflow-y: hidden;background: #f2f2f2;">
 	<div style="margin: 4px;background: #f2f2f2;">
        	&nbsp;&nbsp;用户信息：<input id="queryParams" name="queryParams" style="width: 150px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="登陆名">
 	</div>

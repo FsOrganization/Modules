@@ -69,8 +69,8 @@ $(document).ready(function() {
 		$('#expressServiceProviderContactsGrid').datagrid({
 			dataType : 'json',
 //			url : contextPath + '/pages/system/getExpressServiceProviderList.light',
-//			width : $(window).width() * 0.33,
-			height :268,
+			width : $(window).width(),
+			height :$(window).height(),
 			singleSelect : true,
 			rownumbers : true,
 			pagination : true,

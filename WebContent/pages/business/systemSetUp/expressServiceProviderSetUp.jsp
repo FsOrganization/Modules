@@ -108,7 +108,7 @@ label:hover:before {
 	
 </script>
 </head>
-<body style="background: #f2f2f2;">
+<body style="overflow-y: hidden;background: #f2f2f2;margin: 5px 0px;">
 	<table id="expressServiceProviderGrid" style="height: auto;"></table>
     <div id="addExpressServiceProvider" class="container" style="min-height: 300px;overflow:hidden;">
 			<section class="af-wrapper">

@@ -106,7 +106,7 @@ label:hover:before {
 </script>
 <script src="<%=contextPath%>/pages/business/systemSetUp/js/areaSetUp.js" type="text/javascript"></script>
 </head>
-<body style="background: #f2f2f2;">
+<body style="overflow-y: hidden;background: #f2f2f2;">
 	<div style="margin: 4px;background: #f2f2f2;">
        	&nbsp;&nbsp;区域信息：<input id="queryParams" name="queryParams" style="width: 150px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="区域名称">
 	</div>
