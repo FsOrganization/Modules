@@ -9,10 +9,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sourceforge.barbecue.Barcode;
@@ -20,7 +18,6 @@ import net.sourceforge.barbecue.BarcodeException;
 import net.sourceforge.barbecue.BarcodeFactory;
 import net.sourceforge.barbecue.BarcodeImageHandler;
 import net.sourceforge.barbecue.output.OutputException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.InternalResourceView;
-
 import com.fla.common.base.SuperController;
 import com.fla.common.entity.ExpressInfo;
 import com.fla.common.entity.SystemUser;
@@ -64,7 +60,6 @@ public class LoginController extends SuperController{
 //	@RequestMapping(value = "/login/{name:.+}", method = RequestMethod.GET)
 	@RequestMapping("/pages/system/welcome.light")
 	public ModelAndView welcome(HttpServletRequest request, HttpServletResponse response,String name) throws SQLException {
-//		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		request.getSession().setAttribute("systemUser", null);
 		// logger.debug("welcome() - name {}", name);
 		InternalResourceView iv = new InternalResourceView("/pages/login.jsp");
@@ -74,19 +69,12 @@ public class LoginController extends SuperController{
 		return model;
 	}
 
-//	public void jumpLoginView(ModelAndView model, String name) {
-//		InternalResourceView iv = new InternalResourceView("/pages/login.jsp");
-//		model = new ModelAndView(iv);
-//		model.addObject("name", name);
-//		model.addObject("time", System.currentTimeMillis());
-//	}
-	
 	private void checkRememberMe(ModelAndView model , String rememberMe, String name){
 		if ("on".equalsIgnoreCase(rememberMe)) {
 			model.addObject("remember_me", "checked");
 			model.addObject("name", name);
 		} else {
-//			model.addObject("remember_me", false);
+			model.addObject("remember_me", false);
 			model.addObject("name", "");
 		}
 	}
@@ -127,7 +115,6 @@ public class LoginController extends SuperController{
 				}else {
 					request.getSession().setAttribute("msgTag", false);
 				}
-				
 			}
 		} else {
 			iv = new InternalResourceView("/pages/login.jsp");
@@ -176,7 +163,7 @@ public class LoginController extends SuperController{
 	@RequestMapping("/pages/system/editDataById.light")
 	public void  editDataById(String str,HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (s !=null) {
+		if (s != null) {
 			String id = request.getParameter("id");
 			String logistics = request.getParameter("logistics");
 			String recipientName = request.getParameter("recipientName");
@@ -189,12 +176,12 @@ public class LoginController extends SuperController{
 			ei.setPhoneNumber(phoneNumber);
 			ei.setExpressLocation(expressLocation);
 			JSONObject ja = loginService.editDataById(ei);
-		    response.setCharacterEncoding("utf-8");          
-		    response.setContentType("text/html; charset=utf-8");
-		    PrintWriter printWriter = response.getWriter();
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("text/html; charset=utf-8");
+			PrintWriter printWriter = response.getWriter();
 			printWriter.write(ja.toString());
-	        printWriter.flush(); 
-	        printWriter.close();
+			printWriter.flush();
+			printWriter.close();
 		} 
 		
 	}

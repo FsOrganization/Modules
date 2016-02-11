@@ -8,23 +8,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-
 import sun.misc.BASE64Encoder;
-
 import com.fla.common.base.SuperController;
 import com.fla.common.dao.LoginDao;
 import com.fla.common.entity.SystemUser;
@@ -37,9 +31,6 @@ import com.fla.common.verification.cage.GCage;
 @Controller
 public class PageToolsController extends SuperController{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -222343456360345672L;
 //	private static final Logger logger = LoggerFactory.getLogger(PageToolsController.class);
 
@@ -61,7 +52,7 @@ public class PageToolsController extends SuperController{
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/getVerificationCode.light")
-	public synchronized void getVerificationCode(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
+	public  void getVerificationCode(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
 		PrintWriter printWriter = null;
 		JSONObject json = new JSONObject();
 		String code = null;
@@ -94,7 +85,6 @@ public class PageToolsController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getNewAreaCode.light")
 	public void getNewAreaCode(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		JSONObject jo = systemServiceInterface.getNewAreaCode(null);
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
@@ -130,7 +120,7 @@ public class PageToolsController extends SuperController{
 		
 	}
 	
-	private String getVerificationCode(Cage cage, String code) {
+	private synchronized String getVerificationCode(Cage cage, String code) {
 		code = cage.getTokenGenerator().next();
 		return code;
 	}
@@ -203,7 +193,6 @@ public class PageToolsController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getShopNumberOfPeopleGroupCount.light")
 	public void getShopNumberOfPeopleGroupCount(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
-//		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		PrintWriter printWriter = null;
 		String type = request.getParameter("type");
 		String code = request.getParameter("code");
@@ -223,7 +212,6 @@ public class PageToolsController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getShopInAndSendExpressGroupCount.light")
 	public void getShopInAndSendExpressGroupCount(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		PrintWriter printWriter = null;
 		String type = request.getParameter("type");
 		String code = request.getParameter("code");
@@ -245,7 +233,6 @@ public class PageToolsController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getShopOutAndSendExpressGroupCount.light")
 	public void getShopOutAndSendExpressGroupCount(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
-//		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
 		PrintWriter printWriter = null;
 		String shopCode = request.getParameter("shopCode");
 		String limitTime = request.getParameter("limitTime");
@@ -268,7 +255,6 @@ public class PageToolsController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getSendOutExpressByExpressGroup.light")
 	public void getSendOutExpressByExpressGroup(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
-//		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
 		PrintWriter printWriter = null;
 		String shopCode = request.getParameter("shopCode");
 		String limitTime = request.getParameter("limitTime");
@@ -341,7 +327,6 @@ public class PageToolsController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getTemporaryStorage.light")
 	public void getTemporaryStorage(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		JSONObject jo = loginServiceInterface.getTemporaryStorage();
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
@@ -354,7 +339,6 @@ public class PageToolsController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getOutStorehouseBatchNumber.light")
 	public void getOutStorehouseBatchNumber(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
-//		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		JSONObject jo = loginServiceInterface.getOutStorehouseBatchNumber();
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
@@ -465,7 +449,6 @@ public class PageToolsController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/downShopCustomerCount.light")
 	public void downShopCustomerCount(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		String type = request.getParameter("down_type");
 		String code = request.getParameter("down_code");
 		JSONArray jsonArray = systemServiceInterface.getShopNumberOfPeopleGroupCount(type, code);

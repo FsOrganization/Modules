@@ -3,6 +3,20 @@ var operatingContactsTag=null;
 var loginName = null;
 var textMsg = null;
 $(document).ready(function() {
+		window.onload = function() {
+			obj = document.getElementById("HWPenSign");
+			obj.HWSetBkColor(0xFFF5EE);
+			obj.HWSetCtlFrame(0, 0x000000);
+		};
+		
+		$('#signatureRegion').window({
+			title:'支付二维码',
+			width:560,
+			height:395,
+		    modal:true,
+		    closed:true,
+		    maximizable:false
+		});
 		loginName = getUrlParam("loginName");
 		if (loginName === 'admin') {
 			textMsg = "新增商品";
@@ -577,4 +591,9 @@ function reloadCode(){
 		reloadPaymenCodeGeneration(money, $("#title").html());
 	}
 	
+}
+
+function loadBase64Stream(stream){
+	obj.HWLoadBase64Stream(stream);
+	$('#signatureRegion').window('open');
 }

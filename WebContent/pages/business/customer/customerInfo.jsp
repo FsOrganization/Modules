@@ -108,14 +108,14 @@ label:hover:before {
 </script>
 
 </head>
-<body style="background: white;">
+<body style="overflow-y: hidden;background: #f2f2f2;">
 	<div style="margin: 4px;">
        	&nbsp;&nbsp;用户信息：<input id="queryParams" name="queryParams" style="width: 150px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="姓名、电话">
        	<span id="shopSpan" style="display: none;">
        		&nbsp;&nbsp;网点：<input id="expressServiceId" name="expressServiceId" style="width: 150px;border-style: solid;border-color: antiquewhite;" class="easyui-combobox">
        	</span>
 	</div>
-	<table id="customerGrid" style="height: auto;"></table>
+	<table id="customerGrid"></table>
     <div id="addUser" class="container" style="min-height: 300px;overflow:hidden;">
 			<section class="af-wrapper">
 	            <h1></h1>

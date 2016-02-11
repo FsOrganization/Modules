@@ -45,8 +45,7 @@ $(document).ready(function() {
 	    	if (tempCode == null) {
 				return;
 			} else {
-//				var year = geCurrYear();
-				var year = $('#limitYear').val();
+				var year = geCurrYear();
 				var limitTime = $('#limitTime').val();
 				var paramDate = year + "-" + limitTime;
 				if (limitTime == '' || limitTime.length ==0) {
@@ -65,8 +64,7 @@ $(document).ready(function() {
 		});
 		
 		$("#exportQueryExcelBtu").click(function(){
-//			var year = geCurrYear();
-			var year = $('#limitYear').val();
+			var year = geCurrYear();
 			var limitTime = $('#limitTime').val();
 			var paramDate = year + "-" + limitTime;
 			var shopName = $('#down_shopName').val();
@@ -84,48 +82,12 @@ $(document).ready(function() {
 		});
 		
 		
-		$('#yearStyle').combobox({
-		    valueField:'id',
-		    textField:'text',
-		    panelWitdh : 180,
-			panelHeight : 200,
-			width : 90,
-			height : 30,
-		    data: [{
-		    	"id":1,
-		    	"text":geCurrYear()-1+'年',
-		    	"desc":geCurrYear()-1
-		    },{
-		    	"id":2,
-		    	"text":geCurrYear()+'年',
-		    	"selected":true,
-		    	"desc":geCurrYear()
-		    },{
-		    	"id":3,
-		    	"text":geCurrYear()+1+'年',
-		    	"desc":geCurrYear()+1
-		    }],
-		    formatter :  function(row){
-				var ip = $("#yearStyle").parent().find('.combo').children().eq(1);
-				var comb = $(this).combobox('options');
-				$(ip).click(function(){
-					$('#yearStyle').combo('showPanel');	
-				});
-			    var s = '<span style="font-weight:bold">' + row.text + '</span><br/>' +
-			            '<span style="color:#888">' + row.desc + '</span>';
-			    return s;
-			},
-			onSelect: function(row){
-				$('#limitYear').val(row.desc);
-	        }
-			
-		});
 		$('#dateStyle').combobox({
 		    valueField:'id',
 		    textField:'text',
 		    panelWitdh : 180,
 			panelHeight : 200,
-			width : 90,
+			width : 180,
 			height : 30,
 		    data: [{
 		    	"id":1,
@@ -242,7 +204,7 @@ function searchExpressInfo(shopCode,limitTime) {
 	$('#shopNumberOfPeopleStatisticsGrid').datagrid("clearSelections");
 	$('#shopNumberOfPeopleStatisticsGrid').datagrid({
 		dataType : 'json',
-		url : contextPath+ "/pages/system/getShopOutAndSendExpressGroupCount.light",
+		url : contextPath+ "/pages/system/getSendOutExpressByExpressGroup.light",
 		width : $(window).width() * 1,
 		height :($(window).height()-30)*0.99,
 		singleSelect : true,
@@ -264,8 +226,7 @@ function searchExpressInfo(shopCode,limitTime) {
 			align : 'center',
 			formatter: function(value,row,index){
 				if (row.TT != '<span style="color:red;" class="subtotal">合计</span>'){
-//					var year = geCurrYear();
-					var year = $('#limitYear').val();
+					var year = geCurrYear();
 					var limitTime = $('#limitTime').val();
 					var paramDate = year + "-" + limitTime;
 					return paramDate + '-' +row.TT;
@@ -274,29 +235,140 @@ function searchExpressInfo(shopCode,limitTime) {
 				}
 			}
 		},{
-			field : 'OUTCOUNT',
-			title : '取件人数',
-			width : 120,
+			field : 'SF',
+			title : '顺丰',
+			width : 66,
 			sum: 'true',
 			align : 'center',
 			hidden : false
 		},{
-			field : 'SENDCOUNT',
-			title : '寄件人数',
-			width : 120,
+			field : 'JD',
+			title : '京东',
+			width : 66,
+			sum: 'true',
 			align : 'center',
-			hidden : false,
-			formatter: function(value,row,index){
-				if (row.SENDCOUNT){
-					return row.SENDCOUNT;
-				} else {
-					return 0;
-				}
-			}
+			hidden : false
+		},{
+			field : 'YT',
+			title : '圆通',
+			width : 66,
+			sum: 'true',
+			align : 'center',
+			hidden : false
+		},{
+			field : 'EMS',
+			title : 'EMS',
+			width : 66,
+			sum: 'true',
+			align : 'center',
+			hidden : false
+		},{
+			field : 'TTKD',
+			title : '天天快递',
+			width : 66,
+			sum: 'true',
+			align : 'center',
+			hidden : false
+		},{
+			field : 'ST',
+			title : '申通',
+			width : 66,
+			sum: 'true',
+			align : 'center',
+			hidden : false
+		},{
+			field : 'ZT',
+			title : '中通',
+			width : 66,
+			sum: 'true',
+			align : 'center',
+			hidden : false
+		},{
+			field : 'YD',
+			title : '韵达',
+			width : 66,
+			sum: 'true',
+			align : 'center',
+			hidden : false
+		},{
+			field : 'ZTKY',
+			title : '中铁物流',
+			width : 66,
+			sum: 'true',
+			align : 'center',
+			hidden : false
+		},{
+			field : 'ZJS',
+			title : '宅急送',
+			width : 66,
+			sum: 'true',
+			align : 'center',
+			hidden : false
+		},{
+			field : 'HT',
+			title : '汇通',
+			width : 66,
+			sum: 'true',
+			align : 'center',
+			hidden : false
+		},{
+			field : 'YZ',
+			title : '邮政',
+			width : 66,
+			sum: 'true',
+			align : 'center',
+			hidden : false
+		},{
+			field : 'KJ',
+			title : '快捷',
+			width : 66,
+			sum: 'true',
+			align : 'center',
+			hidden : false
+		},{
+			field : 'YS',
+			title : '优速',
+			width : 66,
+			sum: 'true',
+			align : 'center',
+			hidden : false
+		},{
+			field : 'QT',
+			title : '其他',
+			width : 66,
+			sum: 'true',
+			align : 'center',
+			hidden : false
+		},{
+			field : 'GT',
+			title : '国通',
+			width : 66,
+			sum: 'true',
+			align : 'center',
+			hidden : false
+		},{
+			field : 'WPH',
+			title : '唯品会',
+			width : 66,
+			sum: 'true',
+			align : 'center',
+			hidden : false
 		},{
 			field : 'TOTAL',
 			title : '总数',
-			width : 120,
+			width : 66,
+			align : 'center',
+			hidden : false
+		},{
+			field : 'SENDCOUNT',
+			title : '寄件',
+			width : 66,
+			align : 'center',
+			hidden : false
+		},{
+			field : 'PRICE',
+			title : '总数',
+			width : 66,
 			align : 'center',
 			hidden : false
 		}] ],
@@ -318,9 +390,26 @@ function searchExpressInfo(shopCode,limitTime) {
 function totalPrice(){
 	$('#shopNumberOfPeopleStatisticsGrid').datagrid('appendRow', {
 		TT: '<span style="color:red;" class="subtotal">合计</span>',
-		OUTCOUNT: '<span style="color:red;" class="subtotal">' + compute("OUTCOUNT") + '</span>',
+		SF: '<span style="color:red;" class="subtotal">' + compute("SF") + '</span>',
+		JD: '<span style="color:red;" class="subtotal">' + compute("JD") + '</span>',
+		YT: '<span style="color:red;" class="subtotal">' + compute("YT") + '</span>',
+		EMS: '<span style="color:red;" class="subtotal">' + compute("EMS") + '</span>',
+		TTKD: '<span style="color:red;" class="subtotal">' + compute("TTKD") + '</span>',
+		ST: '<span style="color:red;" class="subtotal">' + compute("ST") + '</span>',
+		ZT: '<span style="color:red;" class="subtotal">' + compute("ZT") + '</span>',
+		YD: '<span style="color:red;" class="subtotal">' + compute("YD") + '</span>',
+		ZTKY: '<span style="color:red;" class="subtotal">' + compute("ZTKY") + '</span>',
+		ZJS: '<span style="color:red;" class="subtotal">' + compute("ZJS") + '</span>',
+		HT: '<span style="color:red;" class="subtotal">' + compute("HT") + '</span>',
+		YZ: '<span style="color:red;" class="subtotal">' + compute("YZ") + '</span>',
+		KJ: '<span style="color:red;" class="subtotal">' + compute("KJ") + '</span>',
+		YS: '<span style="color:red;" class="subtotal">' + compute("YS") + '</span>',
+		QT: '<span style="color:red;" class="subtotal">' + compute("QT") + '</span>',
+		GT: '<span style="color:red;" class="subtotal">' + compute("GT") + '</span>',
+		WPH: '<span style="color:red;" class="subtotal">' + compute("WPH") + '</span>',
+		TOTAL: '<span style="color:red;" class="subtotal">' + compute("TOTAL") + '</span>',
 		SENDCOUNT: '<span style="color:red;" class="subtotal">' + compute("SENDCOUNT") + '</span>',
-        TOTAL: '<span style="color:red;" class="subtotal">' + compute("TOTAL") + '</span>'
+		PRICE: '<span style="color:red;" class="subtotal">' + compute("PRICE") + '</span>'
     });
 }
 

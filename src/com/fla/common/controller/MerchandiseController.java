@@ -7,19 +7,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import net.sf.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.fla.common.base.SuperController;
 import com.fla.common.dao.LoginDao;
 import com.fla.common.entity.SystemUser;
@@ -33,9 +29,6 @@ import com.fla.payment.weixinPay.util.pay.WxPayDto;
 @Controller
 public class MerchandiseController extends SuperController{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	@Autowired

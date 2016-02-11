@@ -10,13 +10,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +23,6 @@ import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.fla.common.base.SuperController;
 import com.fla.common.dao.LoginDao;
 import com.fla.common.entity.CustomerInfo;
@@ -45,9 +41,6 @@ import com.fla.common.util.PaginationUtils;
 public class infinishedController extends SuperController{
 
 	private static final long serialVersionUID = -8384196233388218070L;
-
-//	@Autowired
-//	public SystemUser systemUser;
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory.getLogger(infinishedController.class);
@@ -71,12 +64,12 @@ public class infinishedController extends SuperController{
 
 	@ResponseBody
 	@RequestMapping("/pages/system/showInfinishedData.light")
-	public void  showInfinishedData(String batchNumber,
-			Integer page, Integer rows,HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+	public void  showInfinishedData(String batchNumber,Integer page, Integer rows,
+			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
 		Map<String,String> params = new HashMap<String,String>();
 		params.put("batchNumber", batchNumber);
-		params.put("serviceShopCode", s.getAreaCode());
+		params.put("serviceShopCode", systemUser.getAreaCode());
 		Pagination data  = loginServiceInterface.getExpressInfoList(rows, page,params);
 		String d = PaginationUtils.getData(page, rows, data);
 		response.setCharacterEncoding("utf-8");
@@ -90,13 +83,13 @@ public class infinishedController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/addSentExpressInfo.light")
 	public void addSentExpressInfo(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
 		SentExpressInfo sei=null;
 		try 
 		{
-			String ssc = s.getServiceShopCode();
-			String areaCode = s.getAreaCode();
-			String operator = s.getLoginName();
+			String ssc = systemUser.getServiceShopCode();
+			String areaCode = systemUser.getAreaCode();
+			String operator = systemUser.getLoginName();
 			sei = jsonToSentExpressInfoEntity(request,areaCode);
 			sei.setServiceShopCode(ssc);
 			sei.setOperator(operator);
@@ -121,14 +114,14 @@ public class infinishedController extends SuperController{
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/modifySentExpressInfo.light")
-	public ModelAndView modifySentExpressInfo(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+	public void modifySentExpressInfo(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
+		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
 		SentExpressInfo sei=null;
 		try 
 		{
-			String ssc = s.getServiceShopCode();
-			String areaCode = s.getAreaCode();
-			String operator = s.getLoginName();
+			String ssc = systemUser.getServiceShopCode();
+			String areaCode = systemUser.getAreaCode();
+			String operator = systemUser.getLoginName();
 			sei = jsonToSentExpressInfoEntity(request,areaCode);
 			sei.setId(Integer.valueOf(request.getParameter("id")));
 			sei.setServiceShopCode(ssc);
@@ -144,7 +137,6 @@ public class infinishedController extends SuperController{
 		printWriter.write(jo.toString());
 		printWriter.flush();
 		printWriter.close();
-		return null;
 	}
 	
 	@ResponseBody
@@ -174,13 +166,11 @@ public class infinishedController extends SuperController{
 		printWriter.close();
 	}
 	
-//	@ResponseBody
-//	@RequestMapping("/pages/system/addCustomeInfo.light")
 	public void addCustomeInfo(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
 		CustomerInfo ci=null;
-		String areaCode = s.getAreaCode();
-		String shopCode = s.getServiceShopCode();
+		String areaCode = systemUser.getAreaCode();
+		String shopCode = systemUser.getServiceShopCode();
 		ci = jsonToCustomeInfoEntity(request);
 		ci.setAreaCode(areaCode);
 		ci.setShopCode(shopCode);
@@ -261,14 +251,18 @@ public class infinishedController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/letExpressOutStorehouse.light")
 	public void letExpressOutStorehouse(HttpServletRequest request,HttpServletResponse response, String ids,String signatureImg, Character type)  throws SQLException, IOException {
-//		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		List<Integer > idList  = new ArrayList<Integer>();
 		String[] arr = ids.split(",");
-		for (String id : arr) {
+		for (String id : arr) 
+		{
 			Integer i = Integer.valueOf(id);
 			idList.add(i);
 		}
-		JSONObject batchNumberJson = loginServiceInterface.getOutStorehouseBatchNumber();
+		JSONObject batchNumberJson = null;
+		synchronized (request) 
+		{
+			batchNumberJson = loginServiceInterface.getOutStorehouseBatchNumber();
+		}
 		String batchNumber = batchNumberJson.get("temporaryId").toString();
 		JSONObject jo = loginServiceInterface.letExpressOutStorehouse(idList,batchNumber);
 		Signature sign = makeSignatureEntity(signatureImg, type, batchNumber, request);
@@ -285,14 +279,14 @@ public class infinishedController extends SuperController{
 	@RequestMapping("/pages/system/getNotOutExpressInfoByFilterConditions.light")
 	public void  getNotOutExpressInfoByFilterConditions(String endDate,String startDate,String queryParams,String expressService,
 			Integer page, Integer rows,HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("endDate", endDate);
 		params.put("startDate", startDate);
 		params.put("queryParams", queryParams);
 		params.put("expressService", expressService);
-		params.put("areaCode", s.getAreaCode());
-		params.put("serviceShopCode", s.getServiceShopCode());
+		params.put("areaCode", systemUser.getAreaCode());
+		params.put("serviceShopCode", systemUser.getServiceShopCode());
 		Pagination data = loginServiceInterface.getNotOutExpressInfoByFilterConditions(rows, page,params);
 		String d = PaginationUtils.getData(page, rows, data);
 		response.setCharacterEncoding("utf-8");
@@ -308,11 +302,11 @@ public class infinishedController extends SuperController{
 	@RequestMapping("/pages/system/getExpressInfoList.light")
 	public void getExpressInfoList(String batchNumber,Integer page, Integer rows,
 			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (s !=null) {
+		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
+		if (systemUser !=null) {
 			Map<String,String> params = new HashMap<String,String>();
 			params.put("batchNumber", batchNumber);
-			params.put("serviceShopCode", s.getServiceShopCode());
+			params.put("serviceShopCode", systemUser.getServiceShopCode());
 			Pagination data = loginServiceInterface.getExpressInfoList(rows, page,params);
 			String d = PaginationUtils.getData(page, rows, data);
 			response.setCharacterEncoding("utf-8");          
@@ -329,13 +323,13 @@ public class infinishedController extends SuperController{
 	public void getExpressInfoByFilterConditions(String endDate,String startDate, String queryParams, String expressService,
 			Integer page, Integer rows,HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("endDate", endDate);
 		params.put("startDate", startDate);
 		params.put("queryParams", queryParams);
 		params.put("expressService", expressService);
-		params.put("serviceShopCode", s.getServiceShopCode());
+		params.put("serviceShopCode", systemUser.getServiceShopCode());
 		Pagination data = loginServiceInterface.getExpressInfoPagination(rows, page, params);
 		String d = PaginationUtils.getData(page, rows, data);
 		response.setCharacterEncoding("utf-8");
@@ -348,9 +342,9 @@ public class infinishedController extends SuperController{
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/getSentExpressInfo.light")
-	public ModelAndView getSentExpressInfo(String endDate,String startDate,String queryParams,String expressService,
+	public void getSentExpressInfo(String endDate,String startDate,String queryParams,String expressService,
 			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
 		String rows = request.getParameter("rows");
 		String page = request.getParameter("page");
 		final int rowSize = Integer.valueOf(rows);
@@ -360,7 +354,7 @@ public class infinishedController extends SuperController{
 		params.put("startDate", startDate);
 		params.put("queryParams", queryParams);
 		params.put("expressService", expressService);
-		params.put("serviceShopCode", s.getServiceShopCode());
+		params.put("serviceShopCode", systemUser.getServiceShopCode());
 		JSONArray ja = infinishedServiceInterface.getSentExpressInfo(rowSize,pageSize, params);
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
@@ -368,17 +362,13 @@ public class infinishedController extends SuperController{
 		printWriter.write(ja.toString());
 		printWriter.flush();
 		printWriter.close();
-		return null;
 	}
 	
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/saveSignature.light")
-	public ModelAndView saveSignature(String signatureImg, Character type, String batchNumber, HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
+	public void saveSignature(String signatureImg, Character type, String batchNumber, HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
 		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (s ==null) {
-			return JumpModelAndView();
-		}
 		Signature sign = makeSignatureEntity(signatureImg, type, batchNumber, request);
 		loginServiceInterface.insertSignature(sign);
 		response.setCharacterEncoding("utf-8");
@@ -386,16 +376,11 @@ public class infinishedController extends SuperController{
 		PrintWriter printWriter = response.getWriter();
 		printWriter.flush();
 		printWriter.close();
-		return null;
 	}
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/confirmExpressInStorehouse.light")
-	public ModelAndView confirmExpressInStorehouse(HttpServletRequest request,HttpServletResponse response, String batchNumber,String signatureImg, Character type)  throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (s ==null) {
-			return JumpModelAndView();
-		}
+	public void confirmExpressInStorehouse(HttpServletRequest request,HttpServletResponse response, String batchNumber,String signatureImg, Character type)  throws SQLException, IOException {
 		JSONObject json = new JSONObject();
 		Signature sign = makeSignatureEntity(signatureImg, type, batchNumber, request);
 		loginServiceInterface.insertSignature(sign);
@@ -406,7 +391,6 @@ public class infinishedController extends SuperController{
 		printWriter.write(json.toString());
 		printWriter.flush();
 		printWriter.close();
-		return null;
 	}
 	
 	private Signature makeSignatureEntity(String signatureImg, Character type, String batchNumber, HttpServletRequest request) {

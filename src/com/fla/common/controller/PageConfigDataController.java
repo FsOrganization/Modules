@@ -4,13 +4,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.fla.common.base.SuperController;
 import com.fla.common.entity.SystemUser;
 import com.fla.common.service.interfaces.LoginServiceInterface;
@@ -27,15 +23,11 @@ import com.fla.common.service.interfaces.SystemServiceInterface;
 @Controller
 public class PageConfigDataController extends SuperController{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -222343456360345672L;
 //	private static final Logger logger = LoggerFactory.getLogger(PageToolsController.class);
 
 	@Autowired
 	private LoginServiceInterface loginServiceInterface;
-	
 	
 	@Autowired
 	private SystemServiceInterface systemServiceInterface;
@@ -49,7 +41,7 @@ public class PageConfigDataController extends SuperController{
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/pageconfig/getPageGender.light")
-	public ModelAndView getPageGender(HttpServletRequest request,HttpServletResponse response) {
+	public void getPageGender(HttpServletRequest request,HttpServletResponse response) {
 		JSONArray jsonArray = new JSONArray();
 		JSONObject jsonMale = new JSONObject();
 		jsonMale.put("value", "male");
@@ -75,17 +67,16 @@ public class PageConfigDataController extends SuperController{
             printWriter = response.getWriter();
             printWriter.write(jsonArray.toString());
 		} catch(IOException e) {
-			
+			e.printStackTrace();
 		} finally { 
 			printWriter.flush();
 			printWriter.close();
 		}
-		return null;
 	}
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/pageconfig/getPageGenderForWechat.light")
-	public ModelAndView getPageGenderForWechat(HttpServletRequest request,HttpServletResponse response) {
+	public void getPageGenderForWechat(HttpServletRequest request,HttpServletResponse response) {
 		JSONArray jsonArray = new JSONArray();
 		JSONObject jsonMale = new JSONObject();
 		jsonMale.put("value", "male");
@@ -103,17 +94,16 @@ public class PageConfigDataController extends SuperController{
             printWriter = response.getWriter();
             printWriter.write(jsonArray.toString());
 		} catch(IOException e) {
-			
+			e.printStackTrace();
 		} finally { 
 			printWriter.flush();
 			printWriter.close();
 		}
-		return null;
 	}
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/pageconfig/getAgeSection.light")
-	public ModelAndView getAgeSection(HttpServletRequest request,HttpServletResponse response) {
+	public void getAgeSection(HttpServletRequest request,HttpServletResponse response) {
 		JSONArray jsonArray = new JSONArray();
 		JSONObject jsonSecton_1 = new JSONObject();
 		jsonSecton_1.put("value", "secton_1");
@@ -147,31 +137,31 @@ public class PageConfigDataController extends SuperController{
             printWriter = response.getWriter();
             printWriter.write(jsonArray.toString());
 		} catch(IOException e) {
-			
+			e.printStackTrace();
 		} finally { 
 			printWriter.flush();
 			printWriter.close();
 		}
-		return null;
 	}
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/pageconfig/getAgeSectionForWechat.light")
-	public ModelAndView getAgeSectionForWechat(HttpServletRequest request,HttpServletResponse response) {
+	public void getAgeSectionForWechat(HttpServletRequest request,
+			HttpServletResponse response) {
 		JSONArray jsonArray = new JSONArray();
 		JSONObject jsonSecton_1 = new JSONObject();
 		jsonSecton_1.put("value", "secton_1");
 		jsonSecton_1.put("text", "14岁以下");
-		JSONObject jsonSecton_2  = new JSONObject();
+		JSONObject jsonSecton_2 = new JSONObject();
 		jsonSecton_2.put("value", "secton_2");
 		jsonSecton_2.put("text", "15至29岁");
-		JSONObject jsonSecton_3  = new JSONObject();
+		JSONObject jsonSecton_3 = new JSONObject();
 		jsonSecton_3.put("value", "secton_3");
 		jsonSecton_3.put("text", "30至44岁");
-		JSONObject jsonSecton_4  = new JSONObject();
+		JSONObject jsonSecton_4 = new JSONObject();
 		jsonSecton_4.put("value", "secton_4");
 		jsonSecton_4.put("text", "45至59岁");
-		JSONObject jsonSecton_5  = new JSONObject();
+		JSONObject jsonSecton_5 = new JSONObject();
 		jsonSecton_5.put("value", "secton_5");
 		jsonSecton_5.put("text", "60岁以上");
 		jsonArray.add(jsonSecton_1);
@@ -179,25 +169,24 @@ public class PageConfigDataController extends SuperController{
 		jsonArray.add(jsonSecton_3);
 		jsonArray.add(jsonSecton_4);
 		jsonArray.add(jsonSecton_5);
-		PrintWriter printWriter =null;
+		PrintWriter printWriter = null;
 		try 
 		{
-			response.setCharacterEncoding("utf-8");          
+			response.setCharacterEncoding("utf-8");
 			response.setContentType("text/html; charset=utf-8");
-            printWriter = response.getWriter();
-            printWriter.write(jsonArray.toString());
-		} catch(IOException e) {
-			
-		} finally { 
+			printWriter = response.getWriter();
+			printWriter.write(jsonArray.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
 			printWriter.flush();
 			printWriter.close();
 		}
-		return null;
 	}
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/pageconfig/getWhetherHaveCar.light")
-	public ModelAndView getWhetherHaveCar(HttpServletRequest request,HttpServletResponse response) {
+	public void getWhetherHaveCar(HttpServletRequest request,HttpServletResponse response) {
 		JSONArray jsonArray = new JSONArray();
 		JSONObject jsonSecton_1 = new JSONObject();
 		jsonSecton_1.put("value", "yes");
@@ -219,21 +208,17 @@ public class PageConfigDataController extends SuperController{
             printWriter = response.getWriter();
             printWriter.write(jsonArray.toString());
 		} catch(IOException e) {
-			
+			e.printStackTrace();
 		} finally { 
 			printWriter.flush();
 			printWriter.close();
 		}
-		return null;
 	}
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/pageconfig/getServiceShopName.light")
-	public ModelAndView getServiceShopName(HttpServletRequest request,HttpServletResponse response) {
+	public void getServiceShopName(HttpServletRequest request,HttpServletResponse response) {
 		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
-		if (s ==null) {
-			return JumpModelAndView();
-		}
 		PrintWriter printWriter = null;
 		String areaCode = null;
 		if (s != null) {
@@ -252,7 +237,6 @@ public class PageConfigDataController extends SuperController{
 			printWriter.flush();
 			printWriter.close();
 		}
-		return null;
 	}
 	
 }

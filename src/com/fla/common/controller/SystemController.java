@@ -35,9 +35,6 @@ import com.fla.common.util.MD5Utils;
 @Controller
 public class SystemController extends SuperController{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	@Autowired
@@ -56,7 +53,6 @@ public class SystemController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getAreaInfoList.light")
 	public ModelAndView getAreaInfoList(Integer page, Integer rows,HttpServletRequest request,HttpServletResponse response) {
-//		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		Map<String,String> params = new HashMap<String,String>();
 		JSONArray jsonArray = systemServiceInterface.getAreaInfoList(rows, page, params);
 		PrintWriter printWriter =null;
@@ -78,7 +74,6 @@ public class SystemController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getAreaInfoForSelect.light")
 	public ModelAndView getAreaInfoForSelect(HttpServletRequest request,HttpServletResponse response) {
-//		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		Map<String,String> params = new HashMap<String,String>();
 		JSONArray jsonArray = systemServiceInterface.getAreaInfoForSelect(params);
 		PrintWriter printWriter =null;

@@ -47,6 +47,8 @@
 </head>
 <body id="indexbody" style="background: #fff;overflow-y:auto;overflow-x:hidden;" topmargin="0">
 	<input type="hidden" id="loginTag" value="${loginName}"/>
+	<input type="hidden" id="redirectTag" value="${redirect}"/>
+	
 	<table border="0" cellpadding="0" cellspacing="0" width="100%" height="473" style="border-collapse: collapse" bordercolor="#111111">
 		<tr>
 			<td colspan="10">
@@ -60,7 +62,7 @@
 				</h2>
 				<div id="topNav">
 					<ul class="menu-right" style="margin: 0px 16px 9px 16px;">
-						<h4><li>您好 <a onclick="MochaUI.notification('${loginName}');return false;">${loginName}</a></li>
+						<h4><li>您好 <a>${loginName}</a></li>
 						<li><a id="modfiyPassWord">修改密码</a></li>
 						<li><a onclick="logout();">退出系统</a></li></h4>
 					</ul>
@@ -118,7 +120,8 @@
 			</td>
 		</tr>
 		<tr>
-			<td style="background: #f2f2f2;" valign="top" height="100%">
+			<td style="background: #f2f2f2;height:500px;" valign="top">
+			<div>
 				<div align="center">
 					<center>
 						<ul id="css3menu1" class="topmenu">
@@ -186,6 +189,7 @@
 						</ul>
 					</center>
 				</div>
+			</div>
 			</td>
 			<td colspan="2" style="background: #fff;" valign="top" height="100%">
 				<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border-width: 0;" id="AutoNumber3">

@@ -79,7 +79,7 @@ public class LoginDao implements LoginDaoInterface {
 					+ " a.RECIPIENT_NAME,b.WEIXIN_ID,a.PHONE_NUMBER,a.LANDLINE_NUMBER,"
 					+ " a.EXPRESS_SERVICE_ID,a.ADDRESS,a.REMARK,a.BATCH_NUMBER,"
 					+ " date_format(a.OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,a.AREA_CODE,a.SERVICE_SHOP_CODE,"
-					+ " a.OPERATOR,a.EXPRESS_lOCATION,1 TYPE,b.GENDER"
+					+ " a.OPERATOR,a.EXPRESS_lOCATION,1 TYPE,b.GENDER,b.IS_INTEREST"
 					+ " from TF_EXPRESS_INFO a left join tf_customer_info b on a.PHONE_NUMBER = b.PHONE_NUMBER "
 					+ " where a.SERVICE_SHOP_CODE='"+params.get("serviceShopCode")+"'  order by a.opera_time desc";
 			page=new Pagination(sql.toString(),pageSize,rowSize,getJdbcTemplate());
@@ -395,7 +395,7 @@ public class LoginDao implements LoginDaoInterface {
 			StringBuilder sql = new StringBuilder();
 			sql.append(" "
 					+ " select a.ID, a.LOGISTICS, a.CODE,b.WEIXIN_ID,a.RECIPIENT_NAME, a.PHONE_NUMBER,"
-					+ " a.LANDLINE_NUMBER, a.EXPRESS_SERVICE_ID, a.ADDRESS, a.REMARK, a.BATCH_NUMBER,"
+					+ " a.LANDLINE_NUMBER, a.EXPRESS_SERVICE_ID, a.ADDRESS, a.REMARK, a.BATCH_NUMBER,b.IS_INTEREST, "
 					+ " date_format(a.OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME, a.AREA_CODE, a.SERVICE_SHOP_CODE, a.OPERATOR, a.EXPRESS_lOCATION,1 TYPE "
 					+ " from TF_EXPRESS_INFO a left join tf_customer_info b on a.PHONE_NUMBER = b.PHONE_NUMBER");
 			sql.append(" where 1=1 ");
@@ -743,8 +743,10 @@ public class LoginDao implements LoginDaoInterface {
 		Map<String, Object> t = null;
 		try 
 		{
-			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
-			st = con.prepareStatement("select * from tf_system_user  where login_name = ? and type='1' ");
+			con = connectionManager.getConnection();
+			st = con.prepareStatement("select trim(b.NAME) AREA_NAME,trim(c.NAME) SHOP_NAME,a.* from tf_system_user a "+
+																											" left join tf_area_info b on a.AREA_CODE = b.CODE "+
+																											" left join tf_shop_info c on a.SERVICE_SHOP_CODE = c.SHOP_CODE where a.LOGIN_NAME = ? and a.TYPE='1' ");
 			st.setString(1, loginName);
 			rs = st.executeQuery();
 			t = checkOneResultSet(rs);

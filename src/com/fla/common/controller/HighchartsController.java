@@ -7,12 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import net.sf.json.JSONArray;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -21,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.InternalResourceView;
-
 import com.fla.common.base.SuperController;
 import com.fla.common.service.interfaces.LoginServiceInterface;
 import com.fla.common.service.interfaces.SystemServiceInterface;
@@ -30,9 +26,6 @@ import com.fla.common.service.interfaces.SystemServiceInterface;
 public class HighchartsController extends SuperController{
 	
 	private static final long serialVersionUID = 8137315174834581896L;
-
-//	@Autowired
-//	public SystemUser systemUser;
 	
 	@Autowired
 	private SystemServiceInterface systemServiceInterface;
@@ -61,7 +54,6 @@ public class HighchartsController extends SuperController{
 	@RequestMapping("/pages/system/getHighchartsControllerFilter.light")
 	public void  getHighchartsControllerFilter(String queryParams,int tag,
 			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-//		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
 		if (tag == 1) {
 //			String rows = request.getParameter("rows"); 
 //			String page = request.getParameter("page");

@@ -1,4 +1,3 @@
-
 package com.fla.common.controller;
 
 import java.io.IOException;
@@ -7,17 +6,13 @@ import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import net.sf.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.fla.common.base.SuperController;
 import com.fla.common.entity.CustomerInfo;
 import com.fla.common.entity.SystemUser;
@@ -40,17 +35,16 @@ public class CustomerController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/customer/getCustomerList.light")
 	public void getCustomerList(Integer page, Integer rows,HttpServletRequest request,HttpServletResponse response){
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
 		Map<String,String> params = new HashMap<String,String>();
 		String queryParams = request.getParameter("queryParams");
 		String pageShopCode = request.getParameter("shopCode");
 		params.put("queryParams", queryParams);
 		if (pageShopCode == null || pageShopCode.trim().length() == 0) {
-			params.put("shopCode", s.getServiceShopCode());
+			params.put("shopCode", systemUser.getServiceShopCode());
 		} else {
 			params.put("shopCode", pageShopCode);
 		}
-		
 		Pagination data = customerService.getCustomerList(rows, page, params);
 		String d = PaginationUtils.getData(page, rows, data);
 		PrintWriter printWriter =null;
@@ -61,6 +55,7 @@ public class CustomerController extends SuperController{
             printWriter = response.getWriter();
             printWriter.write(d);
 		} catch(IOException e) {
+			e.printStackTrace();
 		} finally { 
 			printWriter.flush();
 			printWriter.close();
@@ -71,7 +66,6 @@ public class CustomerController extends SuperController{
 	@RequestMapping("/pages/system/modifyCustomer.light")
 	public void modifyCustomer(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
 		JSONObject json = new JSONObject();
-//		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		CustomerInfo customer=null;
 		try 
 		{
@@ -127,7 +121,6 @@ public class CustomerController extends SuperController{
 	@RequestMapping("/pages/system/addCustomer.light")
 	public void addCustomer(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
 		JSONObject json = new JSONObject();
-//		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		CustomerInfo customer=null;
 		try 
 		{

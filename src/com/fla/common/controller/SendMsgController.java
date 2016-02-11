@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fla.common.entity.SystemUser;
 import com.fla.common.service.interfaces.MsgServiceInterface;
 import com.fla.common.service.interfaces.SystemServiceInterface;
-import com.fla.common.sms.MessageServer;
 import com.fla.common.util.Automatic.AutomaticMsgUtils;
 
 @Controller

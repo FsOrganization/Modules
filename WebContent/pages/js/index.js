@@ -13,6 +13,8 @@ $(document).ready(function() {
 			}, 30);
 	});
 	var loginName = $('#loginTag').val();
+	var redirectTag = $('#redirectTag').val();
+//	alert(redirectTag)
 	if ( loginName != 'admin') {
 		$('#statistics').hide();
 		$('#configSeting').hide();

@@ -47,8 +47,6 @@ public class WeiXinController extends SuperController{
 	
 	private static final long serialVersionUID = 8137315174834581896L;
 //	private static Logger logger = Logger.getLogger(WeiXinController.class.getName());
-//	@Autowired
-//	public SystemUser systemUser;
 	
 	@Autowired
 	private CustomerServiceInterface customerService;

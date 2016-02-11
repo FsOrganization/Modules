@@ -50,7 +50,7 @@ $(document).ready(function() {
 //			dataType : 'json',
 			url : contextPath + '/pages/system/getExpressInfoByFilterConditions.light',//getNotOutExpressInfoByFilterConditions
 			width : $(window).width(),
-			height :($(window).height()-30)*0.99,
+			height :($(window).height()-32)*0.99,
 			singleSelect : true,
 			rownumbers : true,
 			pagination : true,
