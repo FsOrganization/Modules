@@ -21,6 +21,7 @@ import com.fla.common.dao.interfaces.ExpressDaoInterface;
 import com.fla.common.entity.SentExpressInfo;
 import com.fla.common.util.BaseUtil;
 import com.fla.common.util.DateUtil;
+import com.fla.common.util.Pagination;
 import com.fla.common.util.SequenceManager;
 import com.fla.common.util.connection.ConnectionManager;
 
@@ -45,14 +46,11 @@ public class ExpressDao implements ExpressDaoInterface {
 	}
 
 	@Override
-	public List<Map<String, Object>> getSentExpressInfo(int rowSize,int pageSize, Map<String, String> params) {
-		ResultSet rs = null;
-		Connection con = null;
-		PreparedStatement st = null;
-		List<Map<String, Object>> t = null;
+	public Pagination getSentExpressInfo(int rowSize,int pageSize, Map<String, String> params) {
+		Pagination page =null;
+		JdbcTemplate jt = getJdbcTemplate();
 		try 
 		{
-			con = connectionManager.getConnection();
 			StringBuilder sql = new StringBuilder();
 			sql.append("select ID,LOGISTICS,CODE,"
 					+ " RECIPIENT_NAME,PHONE_NUMBER,LANDLINE_NUMBER,SENDER_NAME,SENDER_NUMBER,"
@@ -91,17 +89,13 @@ public class ExpressDao implements ExpressDaoInterface {
 				sql.append(" and OPERA_TIME <='" + endDate + "'");
 			}
 			sql.append(" order by EXPRESS_SERVICE_ID desc");
-			st = con.prepareStatement(sql.toString());
-			rs = st.executeQuery();
-			t = checkResultSet(rs);
-		} catch (SQLException e) {
+			page=new Pagination(sql.toString(),pageSize,rowSize,jt);
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			connectionManager.closeResultSet(rs);
-			connectionManager.closeStatement(st);
-			connectionManager.closeConnection(con);
+			Pagination.closeConnection(jt);
 		}
-		return t;
+		return page;
 	}
 	
 	public void insertSendExpressInfo(SentExpressInfo ei) throws Exception{

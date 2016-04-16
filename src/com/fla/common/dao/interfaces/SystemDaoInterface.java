@@ -93,4 +93,9 @@ public interface SystemDaoInterface {
 	
 	public void deleteProviderContactsById(Map<String, String> params) throws SQLException;
 	
+	public List<Map<String, Object>> getSystemConfigInfo(Map<String, String> params);
+	
+	public List<Map<String, Object>> getSystemConfigValues(Map<String, String> params);
+	
+	
 	}

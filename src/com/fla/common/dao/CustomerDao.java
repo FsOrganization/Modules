@@ -3,7 +3,13 @@ package com.fla.common.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.sf.json.JSONObject;
@@ -47,26 +53,31 @@ public class CustomerDao implements CustomerDaoInterface {
 		Pagination page = null;
 		StringBuilder sql = new StringBuilder();
 		sql.append(""
-				+ " select a.ID,a.NAME,a.GENDER,a.WEIXIN_ID,a.ADDRESS,a.AGE_SECTION,a.SERVICE_SHOP_CODE,a.WHETHER_HAVE_CAR,a.PHONE_NUMBER,a.AREA_CODE,IFNULL(b.eCount,0) eCount,IFNULL(c.sCount,0) sCount"
+				+ " select a.ID,a.NAME,a.GENDER,a.WEIXIN_ID,a.ADDRESS,"
+				+ " a.AGE_SECTION,a.SERVICE_SHOP_CODE,"
+				+ " a.WHETHER_HAVE_CAR,a.PHONE_NUMBER,"
+				+ " a.AREA_CODE,IS_INTEREST "
+//				+ " IFNULL(b.eCount,0) eCount,IFNULL(c.sCount,0) sCount"
 				+ "	from tf_customer_info a "
-				+ "	left join ( "
-				+ "	select PHONE_NUMBER,sum(eCount) eCount"
-				+ "	from ("
-				+ "			select PHONE_NUMBER,count(1) eCount  from tf_express_info a group by PHONE_NUMBER"
-				+ "			UNION ALL"
-				+ "			select PHONE_NUMBER,count(1) eCount from tf_express_out_storehouse a group by PHONE_NUMBER"
-				+ "	) e group by PHONE_NUMBER"
-				+ "	) b on a.PHONE_NUMBER = b.PHONE_NUMBER"
-				+ "	left join ("
-				+ "	select SENDER_NUMBER,count(1) sCount  "
-				+ " from tf_sent_express_info a group by SENDER_NUMBER) c on a.PHONE_NUMBER = c.SENDER_NUMBER ");
+//				+ "	left join ( "
+//				+ "	select PHONE_NUMBER,sum(eCount) eCount"
+//				+ "	from ("
+//				+ "			select PHONE_NUMBER,count(1) eCount  from tf_express_info a group by PHONE_NUMBER"
+//				+ "			UNION ALL"
+//				+ "			select PHONE_NUMBER,count(1) eCount from tf_express_out_storehouse a group by PHONE_NUMBER"
+//				+ "	) e group by PHONE_NUMBER"
+//				+ "	) b on a.PHONE_NUMBER = b.PHONE_NUMBER"
+//				+ "	left join ("
+//				+ "	select SENDER_NUMBER,count(1) sCount  "
+//				+ " from tf_sent_express_info a group by SENDER_NUMBER) c on a.PHONE_NUMBER = c.SENDER_NUMBER"
+				+ " ");
 		if (params.get("queryParams") != null && !params.get("queryParams").equals("")) {
 			sql.append( "	where a.PHONE_NUMBER ='"+params.get("queryParams")+"' or substring(a.PHONE_NUMBER, 8, 4) ='"+params.get("queryParams")+"' or a.NAME = '"+params.get("queryParams")+"'");
 			sql.append("  and a.SERVICE_SHOP_CODE="+params.get("shopCode"));
 		} else {
 			sql.append(" where a.SERVICE_SHOP_CODE="+params.get("shopCode"));
 		}
-		sql.append(" order by SERVICE_SHOP_CODE,eCount desc");
+//		sql.append(" order by SERVICE_SHOP_CODE,eCount desc");
 		page = new Pagination(sql.toString(), pageSize, rowSize,getJdbcTemplate());
 		return page;
 	}
@@ -77,7 +88,7 @@ public class CustomerDao implements CustomerDaoInterface {
 		PreparedStatement st = null;
 		String sql = "update TF_CUSTOMER_INFO set "
 				+ " GENDER = ?, WHETHER_HAVE_CAR=? , "
-				+ " AGE_SECTION=?, NAME=? , PHONE_NUMBER =? , ADDRESS =? "
+				+ " AGE_SECTION=?, NAME=? , PHONE_NUMBER =? , ADDRESS =?, IS_INTEREST =? "
 				+ " where ID=?";
 		con = connectionManager.getConnection();
         st=con.prepareStatement(sql);
@@ -87,7 +98,8 @@ public class CustomerDao implements CustomerDaoInterface {
 		st.setString(4, customer.getName());
 		st.setString(5, customer.getPhoneNumber());
 		st.setString(6, customer.getAddress());
-		st.setInt(7, customer.getId());
+		st.setString(7, customer.getIsInterest());
+		st.setInt(8, customer.getId());
 		try 
 		{
 				st.executeUpdate();
@@ -100,6 +112,10 @@ public class CustomerDao implements CustomerDaoInterface {
 		
 	}
 	
+	
+	/**
+	 * 用户注册
+	 */
 	@Override
 	@Transactional
 	public void registerCustomerByOpenId(CustomerInfo customer) throws SQLException {
@@ -109,14 +125,16 @@ public class CustomerDao implements CustomerDaoInterface {
 		if (tag ) {
 			String sql = "update TF_CUSTOMER_INFO set "
 					+ " GENDER = ?, WEIXIN_ID=? , "
-					+ " AGE_SECTION=?"
+					+ " AGE_SECTION=? ,"
+					+ " IS_INTEREST=?"
 					+ " where PHONE_NUMBER=?";
 			con = connectionManager.getConnection();
 	        st=con.prepareStatement(sql);
 			st.setString(1,customer.getGender());
 			st.setString(2,customer.getWeixinId());
 			st.setString(3, customer.getAgeSection());
-			st.setString(4, customer.getPhoneNumber());
+			st.setString(4, "Y");
+			st.setString(5, customer.getPhoneNumber());
 			try 
 			{
 					st.executeUpdate();
@@ -132,8 +150,8 @@ public class CustomerDao implements CustomerDaoInterface {
 			Integer id = sm.getSequenceByName("seq_custome_info_id",con);
 			String insertSQL =
 					"INSERT INTO TF_CUSTOMER_INFO("+
-					 "ID, NAME, PHONE_NUMBER ,lANDLINE_NUMBER, WEIXIN_ID, IDENTITY_CARD, GENDER,AGE_SECTION, ADDRESS, AREA_CODE, INITIALS_CODE, SPELLING_CODE,SERVICE_SHOP_CODE)"+
-				"SELECT ?,?,?,?,?,?,?,?,?,?,?,?,? FROM DUAL "
+					 "ID, NAME, PHONE_NUMBER ,lANDLINE_NUMBER, WEIXIN_ID, IDENTITY_CARD, GENDER,AGE_SECTION, ADDRESS, AREA_CODE, INITIALS_CODE, SPELLING_CODE,SERVICE_SHOP_CODE,IS_INTEREST)"+
+				"SELECT ?,?,?,?,?,?,?,?,?,?,?,?,?,? FROM DUAL "
 				+ "WHERE NOT EXISTS(SELECT NULL  FROM  TF_CUSTOMER_INFO  WHERE PHONE_NUMBER = ?) ";
 	        st=con.prepareStatement(insertSQL);
 			st.setLong(1, id);
@@ -149,7 +167,8 @@ public class CustomerDao implements CustomerDaoInterface {
 			st.setString(11, customer.getInitialsCode());
 			st.setString(12, customer.getSpellingCode());
 			st.setString(13, customer.getShopCode());
-			st.setString(14, customer.getPhoneNumber());
+			st.setString(14, "Y");
+			st.setString(15, customer.getPhoneNumber());
 			try 
 			{
 				st.execute();
@@ -302,5 +321,69 @@ public class CustomerDao implements CustomerDaoInterface {
 		}
 		return json;
 	}
+
+	@Override
+	public List<Map<String, Object>> getCustomerListByTxt(Map<String, String> params) {
+		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement st = null;
+		List<Map<String, Object>> t = null;
+		try 
+		{
+			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
+			st = con.prepareStatement(""
+					+ " select a.name,a.phone_number,a.is_interest "
+					+ " from TF_CUSTOMER_INFO a "
+					+ " where 1=1"
+					+ " and a.SERVICE_SHOP_CODE = '"+params.get("shopCode")+"'"
+					+ " and (a.NAME like '%" + params.get("queryTxt")+ "%' "
+					+ " or a.INITIALS_CODE like '%" + params.get("queryTxt")+ "%'"
+					+ " or a.SPELLING_CODE like '%" + params.get("queryTxt")+ "%'"
+					+ " or substring(PHONE_NUMBER, 8, 4) = '"+params.get("queryTxt")+"'"
+					+ " or a.PHONE_NUMBER like '%" + params.get("queryTxt")+ "%' )");
+			rs = st.executeQuery();
+			t = checkResultSet(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			connectionManager.closeResultSet(rs);
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+		return t;
+	}
 	
+	
+	public List<Map<String, Object>> checkResultSet(ResultSet rs) throws SQLException {
+		 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>(rs.getRow());
+		ResultSetMetaData m = rs.getMetaData();
+		int count = m.getColumnCount();
+		while (rs.next()) {
+			Map<String,Object> map = new HashMap<String,Object>();
+			for (int i = 1; i <= count; i++) {
+				String cName = m.getColumnName(i);
+				int d = Types.DATE;
+				int  t = Types.TIME;
+				int p = Types.TIMESTAMP;
+				List<Integer> ts = new ArrayList<Integer>(3);
+				ts.add(d);
+				ts.add(t);
+				ts.add(p);
+				int  mt = m.getColumnType(i);
+				if (ts.contains(mt)) {
+					Object o = rs.getObject(i);
+					if (o != null) {
+						map.put(cName, sdf.format(o));
+					} else {
+						map.put(cName,"");
+					}
+				} else {
+					map.put(cName, rs.getObject(i));
+				}
+			}
+			list.add(map);
+		}
+		return list;
+	}
 }

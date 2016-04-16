@@ -1,8 +1,10 @@
 package com.fla.common.dao.interfaces;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import com.fla.common.entity.CustomerInfo;
@@ -42,5 +44,7 @@ public interface CustomerDaoInterface {
 	public JSONObject updateCustomerGender(String phoneNumber,String sex) throws SQLException;
 	
 	public JSONObject getCustomerInfoByPhoneNumber(Map<String, String> params) throws SQLException;
+	
+	public List<Map<String, Object>> getCustomerListByTxt(Map<String, String> params);
 	
 	}

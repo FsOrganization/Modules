@@ -72,6 +72,7 @@ public class LoginDao implements LoginDaoInterface {
 	public Pagination getInExpressInfoList(int rowSize,int pageSize, Map<String, String> params) throws SQLException {
 		Pagination page =null;
 		String sql = new  String();
+		JdbcTemplate jt = getJdbcTemplate();
 		try 
 		{
 			sql = ""
@@ -82,10 +83,12 @@ public class LoginDao implements LoginDaoInterface {
 					+ " a.OPERATOR,a.EXPRESS_lOCATION,1 TYPE,b.GENDER,b.IS_INTEREST"
 					+ " from TF_EXPRESS_INFO a left join tf_customer_info b on a.PHONE_NUMBER = b.PHONE_NUMBER "
 					+ " where a.SERVICE_SHOP_CODE='"+params.get("serviceShopCode")+"'  order by a.opera_time desc";
-			page=new Pagination(sql.toString(),pageSize,rowSize,getJdbcTemplate());
+			page=new Pagination(sql.toString(),pageSize,rowSize,jt);
 		} catch (Exception e) {
 			e.printStackTrace();
-		} 
+		} finally {
+			Pagination.closeConnection(jt);
+		}
 		return page;
 	}
 	
@@ -126,13 +129,10 @@ public class LoginDao implements LoginDaoInterface {
 	
 	@Override
 	public Pagination getExpressInfoPagination(Integer rowSize, Integer pageSize, Map<String, String> params) throws SQLException {
-		Connection con = null;
-		PreparedStatement st = null;
 		Pagination page = null;
-//		List<Map<String, Object>> t = null;
+		JdbcTemplate jt = getJdbcTemplate();
 		try 
 		{
-			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
 			StringBuilder sql = new StringBuilder();
 			sql.append(" "
 					+ " select ID, LOGISTICS, CODE, RECIPIENT_NAME, PHONE_NUMBER, "
@@ -197,11 +197,9 @@ public class LoginDao implements LoginDaoInterface {
 			}
 			sql2.append(" order by OPERA_TIME");
 			String fsql = sql.toString() +" UNION ALL "+sql2.toString();
-			page=new Pagination(fsql.toString(),pageSize,rowSize,getJdbcTemplate());
-//			t = page.getResultList();
+			page=new Pagination(fsql.toString(),pageSize,rowSize,jt);
 		} finally {
-			connectionManager.closeStatement(st);
-			connectionManager.closeConnection(con);
+			Pagination.closeConnection(jt);
 		}
 		return page;
 	}
@@ -390,6 +388,7 @@ public class LoginDao implements LoginDaoInterface {
 	@Override
 	public Pagination  getNotOutExpressInfoByFilterConditions(int rowSize, int pageSize, Map<String, String> params)  {
 		Pagination page = null;
+		JdbcTemplate jt = getJdbcTemplate();
 		try 
 		{
 			StringBuilder sql = new StringBuilder();
@@ -427,10 +426,12 @@ public class LoginDao implements LoginDaoInterface {
 			sql.append(" order by a.OPERA_TIME desc");
 			
 			
-			page=new Pagination(sql.toString(),pageSize,rowSize,getJdbcTemplate());
+			page=new Pagination(sql.toString(),pageSize,rowSize,jt);
 		} catch (Exception e) {
 			e.printStackTrace();
-		} 
+		} finally {
+			Pagination.closeConnection(jt);
+		}
 		return page;
 	}
 	

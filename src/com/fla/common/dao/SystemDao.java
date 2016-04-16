@@ -30,6 +30,8 @@ import com.fla.common.util.connection.ConnectionManager;
 
 @Service
 public class SystemDao implements SystemDaoInterface {
+	
+	private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Autowired
 	public ConnectionManager connectionManager;
@@ -925,6 +927,59 @@ public class SystemDao implements SystemDaoInterface {
 		return t;
 	}
 	
+	public String getCurrentQuarterStartTime() {
+		Calendar c = Calendar.getInstance();
+		int currentMonth = c.get(Calendar.MONTH) + 1;
+		String now = null;
+		try
+		{
+			if (currentMonth >= 1 && currentMonth <= 3) {
+				c.set(Calendar.MONTH, 0);
+			} else if (currentMonth >= 4 && currentMonth <= 6) {
+				c.set(Calendar.MONTH, 3);
+			} else if (currentMonth >= 7 && currentMonth <= 9) {
+				c.set(Calendar.MONTH, 4);
+			} else if (currentMonth >= 10 && currentMonth <= 12) {
+				c.set(Calendar.MONTH, 9);
+			} 
+			c.set(Calendar.DATE, 1);
+			now = sdf.format(c.getTime());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return now;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getCurrentQuarterEndTime() {
+		Calendar c = Calendar.getInstance();
+		int currentMonth = c.get(Calendar.MONTH) + 1;
+		String now = null;
+		try 
+		{
+			if (currentMonth >= 1 && currentMonth <= 3) {
+				c.set(Calendar.MONTH, 2);
+				c.set(Calendar.DATE, 31);
+			} else if (currentMonth >= 4 && currentMonth <= 6) {
+				c.set(Calendar.MONTH, 5);
+				c.set(Calendar.DATE, 30);
+			} else if (currentMonth >= 7 && currentMonth <= 9) {
+				c.set(Calendar.MONTH, 8);
+				c.set(Calendar.DATE, 30);
+			} else if (currentMonth >= 10 && currentMonth <= 12) {
+				c.set(Calendar.MONTH, 11);
+				c.set(Calendar.DATE, 31);
+			}
+			now = sdf.format(c.getTime());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return now;
+	}
+	
 	private String checkStartDate(String startDate){
 		if (startDate == null || startDate.equals("")) {
 			startDate = DateUtil.dateAddToString(new Date(), Calendar.YEAR, -10);
@@ -941,8 +996,12 @@ public class SystemDao implements SystemDaoInterface {
 	
 	@Override
 	public List<Map<String, Object>> getShopInAndSendExpressGroupCount(String type,String code,String startDate,String endDate) throws SQLException {
-		startDate = checkStartDate(startDate);
-		endDate = checkEndDate(endDate);
+//		startDate = checkStartDate(startDate);
+//		endDate = checkEndDate(endDate);
+		
+		startDate = getCurrentQuarterStartTime();
+		endDate = getCurrentQuarterEndTime();
+		
 		ResultSet rs = null;
 		Connection con = null;
 		PreparedStatement st = null;
@@ -1291,5 +1350,52 @@ public class SystemDao implements SystemDaoInterface {
 			connectionManager.closeConnection(con);
 		}
 	}
+
+	@Override
+	public List<Map<String, Object>> getSystemConfigInfo(Map<String, String> params) {
+		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement st = null;
+		List<Map<String, Object>> t = null;
+		try 
+		{
+			con = connectionManager.getConnection();
+			st = con.prepareStatement("select * from tf_system_config a where a.STATUS = 1");
+//			st.setString(1, params.get("configId"));
+			rs = st.executeQuery();
+			t = checkResultSet(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			connectionManager.closeResultSet(rs);
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+		return t;
+	}
+
+	@Override
+	public List<Map<String, Object>> getSystemConfigValues(Map<String, String> params) {
+		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement st = null;
+		List<Map<String, Object>> t = null;
+		try 
+		{
+			con = connectionManager.getConnection();
+			st = con.prepareStatement("select * from tf_system_config_values a where a.CONFIG_ID = ?");
+			st.setString(1, params.get("configId"));
+			rs = st.executeQuery();
+			t = checkResultSet(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			connectionManager.closeResultSet(rs);
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+		return t;
+	}
+	
 	
 }
