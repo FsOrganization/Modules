@@ -16,8 +16,10 @@ public class SystemUser implements Serializable{
 	private String loginName;
 	private String password;
 	private String areaCode;
+	private String areaName;
 	private String nickName;
 	private String serviceShopCode;
+	private String shopName;
 	private String phoneNumber;
 	private String type;
 	private String remark;
@@ -127,6 +129,22 @@ public class SystemUser implements Serializable{
 
 	public void setCreateDate(String createDate) {
 		this.createDate = createDate;
+	}
+
+	public String getAreaName() {
+		return areaName;
+	}
+
+	public void setAreaName(String areaName) {
+		this.areaName = areaName;
+	}
+
+	public String getShopName() {
+		return shopName;
+	}
+
+	public void setShopName(String shopName) {
+		this.shopName = shopName;
 	}
 
 }
