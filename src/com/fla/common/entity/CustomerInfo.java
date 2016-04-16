@@ -32,6 +32,7 @@ public class CustomerInfo implements Serializable{
 	private Short  age;
 	private String ageSection;
 	private String whetherHaveCar;
+	private String isInterest;
 	
 	public Integer getId() {
 		return id;
@@ -136,6 +137,12 @@ public class CustomerInfo implements Serializable{
 	@Override
 	public String toString() {
 		return super.toString();
+	}
+	public String getIsInterest() {
+		return isInterest;
+	}
+	public void setIsInterest(String isInterest) {
+		this.isInterest = isInterest;
 	}
 	
 	
