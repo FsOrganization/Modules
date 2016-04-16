@@ -3,6 +3,7 @@ package com.fla.common.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,10 +11,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,7 @@ import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
 import com.fla.common.base.SuperController;
 import com.fla.common.dao.LoginDao;
 import com.fla.common.entity.CustomerInfo;
@@ -283,6 +288,7 @@ public class infinishedController extends SuperController{
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("endDate", endDate);
 		params.put("startDate", startDate);
+		queryParams = URLDecoder.decode(queryParams, "UTF-8");
 		params.put("queryParams", queryParams);
 		params.put("expressService", expressService);
 		params.put("areaCode", systemUser.getAreaCode());
@@ -342,24 +348,21 @@ public class infinishedController extends SuperController{
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/getSentExpressInfo.light")
-	public void getSentExpressInfo(String endDate,String startDate,String queryParams,String expressService,
-			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+	public void getSentExpressInfo(String endDate,String startDate,String queryParams,
+			String expressService,Integer page, Integer rows,HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		String rows = request.getParameter("rows");
-		String page = request.getParameter("page");
-		final int rowSize = Integer.valueOf(rows);
-		final int pageSize = Integer.valueOf(page);
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("endDate", endDate);
 		params.put("startDate", startDate);
 		params.put("queryParams", queryParams);
 		params.put("expressService", expressService);
 		params.put("serviceShopCode", systemUser.getServiceShopCode());
-		JSONArray ja = infinishedServiceInterface.getSentExpressInfo(rowSize,pageSize, params);
+		Pagination data = infinishedServiceInterface.getSentExpressInfo(rows,page, params);
+		String d = PaginationUtils.getData(page, rows, data);
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
 		PrintWriter printWriter = response.getWriter();
-		printWriter.write(ja.toString());
+		printWriter.write(d);
 		printWriter.flush();
 		printWriter.close();
 	}

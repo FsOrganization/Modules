@@ -3,16 +3,22 @@ package com.fla.common.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.fla.common.base.SuperController;
 import com.fla.common.entity.CustomerInfo;
 import com.fla.common.entity.SystemUser;
@@ -33,30 +39,57 @@ public class CustomerController extends SuperController{
 	}
 	
 	@ResponseBody
-	@RequestMapping("/pages/system/customer/getCustomerList.light")
-	public void getCustomerList(Integer page, Integer rows,HttpServletRequest request,HttpServletResponse response){
+	@RequestMapping("/pages/system/customer/getCustomerListByTxt.light")
+	public void getCustomerListByTxt(HttpServletRequest request, HttpServletResponse response,String queryTxt) {
+		PrintWriter printWriter = null;
 		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
-		Map<String,String> params = new HashMap<String,String>();
-		String queryParams = request.getParameter("queryParams");
-		String pageShopCode = request.getParameter("shopCode");
-		params.put("queryParams", queryParams);
-		if (pageShopCode == null || pageShopCode.trim().length() == 0) {
-			params.put("shopCode", systemUser.getServiceShopCode());
-		} else {
-			params.put("shopCode", pageShopCode);
-		}
-		Pagination data = customerService.getCustomerList(rows, page, params);
-		String d = PaginationUtils.getData(page, rows, data);
-		PrintWriter printWriter =null;
+		Map<String, String> params = new HashMap<String, String>();
+//		String queryTxt = request.getParameter("queryTxt");
 		try 
 		{
-			response.setCharacterEncoding("utf-8");          
+			queryTxt = URLDecoder.decode(queryTxt, "UTF-8");
+			params.put("queryTxt", queryTxt);
+			params.put("shopCode", systemUser.getServiceShopCode());
+			JSONArray ja = customerService.getCustomerListByTxt(params);
+			response.setCharacterEncoding("utf-8");
 			response.setContentType("text/html; charset=utf-8");
-            printWriter = response.getWriter();
-            printWriter.write(d);
-		} catch(IOException e) {
+			printWriter = response.getWriter();
+			printWriter.write(ja.toString());
+		} catch (IOException e) {
 			e.printStackTrace();
-		} finally { 
+		} finally {
+			printWriter.flush();
+			printWriter.close();
+		}
+	}
+	
+	@ResponseBody
+	@RequestMapping("/pages/system/customer/getCustomerList.light")
+	public void getCustomerList(Integer page, Integer rows,
+			HttpServletRequest request, HttpServletResponse response) {
+		PrintWriter printWriter = null;
+		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
+		Map<String, String> params = new HashMap<String, String>();
+		String queryParams = request.getParameter("queryParams");
+		String pageShopCode = request.getParameter("shopCode");
+		try 
+		{
+			queryParams = URLDecoder.decode(queryParams, "UTF-8");
+			params.put("queryParams", queryParams);
+			if (pageShopCode == null || pageShopCode.trim().length() == 0) {
+				params.put("shopCode", systemUser.getServiceShopCode());
+			} else {
+				params.put("shopCode", pageShopCode);
+			}
+			Pagination data = customerService.getCustomerList(rows, page,params);
+			String d = PaginationUtils.getData(page, rows, data);
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("text/html; charset=utf-8");
+			printWriter = response.getWriter();
+			printWriter.write(d);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
 			printWriter.flush();
 			printWriter.close();
 		}
@@ -145,6 +178,7 @@ public class CustomerController extends SuperController{
 		String gender = request.getParameter("gender");
 		String whetherHaveCar = request.getParameter("whetherHaveCar");
 		String phoneNumber = request.getParameter("phoneNumber");
+		String isInterest = request.getParameter("isInterest");
 		
 		CustomerInfo cc = new CustomerInfo();
 		String customerId  = request.getParameter("id");
@@ -155,6 +189,7 @@ public class CustomerController extends SuperController{
 		cc.setWhetherHaveCar(whetherHaveCar);
 		cc.setGender(gender);
 		cc.setPhoneNumber(phoneNumber);
+		cc.setIsInterest(isInterest);
 		return cc;
 	}
 	

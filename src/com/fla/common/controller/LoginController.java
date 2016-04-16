@@ -108,6 +108,8 @@ public class LoginController extends SuperController{
 				model.addObject("loginName",name);
 				model.addObject("nickName",systemUser.getNickName());
 				model.addObject("userMode",systemUser.getUserMode());
+				model.addObject("shopName", systemUser.getShopName());
+				model.addObject("areaName", systemUser.getAreaName());
 				request.getSession().setAttribute("systemUser", systemUser);
 				HashSet <String>list = msgService.getSendMsgShopStringList(new HashMap<String, String>());
 				if (list.contains(systemUser.getServiceShopCode())) {
