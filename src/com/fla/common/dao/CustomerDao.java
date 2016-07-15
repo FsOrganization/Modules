@@ -200,6 +200,7 @@ public class CustomerDao implements CustomerDaoInterface {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
+			connectionManager.closeResultSet(rs);
 			connectionManager.closeStatement(st);
 			connectionManager.closeConnection(con);
 		}
@@ -230,6 +231,7 @@ public class CustomerDao implements CustomerDaoInterface {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
+			connectionManager.closeResultSet(rs);
 			connectionManager.closeStatement(st);
 			connectionManager.closeConnection(con);
 		}
@@ -263,6 +265,7 @@ public class CustomerDao implements CustomerDaoInterface {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
+			connectionManager.closeResultSet(rs);
 			connectionManager.closeStatement(st);
 			connectionManager.closeConnection(con);
 		}
@@ -305,10 +308,13 @@ public class CustomerDao implements CustomerDaoInterface {
 			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
 			st = con.prepareStatement(""
 					+ "	select a.PHONE_NUMBER,a.WEIXIN_ID,"
-					+ "	a.SERVICE_SHOP_CODE,b.NAME "
+					+ "	a.SERVICE_SHOP_CODE,b.NAME,trim(c.PHONE_NUMBER)  SHOP_PHONE_NUMBER"
 					+ " from TF_CUSTOMER_INFO a "
-					+ " left join tf_shop_info b on a.SERVICE_SHOP_CODE = b.SHOP_CODE where a.PHONE_NUMBER = ?");
-			st.setString(1, params.get("phoneNumber"));
+					+ " left join tf_shop_info b on a.SERVICE_SHOP_CODE = b.SHOP_CODE "
+					+ " left join tf_system_user c on c.LOGIN_NAME = ? "
+					+ "where a.PHONE_NUMBER = ?");
+			st.setString(1, params.get("loginName"));
+			st.setString(2, params.get("phoneNumber"));
 			rs = st.executeQuery();
 			t = ResultSetUtils.checkOneResultSet(rs);
 			json = JSONObject.fromObject(t);  
@@ -386,4 +392,32 @@ public class CustomerDao implements CustomerDaoInterface {
 		}
 		return list;
 	}
+
+	@Override
+	public JSONObject getOutExpressId(Map<String, String> params) {
+		JSONObject json = new JSONObject();
+		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement st = null;
+		Map<String, Object> t = null;
+		try 
+		{
+			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
+			st = con.prepareStatement("select * from tf_express_info a  where a.PHONE_NUMBER = ? and CONCAT(a.SERVICE_SHOP_CODE,a.EXPRESS_lOCATION) = ?");
+			st.setString(1, params.get("phoneNumber"));
+			st.setString(2, params.get("extractionCode"));
+			rs = st.executeQuery();
+			t = ResultSetUtils.checkOneResultSet(rs);
+			json = JSONObject.fromObject(t);  
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			connectionManager.closeResultSet(rs);
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+		return json;
+	}
+	
+	
 }
