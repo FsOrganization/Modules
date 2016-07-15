@@ -47,4 +47,6 @@ public interface CustomerDaoInterface {
 	
 	public List<Map<String, Object>> getCustomerListByTxt(Map<String, String> params);
 	
+	public JSONObject getOutExpressId(Map<String, String> params);
+	
 	}
