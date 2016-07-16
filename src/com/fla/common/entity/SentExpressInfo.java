@@ -20,6 +20,7 @@ public class SentExpressInfo implements Serializable{
     private String phoneNumber;
     private String landlineNumber;
     private String senderName;
+    private String idNumber;
     private String senderNumber;
     private String senderLandlineNumber;
     private Integer expressServiceId;
@@ -174,6 +175,13 @@ public class SentExpressInfo implements Serializable{
 	}
 	public void setPrice(float  price) {
 		this.price = price;
+	}
+	
+	public String getIdNumber() {
+		return idNumber;
+	}
+	public void setIdNumber(String idNumber) {
+		this.idNumber = idNumber;
 	}
 	@Override
 	public int hashCode() {
