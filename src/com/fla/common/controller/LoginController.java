@@ -9,8 +9,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sourceforge.barbecue.Barcode;
@@ -18,6 +20,7 @@ import net.sourceforge.barbecue.BarcodeException;
 import net.sourceforge.barbecue.BarcodeFactory;
 import net.sourceforge.barbecue.BarcodeImageHandler;
 import net.sourceforge.barbecue.output.OutputException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,17 +31,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.InternalResourceView;
+
 import com.fla.common.base.SuperController;
 import com.fla.common.entity.ExpressInfo;
 import com.fla.common.entity.SystemUser;
 import com.fla.common.service.interfaces.LoginServiceInterface;
 import com.fla.common.service.interfaces.MsgServiceInterface;
+import com.fla.common.service.interfaces.ScanneServiceInterface;
+import com.fla.common.service.interfaces.SystemServiceInterface;
 import com.fla.common.util.MD5Utils;
 
 @Controller
 public class LoginController extends SuperController{
 
 	private static final long serialVersionUID = -92227420050300172L;
+	
+	@Autowired
+	private ScanneServiceInterface scanneService;
 	
 	@Autowired
 	public MsgServiceInterface msgService;
@@ -48,6 +57,9 @@ public class LoginController extends SuperController{
 
 	@Autowired
 	private LoginServiceInterface loginService;
+	
+	@Autowired
+	private SystemServiceInterface systemServiceInterface;
 	
 	@org.springframework.web.bind.annotation.InitBinder
 	public void InitBinder(HttpServletRequest request, ServletRequestDataBinder binder) {
@@ -117,6 +129,15 @@ public class LoginController extends SuperController{
 				}else {
 					request.getSession().setAttribute("msgTag", false);
 				}
+				String lateFeeLimitUpper = (String) request.getSession().getAttribute("lateFeeLimitUpper");
+				if (lateFeeLimitUpper == null || lateFeeLimitUpper.trim().equals("")) {
+					Map<String,JSONObject> tmp = systemServiceInterface.getAllConfigValues(null);
+					JSONObject jtmp = tmp.get("8");
+					lateFeeLimitUpper = jtmp.get("VAlUE").toString();
+					request.getSession().setAttribute("lateFeeLimitUpper", lateFeeLimitUpper);
+				}
+				model.addObject("lateFeeLimitUpper", lateFeeLimitUpper);
+				
 			}
 		} else {
 			iv = new InternalResourceView("/pages/login.jsp");

@@ -8,13 +8,16 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -34,10 +37,14 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.InternalResourceView;
 import org.sword.wechat4j.common.Config;
 import org.sword.wechat4j.token.TokenProxy;
+import org.sword.wechat4j.user.AccountManager;
+import org.sword.wechat4j.user.Qrcode;
 
 import com.fla.common.base.SuperController;
+import com.fla.common.entity.SystemUser;
 import com.fla.common.service.interfaces.CustomerServiceInterface;
 import com.fla.common.service.interfaces.LoginServiceInterface;
+import com.fla.common.service.interfaces.SystemServiceInterface;
 import com.fla.common.util.Automatic.AutomaticMsgUtils;
 import com.fla.common.weixin.util.WechatProcess;
 import com.fla.common.weixin.util.xml.ReceiveXmlEntity;
@@ -48,11 +55,40 @@ public class WeiXinController extends SuperController{
 	private static final long serialVersionUID = 8137315174834581896L;
 //	private static Logger logger = Logger.getLogger(WeiXinController.class.getName());
 	
+	public static final String SYS_HTTP = "http://121.41.76.133";
+	
+	public static final ArrayList<String> openIds = new ArrayList<String>(
+			Arrays.asList(
+					"oharnspby0RvSzYT7BhqhHgqTlSU",
+					"oharnsu4Pnmz-Zq5fuugdVeKZHLg",
+					"oharnsicBub9Pff8MQ95uPxhBems",
+					"oharnsuEaG8_UJIivL4hWTyQOcec",
+					 "oharnss9hPn2O4clpj2SmqyrSh2M",
+					 "oharnsh4zkPqowYb3Z3G40uvH14w",
+					 "oharnsnabPa0n62wmrUHt5O_xY_w",
+					 "oharnsuRu6EHSFiWeHWq3rDh5XJU",
+					 "oharnsmRyc0_dEvFwrYpM90lldNo",
+					 "oharnsme0mwTznN-NGwec-sU-DKs",
+					 "oharnskiWaeEosX3v8OL4NQwteus",
+					 "oharnsq-h6ezWgFXC-T_QIyGOPRM",
+					 "oharnsrFdJunlMWegTJbPG39GLDM",
+					 "oharnsugKoZ1OSWVUd1itKMepGZs",
+					"oharnsjZ0z_l9XwUxVud_5cMC0FM",
+					"oharnssr95wXIzf1UKkx7sNmXBf4",
+					"oharnsgQyUW6m_9pboksY8kcnr6w",
+					"oharnsgCA4p9F7bM6_h8ixWxhIX4",
+					"oharnsk2PVwruhWEPfqdw1sGxUQ4",
+					"oharnslvF2ButDe-dS3lPdl0n1OE"
+		));
+	
 	@Autowired
 	private CustomerServiceInterface customerService;
 	
 	@Autowired
 	private LoginServiceInterface loginServiceInterface;
+	
+	@Autowired
+	private SystemServiceInterface systemServiceInterface;
 	
 	@org.springframework.web.bind.annotation.InitBinder
 	public void InitBinder(HttpServletRequest request, ServletRequestDataBinder binder) {
@@ -70,6 +106,109 @@ public class WeiXinController extends SuperController{
 		model.addObject("tag", 1);
 		return model;
 	}
+	
+	@ResponseBody
+	@RequestMapping("/pages/system/weixin/getWeixinExtractionHandle.light")
+	public ModelAndView getWeixinExtractionHandle(HttpServletRequest request,HttpServletResponse response,String extractionCode) {
+		InternalResourceView iv = null;
+		ModelAndView model = null;
+		Integer id = null;
+		String recipientName = null;
+		String expressLocation = null;
+		String inOperaTime = null;
+		JSONObject json = null;
+		if (extractionCode != null && !extractionCode.equals("")) {
+			String[] ss = extractionCode.split("-");
+			String eCode = ss[0];
+			String phoneNumber = ss[1];
+			Map m = new HashMap();
+			m.put("extractionCode", eCode);
+			m.put("phoneNumber", phoneNumber);
+			json = customerService.getOutExpressId(m);
+			if (json.isNullObject()) {
+				iv = new InternalResourceView("/pages/business/test/weixinExtraction-master/errorPage.jsp");
+				model = new ModelAndView(iv);
+				model.addObject("msg", "快递已领取！");
+			} else {
+				iv = new InternalResourceView("/pages/business/test/weixinExtraction-master/extractionHandle.jsp");
+				model = new ModelAndView(iv);
+				id = Integer.valueOf(json.get("ID").toString());
+				recipientName = json.get("RECIPIENT_NAME").toString();
+				inOperaTime = json.get("OPERA_TIME").toString();
+				expressLocation = eCode.substring(eCode.length()-4,eCode.length());
+				model.addObject("id", id);
+				model.addObject("expressLocation", expressLocation);
+				model.addObject("recipientName", recipientName);
+				model.addObject("inOperaTime", inOperaTime);
+				String lateFeeLimitUpper = (String) request.getSession().getAttribute("lateFeeLimitUpper");
+				if (lateFeeLimitUpper == null || lateFeeLimitUpper.trim().equals("")) {
+					Map<String,JSONObject> tmp = systemServiceInterface.getAllConfigValues(null);
+					JSONObject jtmp = tmp.get("8");
+					lateFeeLimitUpper = jtmp.get("VAlUE").toString();
+					request.getSession().setAttribute("lateFeeLimitUpper", lateFeeLimitUpper);
+				}
+				model.addObject("lateFeeLimitUpper", lateFeeLimitUpper);
+			}
+		}
+		return model;
+	}
+	
+	
+	/**
+	 * 二维码取件
+	 * @param request
+	 * @param response
+	 * @param extractionCode
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/pages/system/weixin/outByExtractionCode.light")
+	public ModelAndView outByExtractionCode(HttpServletRequest request,HttpServletResponse response) {
+		InternalResourceView iv = new InternalResourceView("/pages/business/test/weixinExtraction-master/endPage.jsp");
+		ModelAndView model = new ModelAndView(iv);
+		String idStr = request.getParameter("id");
+		Integer id = Integer.valueOf(idStr);
+		try 
+		{
+			JSONObject json = loginServiceInterface.letExpressOutStorehouseByExtractionCode(id);
+			model.addObject("msg", json);
+			model.addObject("type", true);
+		} catch (SQLException e) {
+			model.addObject("type", false);
+			model.addObject("msg", "操作失败!");
+			e.printStackTrace();
+		}
+		return model;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/pages/system/weixin/getQRCode.light")
+	public ModelAndView getQRCode(HttpServletRequest request,
+			HttpServletResponse response, String extractionCode, String contactNumber) {
+		InternalResourceView iv = new InternalResourceView("/pages/business/test/weixinExtraction-master/extractionQRCode.jsp");
+		ModelAndView model = new ModelAndView(iv);
+//		String accessToken = TokenProxy.accessTokenRealTime();
+		String img = "";
+		String url = SYS_HTTP+"/Express/pages/system/weixin/getWeixinExtractionHandle.light?extractionCode="+extractionCode+"&contactNumber="+contactNumber;
+		AccountManager am = new AccountManager();
+		Qrcode qr = am.createQrcodePerpetualstr(extractionCode+"-"+contactNumber,url);
+		img = AccountManager.getQrcodeByBASE64Encoder(qr.getTicket());
+		model.addObject("img", img);
+		model.addObject("extractionCode", extractionCode);
+		model.addObject("contactNumber", contactNumber);
+		return model;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/pages/system/weixin/rejectOperatingAuthorityPage.light")
+	public ModelAndView rejectOperatingAuthorityPage(HttpServletRequest request,HttpServletResponse response) {
+		InternalResourceView iv = new InternalResourceView("/pages/business/test/weixinExtraction-master/rejectOperatingAuthorityPage.jsp");
+		ModelAndView model = new ModelAndView(iv);
+		model.addObject("time", System.currentTimeMillis());
+		model.addObject("tag", 1);
+		return model;
+	}
+	
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/getShopMapQueryPage.light")
@@ -127,9 +266,9 @@ public class WeiXinController extends SuperController{
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/weixin.light")
-	public void wechatServlet(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
+	public void wechatServlet(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException, ServletException {
 		String token = Config.instance().getToken();
-    	String accessToken = TokenProxy.accessToken();
+		String accessToken = TokenProxy.accessTokenRealTime();
 		// 微信加密签名
 		String signature = request.getParameter("signature");
 		// 随机字符串
@@ -138,9 +277,8 @@ public class WeiXinController extends SuperController{
 		String timestamp = request.getParameter("timestamp");
 		// 随机数
 		String nonce = request.getParameter("nonce");
-		
-		//key
-//		String key = request.getParameter("key");
+		// key
+		// String key = request.getParameter("key");
 		String[] str = { token, timestamp, nonce };
 		Arrays.sort(str); // 字典序排序
 		String bigStr = str[0] + str[1] + str[2];
@@ -150,7 +288,8 @@ public class WeiXinController extends SuperController{
 		String result = "";
 		ReceiveXmlEntity rxe = null;
 		// 确认请求来至微信
-		if (digest.equals(signature)) {
+		if (digest.equals(signature)) 
+		{
 			try 
 			{
 				request.setCharacterEncoding("UTF-8");
@@ -165,77 +304,108 @@ public class WeiXinController extends SuperController{
 				{
 					sb.append(s);
 				}
-				String xml = sb.toString(); // 次即为接收到微信端发送过来的xml数据
+				
 				/** 判断是否是微信接入激活验证，只有首次接入验证时才会收到echostr参数，此时需要把它直接返回 */
 				if (echostr != null && echostr.length() > 1) {
+					//验证后台接口
 					result = echostr;
+					response.getWriter().print(echostr);
 				} else {
+					String xml = sb.toString(); // 次即为接收到微信端发送过来的xml数据
+					System.out.println("xml="+xml);
 					// 正常的微信处理流程
 					rxe = new WechatProcess().processWechatMag(xml);
 				}
-//				String responseXml =  getRegisterPageXml(rxe);
-				String funcKey =  rxe.getEventKey();
-				if (funcKey.equals("WECHAT_USER_REGISTRATION_1")) {
-//					System.out.println("WECHAT_USER_REGISTRATION_1:"+funcKey);
-					JSONObject jo = checkWechatOpenId(rxe.getFromUserName(), null, null);
-					boolean tag =  (boolean) jo.get("tag");
-					String msg = null;
-					try 
-					{
-						if (tag) {
-							msg="尊敬的客户，你已经是幸福快递的会员";
-						} else {
-							msg="<a href='http://121.41.76.133/Express/pages/system/getWechatRegisterPage.light?openId="+rxe.getFromUserName()+"'>开始注册[点击开始]</a>";
-						}
-						sendMessage(accessToken, msg, rxe.getFromUserName());
-					} catch (Exception e) {
-						e.printStackTrace();
+				// String responseXml = getRegisterPageXml(rxe);
+				if (rxe != null) {
+					System.out.println(rxe.getEvent() + "," + rxe.getEventKey());
+					System.out.println("fromUserName="+rxe.getFromUserName());
+					String funcKey = rxe.getEventKey();
+					String event = rxe.getEvent();
+					if (rxe.getContent()!= null && rxe.getContent().equals("团购")) {
+						String test = "http://pintuan.yxzhgroup.com/app/index.php?i=2&c=entry&do=index&m=feng_fightgroups&openId="+ rxe.getFromUserName();
+						sendMessage(accessToken, test, rxe.getFromUserName());
 					}
-				} else if (funcKey.equals("WECHAT_YX_ASPECT_1")) {
-//					System.out.println("WECHAT_YX_ASPECT_1:"+funcKey);
-						sendMessage(accessToken, "建设中...", rxe.getFromUserName());
-				}else if (funcKey.equals("http://121.41.76.133/Express/pages/system/getShopMapQueryPage.light")) {
-//					System.out.println("no funcKey:"+funcKey);
-				}else if (funcKey.equals("http://121.41.76.133/Express/pages/system/getSimplyConstructedQueryPage.light")) {
-//					System.out.println("no funcKey:"+funcKey);
-				} else  {
-					String phoneNumberOrLogistics = rxe.getContent();
-					if(checkCustomerInput(phoneNumberOrLogistics) || checkCustomerInputNumber(phoneNumberOrLogistics)) {
-						Map<String,String> params = new HashMap<String,String>();
-						params.put("queryParams", phoneNumberOrLogistics);
-						JSONArray ja = loginServiceInterface.getSimplyConstructedNotOutExpressInfoByCustomerInput(params);
-						if (ja == null || ja.size() == 0) {
-							String m = "当前没有您的快递!";
-							sendMessage(accessToken, m, rxe.getFromUserName());
+					if (event.equalsIgnoreCase("SCAN")) {
+						String operaOpenId =  rxe.getFromUserName();
+						if (openIds.contains(operaOpenId)) {
+							String extractionCode = funcKey;
+							String url = SYS_HTTP+"/Express/pages/system/weixin/getWeixinExtractionHandle.light?extractionCode="+extractionCode;
+							String touser = rxe.getFromUserName();
+							Map<String,String> map = new HashMap<String,String>(2);
+							map.put("touser", touser);
+							map.put("url", url);
+							AutomaticMsgUtils.sendWechatTemplateMsgByExtractionCode(map);
 						} else {
-//							System.out.println("ja:"+ja);
-							String ss = new String("尊敬的客户！您有来至:"+"\n");
-							StringBuilder sub = new StringBuilder();
-							String SHOP_NAME = null;
-							for (Object obj : ja) {
-								JSONObject json = JSONObject.fromObject(obj);
-//								System.out.println("json:"+json+",ja.size()"+ja.size());
-								String LOGISTICS = json.get("LOGISTICS").toString();
-								String PROVIDER_NAME = json.get("PROVIDER_NAME").toString();
-								String OPERA_TIME = json.get("OPERA_TIME").toString();
-								SHOP_NAME  =  json.get("SHOP_NAME").toString();
-								String ff = PROVIDER_NAME+" 的快递："+LOGISTICS+" 到达时间："+OPERA_TIME+"\n";
-								sub.append(ff);
-								sub.append("- - - - - - - - - - - - - - - - - -  ");
-								sub.append("\n");
-							}
-							String mmms = ss + sub.toString()+"请尽快到 "+SHOP_NAME+" 幸福快递网点领取!";
-							sendMessage(accessToken, mmms, rxe.getFromUserName());
+							String url = SYS_HTTP+"/Express/pages/system/weixin/rejectOperatingAuthorityPage.light";
+							String touser = rxe.getFromUserName();
+							Map<String,String> map = new HashMap<String,String>(2);
+							map.put("touser", touser);
+							map.put("url", url);
+							AutomaticMsgUtils.sendWechatTemplateMsgByExtractionCode(map);
 						}
+					} 
+					if (funcKey.equals("WECHAT_USER_REGISTRATION_1")) {
+						JSONObject jo = checkWechatOpenId(rxe.getFromUserName(), null, null);
+						boolean tag = (boolean) jo.get("tag");
+						String msg = null;
+						try 
+						{
+							if (tag) {
+								msg = "尊敬的客户，你已经是幸福快递的会员";
+							} else {
+								msg = "<a href='"+SYS_HTTP+"/Express/pages/system/getWechatRegisterPage.light?openId="+ rxe.getFromUserName()+ "'>开始注册[点击开始]</a>";
+							}
+							sendMessage(accessToken, msg, rxe.getFromUserName());
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					} else if (funcKey.equals("WECHAT_YX_ASPECT_1")) {
+						// System.out.println("WECHAT_YX_ASPECT_1:"+funcKey);
+						sendMessage(accessToken, "建设中...",rxe.getFromUserName());
+					} else if (funcKey.equals("WECHAT_EXPRESS_APP")) {
+						
+					} else if (funcKey.equals(SYS_HTTP+"/Express/pages/system/getShopMapQueryPage.light")) {
+						// System.out.println("no funcKey:"+funcKey);
+					} else if (funcKey.equals(SYS_HTTP+"/Express/pages/system/getSimplyConstructedQueryPage.light")) {
+						// System.out.println("no funcKey:"+funcKey);
 					} else {
-						String m = "输入快递运单号或手机号码查询";
-						sendMessage(accessToken, m, rxe.getFromUserName());
+						String phoneNumberOrLogistics = rxe.getContent();
+						if (checkCustomerInput(phoneNumberOrLogistics)|| checkCustomerInputNumber(phoneNumberOrLogistics)) {
+							Map<String, String> params = new HashMap<String, String>();
+							params.put("queryParams", phoneNumberOrLogistics);
+							JSONArray ja = loginServiceInterface.getSimplyConstructedNotOutExpressInfoByCustomerInput(params);
+							if (ja == null || ja.size() == 0) {
+								String m = "当前没有您的快递!";
+								sendMessage(accessToken, m,rxe.getFromUserName());
+							} else {
+								String ss = new String("尊敬的客户！您有来至:" + "\n");
+								StringBuilder sub = new StringBuilder();
+								String SHOP_NAME = null;
+								for (Object obj : ja) {
+									JSONObject json = JSONObject.fromObject(obj);
+									// System.out.println("json:"+json+",ja.size()"+ja.size());
+									String LOGISTICS = json.get("LOGISTICS").toString();
+									String PROVIDER_NAME = json.get("PROVIDER_NAME").toString();
+									String OPERA_TIME = json.get("OPERA_TIME").toString();
+									SHOP_NAME = json.get("SHOP_NAME").toString();
+									String ff = PROVIDER_NAME + " 的快递："+ LOGISTICS + " 到达时间：" + OPERA_TIME+ "\n";
+									sub.append(ff);
+									sub.append("- - - - - - - - - - - - - - - - - -  ");
+									sub.append("\n");
+								}
+								String mmms = ss + sub.toString() + "请尽快到 "+ SHOP_NAME + " 幸福驿站领取!";
+								sendMessage(accessToken, mmms,rxe.getFromUserName());
+							}
+						} else {
+							String m = "输入快递运单号或手机号码查询";
+							sendMessage(accessToken, m, rxe.getFromUserName());
+						}
 					}
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
 		}
 	}
 	
@@ -276,7 +446,7 @@ public class WeiXinController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/wechat/sendMessage.light")
 	public static void sendMessageLight(String msg,String touser,HttpServletRequest request, HttpServletResponse response) {
-		String accessToken = TokenProxy.accessToken();
+		String accessToken = TokenProxy.accessTokenRealTime();
 		try 
 		{
 			String url = MessageFormat.format("https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token={0}",accessToken);
@@ -290,7 +460,7 @@ public class WeiXinController extends SuperController{
 				obj.put("msgtype", "text");
 				net.sf.json.JSONObject result = WxstoreUtils.httpRequest(url,"POST", obj.toString());
 				System.out.println("推送微信信息："+result);
-				response.setCharacterEncoding("utf-8");          
+				response.setCharacterEncoding("utf-8");
 				response.setContentType("text/html; charset=utf-8");
 				 PrintWriter printWriter = response.getWriter();
 				printWriter.write(result.toString()); 
@@ -309,24 +479,38 @@ public class WeiXinController extends SuperController{
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/wechat/sendWechatMsgAutomatic.light")
-	public  void sendWechatMsgAutomatic(String msg, String phoneNumber,String expServiceName,String logistics,
-			HttpServletRequest request, HttpServletResponse response) {
+	public  void sendWechatMsgAutomatic(String msg, String phoneNumber,String expServiceName,
+			String expServiceId,String expressLocation,String logistics,HttpServletRequest request, HttpServletResponse response) {
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		Map<String,String> params = new HashMap<String,String>(1);
 		params.put("phoneNumber", phoneNumber);
+		params.put("loginName", s.getLoginName());
 		JSONObject customerObj =  customerService.getCustomerInfoByPhoneNumber(params);
-		String shopName = customerObj.getString("NAME");
+		String shopName =null;
+		if (s == null ||s.getShopName() == null || s.getShopName().equals("")) {
+			shopName= "幸福驿站";
+		} else {
+			shopName = s.getShopName();//customerObj.getString("NAME");
+		}
 		String touser = customerObj.getString("WEIXIN_ID");
-		if (touser == null || touser.length() == 0 || touser.trim().equals("")) {
-			System.out.println("1 phoneNumber:"+phoneNumber+",touser:"+touser);
+//		String serviceShopCode = customerObj.getString("SERVICE_SHOP_CODE");
+		String shopPhoneNumber = customerObj.getString("SHOP_PHONE_NUMBER");
+		if (touser == null || touser.length() == 0 || touser.trim().equals("") || touser.trim().equalsIgnoreCase("null")) {
 			return;
 		} else {
-			System.out.println("2 phoneNumber:"+phoneNumber+",touser:"+touser);
 			Map<String,String> paraMap = new HashMap<String,String>();
 			paraMap.put("touser",touser);
 			paraMap.put("phoneNumber",phoneNumber);
 			paraMap.put("shopName",shopName);
+			paraMap.put("serviceShopCode",s.getServiceShopCode());//获取入库操作人的网点编号
+			paraMap.put("expServiceName",expServiceName);
+			paraMap.put("expServiceId",expServiceId);
+			paraMap.put("expressLocation",expressLocation);
 			paraMap.put("msg",msg);
-			AutomaticMsgUtils.sendWechatMsgAutomatic(paraMap);
+			paraMap.put("expLogistics",logistics);
+			paraMap.put("shopPhoneNumber",shopPhoneNumber);
+//			AutomaticMsgUtils.sendWechatMsgAutomatic(paraMap);//文本消息
+			AutomaticMsgUtils.sendWechatTemplateMsgAutomatic(paraMap); //模板消息
 		}
 		
 	}

@@ -162,7 +162,13 @@ public class infinishedController extends SuperController{
 			e.printStackTrace();
 		}
 		JSONObject jo = loginServiceInterface.addExpressInfo(ei);
-		addCustomeInfo(request, response);
+		try 
+		{
+			//???
+			addCustomeInfo(request, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
 		PrintWriter printWriter = response.getWriter();
@@ -171,7 +177,7 @@ public class infinishedController extends SuperController{
 		printWriter.close();
 	}
 	
-	public void addCustomeInfo(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
+	public synchronized void addCustomeInfo(HttpServletRequest request,HttpServletResponse response)  throws SQLException, IOException {
 		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
 		CustomerInfo ci=null;
 		String areaCode = systemUser.getAreaCode();
@@ -229,6 +235,7 @@ public class infinishedController extends SuperController{
 		sei.setRes(request.getParameter("res"));
 		sei.setSenderLandlineNumber(request.getParameter("senderLandlineNumber"));
 		sei.setSenderName(request.getParameter("senderName"));
+		sei.setIdNumber(request.getParameter("idNumber"));
 		sei.setSenderNumber(request.getParameter("senderNumber"));
 		sei.setServiceShopCode(request.getParameter("serviceShopCode"));
 		sei.setWeight(request.getParameter("weight"));
