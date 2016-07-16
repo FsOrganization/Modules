@@ -208,6 +208,34 @@ public class SystemDao implements SystemDaoInterface {
 	}
 	
 	@Override
+	public List<Map<String, Object>> getAllConfigValues(Map<String, String> params) {
+		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement st = null;
+		List<Map<String, Object>> t = null;
+		try 
+		{
+			con = connectionManager.getConnection();
+			st = con.prepareStatement("SELECT ID, "
+					+ "CONFIG_ID, VAlUE, VAlUE_TYPE, "
+					+ "CONFIG_CODE, CONFIG_NAME, "
+					+ "ORDER_NUMBER, REMARK, STATUS, SERVICE_SHOP_CODE "
+					+ "FROM TF_SYSTEM_CONFIG_VALUES "
+					+ "WHERE STATUS=1 ORDER BY ORDER_NUMBER");
+			rs = st.executeQuery();
+			t = checkResultSet(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			connectionManager.closeResultSet(rs);
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+		return t;
+		
+	}
+	
+	@Override
 	public void modifyAreaInfo(SystemArea area) throws SQLException {
 		Connection con = null;
 		PreparedStatement st = null;
@@ -1210,7 +1238,7 @@ public class SystemDao implements SystemDaoInterface {
   + "  where SERVICE_SHOP_CODE = ? "
    + " and date_format(OPERA_TIME,'%Y-%m') = ? "
    + " group by TT,SERVICE_SHOP_CODE,EXPRESS_SERVICE_ID "
-+ ") c group by c.TT";
+   + ") c group by c.TT";
 		
 		try 
 		{
