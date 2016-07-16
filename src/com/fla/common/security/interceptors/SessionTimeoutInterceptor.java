@@ -4,12 +4,12 @@ import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import net.sf.json.JSONObject;
 
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.resource.DefaultServletHttpRequestHandler;
 
 import com.fla.common.entity.SystemUser;
 
@@ -30,20 +30,24 @@ public class SessionTimeoutInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request,HttpServletResponse response, Object handler) throws Exception {
 		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		HttpSession session = request.getSession();
 		if (s == null || s.getServiceShopCode() == null) {
 			if (request.getHeader("x-requested-with") != null && request.getHeader("x-requested-with").equalsIgnoreCase("XMLHttpRequest")) {
 				response.setHeader("sessionstatus", "timeout");
 				response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY); 
 				response.setCharacterEncoding("utf-8");
 				response.setContentType("text/html; charset=utf-8");
-				PrintWriter printWriter = response.getWriter();
-				JSONObject j = new JSONObject();
-				j.put("redirect", request.getContextPath()+"/pages/login.jsp");
-				printWriter.write(j.toString());
-				printWriter.flush();
-				printWriter.close();
+//				PrintWriter printWriter = response.getWriter();
+//				JSONObject j = new JSONObject();
+				session.setAttribute("redirect", request.getContextPath()+"/pages/login.jsp");
+//				j.put("redirect", request.getContextPath()+"/pages/login.jsp");
+//				printWriter.write(j.toString());
+//				printWriter.flush();
+//				printWriter.close();
 				return false;
 			}
+		} else {
+			session.setAttribute("redirect", request.getContextPath()+"/pages/login.jsp");
 		}
 		return true;
 		
