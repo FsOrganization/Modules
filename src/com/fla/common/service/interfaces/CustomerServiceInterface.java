@@ -6,6 +6,7 @@ package com.fla.common.service.interfaces;
 import java.sql.SQLException;
 import java.util.Map;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import com.fla.common.entity.CustomerInfo;
@@ -35,6 +36,8 @@ public interface CustomerServiceInterface {
 	 */
 	public JSONObject updateCustomerGender(String phoneNumber,String sex);
 	
+	public JSONArray getCustomerListByTxt(Map<String,String> params);
 	
+	public JSONObject getOutExpressId(Map<String,String> params) ;
 	
 }

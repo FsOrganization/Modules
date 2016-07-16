@@ -1,6 +1,7 @@
 package com.fla.common.service.interfaces;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 import net.sf.json.JSONArray;
@@ -20,6 +21,8 @@ public interface SystemServiceInterface {
 	public JSONArray getSpecialShopInfoForSelect(Map<String,String> params);
 	
 	public JSONArray getAreaInfoList(final int rowSize, final int pageSize, Map<String,String> params);
+	
+	public Map<String,JSONObject> getAllConfigValues(Map<String, String> params);
 	
 	public JSONArray getShopInfoList(final int rowSize, final int pageSize, Map<String,String> params);
 	
@@ -96,5 +99,9 @@ public interface SystemServiceInterface {
 	public JSONObject modifyServiceProviderContacts(Map<String,String> params) throws SQLException;
 	
 	public JSONObject deleteProviderContactsById(Map<String,String> params) throws SQLException;
+	
+	public JSONArray getSystemConfigInfo(Map<String, String> params) throws SQLException;
+	
+	public JSONArray getSystemConfigValues(Map<String, String> params) throws SQLException;
 	
 }

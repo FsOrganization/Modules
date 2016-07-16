@@ -45,6 +45,19 @@ public class SystemService implements SystemServiceInterface{
 		}
 	}
 	
+	private Map<String,JSONObject> makeRowToMap(List<Map<String, Object>> rowMap) {
+		Map<String,JSONObject> t = new HashMap<String,JSONObject>(rowMap.size());
+		for (Map<String, Object> map : rowMap) {
+			JsonValueProcessor jv = new FlaJsonValueProcessor();
+			JsonConfig jsonConfig = new JsonConfig();
+			jsonConfig.registerJsonValueProcessor(Date.class, jv);
+			String jsonString = JSONSerializer.toJSON(map, jsonConfig).toString();
+			JSONObject json = JSONObject.fromObject(jsonString);
+			t.put(json.get("ID").toString(), json);
+		}
+		return t;
+	}
+	
 	private void makeJSONTreeArray(List<Map<String, Object>> rowMap, JSONArray ja) {
 		Map<String, String> params = new HashMap<String, String>();
 		for (Map<String, Object> map : rowMap) 
@@ -573,5 +586,39 @@ public class SystemService implements SystemServiceInterface{
 		}
 		return null;
 	}
+
+	@Override
+	public JSONArray getSystemConfigInfo(Map<String, String> params)
+			throws SQLException {
+		List<Map<String, Object>> rowMap = systemDao.getSystemConfigInfo(params);
+		JSONArray array = new JSONArray();
+		if (rowMap != null) {
+			makeJSONArray(rowMap, array);
+		}
+		return array;
+	}
+	
+	@Override
+	public JSONArray getSystemConfigValues(Map<String, String> params)
+			throws SQLException {
+		List<Map<String, Object>> rowMap = systemDao.getSystemConfigValues(params);
+		JSONArray array = new JSONArray();
+		if (rowMap != null) {
+			makeJSONArray(rowMap, array);
+		}
+		return array;
+	}
+
+	@Override
+	public Map<String,JSONObject> getAllConfigValues(Map<String, String> params) {
+		List<Map<String, Object>> rowMap = systemDao.getAllConfigValues(params);
+		Map<String,JSONObject>ff = null;
+		if (rowMap != null) {
+			ff = makeRowToMap(rowMap);
+		}
+		return ff;
+	}
+	
+	
 	
 }

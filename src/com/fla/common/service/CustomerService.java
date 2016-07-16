@@ -99,8 +99,22 @@ public class CustomerService implements CustomerServiceInterface{
 		}
 		return json;
 	}
-	
-	
-	
+
+	@Override
+	public JSONArray getCustomerListByTxt(Map<String, String> params) {
+		List<Map<String, Object>> rowMap = customerDao.getCustomerListByTxt(params);
+		JSONArray ja = new JSONArray();
+		if (rowMap !=null) {
+			ResultSetUtils.makeJSONArray(rowMap, ja);
+		}
+		return ja;
+	}
+
+	@Override
+	public JSONObject getOutExpressId(Map<String, String> params) {
+		JSONObject json = new JSONObject();
+		json = customerDao.getOutExpressId(params);
+		return json;
+	}
 	
 }

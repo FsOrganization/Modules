@@ -23,6 +23,7 @@ import com.fla.common.entity.Signature;
 import com.fla.common.entity.SystemUser;
 import com.fla.common.enums.Msg;
 import com.fla.common.service.interfaces.LoginServiceInterface;
+import com.fla.common.service.interfaces.ScanneServiceInterface;
 import com.fla.common.util.FlaJsonValueProcessor;
 import com.fla.common.util.Pagination;
 
@@ -32,7 +33,7 @@ public class LoginService implements LoginServiceInterface{
 
 	@Autowired
 	private LoginDaoInterface loginDao;
-
+	
 	public LoginService() {
 	}
 
@@ -131,6 +132,14 @@ public class LoginService implements LoginServiceInterface{
 			su.setNickName(m.get("NICK_NAME").toString());
 			su.setPassword(m.get("PASSWORD").toString());
 			su.setServiceShopCode(m.get("SERVICE_SHOP_CODE").toString());
+			try
+			{
+				su.setShopName(m.get("SHOP_NAME").toString());
+				su.setAreaName(m.get("AREA_NAME").toString());
+			} catch (Exception e) {
+				su.setShopName("admin");
+				su.setAreaName("不属于任何网点");
+			}
 			String ss = (String) m.get("USER_MODE");
 			su.setUserMode(new String(ss));
 //			su.setRemark(m.get("REMARK").toString());
@@ -315,6 +324,24 @@ public class LoginService implements LoginServiceInterface{
 		} catch (Exception e) {
 			e.printStackTrace();
 			json.put("streamCode", e.getMessage());
+		}
+		return json;
+	}
+
+	@Override
+	public JSONObject letExpressOutStorehouseByExtractionCode(Integer id)
+			throws SQLException {
+		JSONObject json = new JSONObject();
+		json.put("msg", "操作成功");
+		ExpressInfo ei = null;
+		try
+		{
+				ei =  loginDao.getExpressInfoById(id);
+				ei.setOutBatchNumber("-1");
+				loginDao.letExpressOutStorehouse(ei);
+		} catch (Exception e) {
+			json.put("msg", e.getMessage());
+			e.printStackTrace();
 		}
 		return json;
 	}

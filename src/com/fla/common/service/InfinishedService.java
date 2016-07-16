@@ -18,6 +18,7 @@ import com.fla.common.dao.interfaces.ExpressDaoInterface;
 import com.fla.common.entity.SentExpressInfo;
 import com.fla.common.service.interfaces.InfinishedServiceInterface;
 import com.fla.common.util.FlaJsonValueProcessor;
+import com.fla.common.util.Pagination;
 
 @Service
 @Transactional
@@ -30,13 +31,9 @@ public class InfinishedService implements InfinishedServiceInterface{
 	}
 
 	@Override
-	public JSONArray getSentExpressInfo(int rowSize, int pageSize,Map<String, String> params) {
-		List<Map<String, Object>> inRowMap = expressDao.getSentExpressInfo(rowSize, pageSize,params);
-		JSONArray inJa = new JSONArray();
-		if (inRowMap !=null) {
-			makeJSONArray(inRowMap, inJa);
-		}
-		return inJa;
+	public Pagination getSentExpressInfo(int rowSize, int pageSize,Map<String, String> params) {
+		Pagination rowPage = expressDao.getSentExpressInfo(rowSize, pageSize,params);
+		return rowPage;
 	}
 	
 	@Override

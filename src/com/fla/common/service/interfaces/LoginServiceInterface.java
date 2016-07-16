@@ -39,6 +39,8 @@ public interface LoginServiceInterface {
 	
 	public JSONObject letExpressOutStorehouse(List<Integer> eIds, String batchNumber) throws SQLException;
 	
+	public JSONObject letExpressOutStorehouseByExtractionCode(Integer id) throws SQLException;
+	
 	public JSONArray getExpressInfoByFilterConditions(final int rowSize, final int pageSize,Map<String,String> params) throws SQLException ;
 	
 	public Pagination getExpressInfoPagination(final int rowSize, final int pageSize,Map<String,String> params) throws SQLException ;
