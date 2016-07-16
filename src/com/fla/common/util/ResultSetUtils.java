@@ -60,8 +60,7 @@ public class ResultSetUtils {
 			return null;
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>(
-				rs.getRow());
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>(rs.getRow());
 		ResultSetMetaData m = rs.getMetaData();
 		int count = m.getColumnCount();
 		if (rs.first()) {

@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
@@ -25,6 +26,8 @@ public class Pagination extends JdbcDaoSupport {
 	private int lastIndex;
 	// 结果集存放List
 	private List<Map<String,Object>> resultList;
+	// 结果集
+	private  T entity;  
 	// JdbcTemplate jTemplate
 	private JdbcTemplate jTemplate;
 
@@ -83,7 +86,7 @@ public class Pagination extends JdbcDaoSupport {
 		setStartIndex();
 		// 计算结束行数
 		setLastIndex();
-//		System.out.println("lastIndex=" + lastIndex);// ////////////////
+//		System.out.println("lastIndex=" + lastIndex);//
 
 		// 构造oracle数据库的分页语句
 		/**
@@ -93,9 +96,10 @@ public class Pagination extends JdbcDaoSupport {
 		 * paginationSQL.append(" ) temp where ROWNUM <= " + lastIndex);
 		 * paginationSQL.append(" ) WHERE num > " + startIndex);
 		 */
-
+		String sqlTemp = getMySQLPageSQL(sql, startIndex, numPerPage);
 		// 装入结果集
-		setResultList(getJdbcTemplate().queryForList(getMySQLPageSQL(sql, startIndex, numPerPage)));
+		setResultList(getJdbcTemplate().queryForList(sqlTemp));
+		closeConnection(jTemplate);
 	}
 	
 	public static void closeConnection(JdbcTemplate jTemplate) {
@@ -193,6 +197,14 @@ public class Pagination extends JdbcDaoSupport {
 
 	public void setJTemplate(JdbcTemplate template) {
 		jTemplate = template;
+	}
+
+	public T getEntity() {
+		return entity;
+	}
+
+	public void setEntity(T entity) {
+		this.entity = entity;
 	}
 
 	// 计算结束时候的索引
