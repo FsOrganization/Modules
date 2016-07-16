@@ -425,7 +425,6 @@ public class LoginDao implements LoginDaoInterface {
 			}
 			sql.append(" order by a.OPERA_TIME desc");
 			
-			
 			page=new Pagination(sql.toString(),pageSize,rowSize,jt);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -690,7 +689,7 @@ public class LoginDao implements LoginDaoInterface {
 		st.setString(4, ci.getLandlineNumber());
 		st.setString(5, ci.getWeixinId());
 		st.setString(6, ci.getIdentityCard());
-		st.setString(7, null);
+		st.setString(7, ci.getGender());
 		st.setString(8, ci.getAddress());
 		st.setString(9, ci.getAreaCode());
 		st.setString(10, ci.getInitialsCode());
