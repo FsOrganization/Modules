@@ -56,7 +56,7 @@ public class ExpressDao implements ExpressDaoInterface {
 					+ " RECIPIENT_NAME,PHONE_NUMBER,LANDLINE_NUMBER,SENDER_NAME,SENDER_NUMBER,"
 					+ " DESTINATION,EXPRESS_SERVICE_ID,ADDRESS,REMARK,SENDER_LANDLINE_NUMBER,"
 					+ " date_format(OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME,AREA_CODE,SERVICE_SHOP_CODE,RES,"
-					+ " OPERATOR,EXPRESS_lOCATION,TYPE,PRICE"
+					+ " OPERATOR,EXPRESS_lOCATION,TYPE,PRICE,ID_NUMBER"
 					+ " from tf_sent_express_info ");
 			sql.append(" where 1=1 ");
 			sql.append(" and SERVICE_SHOP_CODE="
@@ -109,8 +109,8 @@ public class ExpressDao implements ExpressDaoInterface {
 				 "ID,LOGISTICS,CODE,RECIPIENT_NAME,PHONE_NUMBER,LANDLINE_NUMBER,"+
 				 "SENDER_NAME,SENDER_NUMBER,SENDER_LANDLINE_NUMBER,EXPRESS_SERVICE_ID,"+
 				 "ADDRESS,DESTINATION,OPERA_TIME,AREA_CODE,SERVICE_SHOP_CODE,OPERATOR,"+
-				 "EXPRESS_lOCATION,WEIGHT,DIMENSIONS,REMARK,RES,TYPE,PRICE)"+
-			"VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				 "EXPRESS_lOCATION,WEIGHT,DIMENSIONS,REMARK,RES,TYPE,PRICE,ID_NUMBER)"+
+			"VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         st=con.prepareStatement(insertSQL);
 		st.setLong(1, id);
 		st.setString(2, ei.getLogistics());
@@ -135,6 +135,7 @@ public class ExpressDao implements ExpressDaoInterface {
 		st.setString(21, ei.getRes());
 		st.setString(22, ei.isType()==false?"1":"0");
 		st.setFloat(23, ei.getPrice());
+		st.setString(24, ei.getIdNumber());
 		try 
 		{
 			st.execute();
@@ -158,7 +159,7 @@ public class ExpressDao implements ExpressDaoInterface {
 				 "	 LOGISTICS=?,CODE=?,RECIPIENT_NAME=?,PHONE_NUMBER=?,LANDLINE_NUMBER=?,"+
 				 " SENDER_NAME=?,SENDER_NUMBER=?,SENDER_LANDLINE_NUMBER=?,EXPRESS_SERVICE_ID=?,"+
 				 "	 ADDRESS=?,DESTINATION=?,OPERA_TIME=?,AREA_CODE=?,SERVICE_SHOP_CODE=?,OPERATOR=?,"+
-				 "	 EXPRESS_lOCATION=?,WEIGHT=?,DIMENSIONS=?,REMARK=?,RES=?,TYPE=?,PRICE=?"+
+				 "	 EXPRESS_lOCATION=?,WEIGHT=?,DIMENSIONS=?,REMARK=?,RES=?,TYPE=?,PRICE=?,ID_NUMBER=?"+
 				 " where id = ?";
         st=con.prepareStatement(modifySQL);
 		
@@ -184,7 +185,8 @@ public class ExpressDao implements ExpressDaoInterface {
 		st.setString(20, ei.getRes());
 		st.setString(21, ei.isType()==false?"1":"0");
 		st.setFloat(22, ei.getPrice());
-		st.setLong(23, ei.getId());
+		st.setString(23, ei.getIdNumber());
+		st.setLong(24, ei.getId());
 		
 		try 
 		{
