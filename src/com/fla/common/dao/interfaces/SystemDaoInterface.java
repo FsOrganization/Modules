@@ -61,6 +61,8 @@ public interface SystemDaoInterface {
 	
 	public List<Map<String, Object>> getConfigValuesList(Map<String, String> params);
 	
+	public List<Map<String, Object>> getAllConfigValues(Map<String, String> params);
+	
 	public  Map<String, Object> getLocationCodeByExpressType(String type, String areaCode)throws SQLException;
 	
 	public List<Map<String, Object>> getExpressServiceProviderList(String areaCode,String shopCode)throws SQLException ;
@@ -69,7 +71,7 @@ public interface SystemDaoInterface {
 	
 	public void modifyExpressServiceProvider(ExpressServiceProvider esp) throws SQLException;
 	
-	public List<Map<String, Object>> getExpressStatisticalArea(String areaCode) throws SQLException;
+	public List<Map<String, Object>> getExpressStatisticalArea(Map<String, Object> params) throws SQLException;
 	
 	public List<Map<String, Object>> getAreaChildrenShops(String areaCode) throws SQLException;
 	

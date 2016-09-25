@@ -80,8 +80,14 @@ public class SystemDao implements SystemDaoInterface {
 		try 
 		{
 			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
-			st = con.prepareStatement("select ID,NAME,CODE,TYPE,REMARK from TF_AREA_INFO");
-//			st.setString(1, areaCode);
+			String sql = "select ID,NAME,CODE,TYPE,REMARK from TF_AREA_INFO";
+			String loginName = params.get("loginName");
+			String appendSql = "";
+			if (!loginName.equals("admin")) {
+				appendSql = " where CODE='"+params.get("areaCode")+"'";
+			} 
+			sql = sql + appendSql;
+			st = con.prepareStatement(sql);
 			rs = st.executeQuery();
 			t = checkResultSet(rs);
 		} finally {
@@ -101,8 +107,14 @@ public class SystemDao implements SystemDaoInterface {
 		try 
 		{
 			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
-			st = con.prepareStatement("select a.ID, a.SHOP_CODE,a.NAME,trim(b.NAME) as AREA_NAME,a.TYPE, a.AREA_CODE,a.SHOP_ADDRESS,a.SHOP_CONTACTS from tf_shop_info a,tf_area_info b where a.AREA_CODE = b.CODE");
-//			st.setString(1, areaCode);
+			String sql = "select a.ID, a.SHOP_CODE,a.NAME,trim(b.NAME) as AREA_NAME,a.TYPE, a.AREA_CODE,a.SHOP_ADDRESS,a.SHOP_CONTACTS from tf_shop_info a,tf_area_info b where a.AREA_CODE = b.CODE";
+			String loginName = params.get("loginName");
+			String appendSql = "";
+			if (!loginName.equals("admin")) {
+				appendSql = " and a.AREA_CODE='"+params.get("areaCode")+"'";
+			} 
+			sql = sql + appendSql;
+			st = con.prepareStatement(sql);
 			rs = st.executeQuery();
 			t = checkResultSet(rs);
 		} finally {
@@ -122,7 +134,14 @@ public class SystemDao implements SystemDaoInterface {
 		try 
 		{
 			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
-			st = con.prepareStatement("select a.ID, a.SHOP_CODE,a.NAME,trim(b.NAME) as AREA_NAME,a.TYPE, a.AREA_CODE from tf_shop_info a,tf_area_info b where a.AREA_CODE = b.CODE");
+			String sql = "select a.ID, a.SHOP_CODE,a.NAME,trim(b.NAME) as AREA_NAME,a.TYPE, a.AREA_CODE from tf_shop_info a,tf_area_info b where a.AREA_CODE = b.CODE";
+			String loginName = params.get("loginName");
+			String appendSql = "";
+			if (!loginName.equals("admin")) {
+				appendSql = " and a.AREA_CODE='"+params.get("areaCode")+"'";
+			} 
+			sql = sql + appendSql;
+			st = con.prepareStatement(sql);
 //			st.setString(1, areaCode);
 			rs = st.executeQuery();
 			t = checkResultSet(rs);
@@ -143,11 +162,18 @@ public class SystemDao implements SystemDaoInterface {
 		try 
 		{
 			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
-			st = con.prepareStatement(""
+			String sql=""
 					+ " select a.ID, a.LOGIN_NAME, a.PASSWORD, a.AREA_CODE, a.NICK_NAME, "
 					+ " a.SERVICE_SHOP_CODE, a.REMARK, a.TYPE,trim(b.NAME) as SERVICE_SHOP_NAME,a.PHONE_NUMBER,CREATE_DATE,OPEN_IM"
-					+" from tf_system_user a,tf_shop_info b where a.SERVICE_SHOP_CODE = b.SHOP_CODE and a.LOGIN_NAME <> 'admin' ");
-//			st.setString(1, areaCode);
+					+" from tf_system_user a,tf_shop_info b where a.SERVICE_SHOP_CODE = b.SHOP_CODE and a.LOGIN_NAME <> 'admin' ";
+			String loginName = params.get("loginName");
+			String appendSql = "";
+			if (!loginName.equals("admin")) {
+				appendSql = " and b.AREA_CODE='"+params.get("areaCode")+"'";
+			} 
+			sql = sql + appendSql;
+//			st.setString(1, params.get("areaCode"));
+			st = con.prepareStatement(sql);
 			rs = st.executeQuery();
 			t = checkResultSet(rs);
 		} finally {
@@ -870,7 +896,7 @@ public class SystemDao implements SystemDaoInterface {
 	}
 
 	@Override
-	public List<Map<String, Object>> getExpressStatisticalArea(String areaCode) {
+	public List<Map<String, Object>> getExpressStatisticalArea(Map<String, Object> params) {
 		ResultSet rs = null;
 		Connection con = null;
 		PreparedStatement st = null;
@@ -878,8 +904,14 @@ public class SystemDao implements SystemDaoInterface {
 		try 
 		{
 			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
-			st = con.prepareStatement("select  * from tf_area_info");
-//			st.setString(1, areaCode);
+			String sql = "select  * from tf_area_info a";
+			String loginName = (String) params.get("loginName");
+			String appendSql = "";
+			if (!loginName.equals("admin")) {
+				appendSql = "  where a.CODE='"+params.get("areaCode")+"'";
+			} 
+			sql = sql + appendSql;
+			st = con.prepareStatement(sql);
 			rs = st.executeQuery();
 			t = checkResultSet(rs);
 		} catch (SQLException e) {

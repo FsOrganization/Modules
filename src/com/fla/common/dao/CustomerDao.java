@@ -19,6 +19,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fla.common.base.MapperAnnotation;
 import com.fla.common.dao.interfaces.CustomerDaoInterface;
 import com.fla.common.entity.CustomerInfo;
 import com.fla.common.util.Pagination;
@@ -27,6 +28,7 @@ import com.fla.common.util.SequenceManager;
 import com.fla.common.util.connection.ConnectionManager;
 
 @Service
+@MapperAnnotation
 public class CustomerDao implements CustomerDaoInterface {
 
 	@Autowired
@@ -72,7 +74,10 @@ public class CustomerDao implements CustomerDaoInterface {
 //				+ " from tf_sent_express_info a group by SENDER_NUMBER) c on a.PHONE_NUMBER = c.SENDER_NUMBER"
 				+ " ");
 		if (params.get("queryParams") != null && !params.get("queryParams").equals("")) {
-			sql.append( "	where a.PHONE_NUMBER ='"+params.get("queryParams")+"' or substring(a.PHONE_NUMBER, 8, 4) ='"+params.get("queryParams")+"' or a.NAME = '"+params.get("queryParams")+"'");
+			sql.append( "	where (a.PHONE_NUMBER ='"+params.get("queryParams")
+					+"' or substring(a.PHONE_NUMBER, 8, 4) ='"
+					+params.get("queryParams")+"' or a.NAME = '"
+					+params.get("queryParams")+"')");
 			sql.append("  and a.SERVICE_SHOP_CODE="+params.get("shopCode"));
 		} else {
 			sql.append(" where a.SERVICE_SHOP_CODE="+params.get("shopCode"));
