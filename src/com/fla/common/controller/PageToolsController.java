@@ -8,17 +8,22 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import sun.misc.BASE64Encoder;
+
 import com.fla.common.base.SuperController;
 import com.fla.common.dao.LoginDao;
 import com.fla.common.entity.SystemUser;
@@ -173,11 +178,12 @@ public class PageToolsController extends SuperController{
 	public void getExpressStatisticalArea(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
 		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		PrintWriter printWriter = null;
-		String areaCode = null;
+		Map<String, Object> params = new HashMap<String, Object>();
 		if (s != null) {
-			areaCode = s.getAreaCode();
+			params.put("areaCode", s.getAreaCode());
+			params.put("loginName", s.getLoginName());
 		}
-		JSONArray jsonArray = systemServiceInterface.getExpressStatisticalArea(areaCode);
+		JSONArray jsonArray = systemServiceInterface.getExpressStatisticalArea(params);
 		try 
 		{
 			response.setCharacterEncoding("utf-8");          

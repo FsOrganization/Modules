@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fla.common.dao.interfaces.UserRoleDaoInterface">
+	
+	<select id="getRoleMenuListByUserId" parameterType="java.util.Map" resultType="com.fla.common.entity.SysMenu">
+       SELECT
+       		distinct C.ID id,
+            C.NAME name,
+			C.TITLE title,
+			C.STATUS status,
+			C.LEVEL level,
+			C.DISPLAY_ORDER displayOrder,
+			C.URL url,
+			C.CODE code,
+			C.CLASS_NAME className,
+			C.ICON icon,
+			C.PARENT_ID parentId,
+			C.CREATED_TIME createdTime,
+			C.CREATED_OPERATOR createdOperator,
+			C.LAST_DATE lastDate,
+			C.LAST_OPERATOR lastOperator,
+			C.ABSTRACT_LEVEL abstractLevel,
+			C.REMARK remark
+	   FROM TF_ROLE_MENU A
+	   LEFT JOIN TF_USER_ROLE B ON B.ROLE_ID = A.ROLE_ID
+	   LEFT JOIN TF_MENU C ON C.ID = A.MENU_ID
+	   <where> 
+	    <if test="userId != null and userId != '' ">
+	         B.USER_ID = #{userId,jdbcType=NUMERIC}
+	    </if>
+	    <if test="level != null and level != '' ">
+	         AND LEVEL = #{level}
+	    </if>
+	  </where>
+	  ORDER BY DISPLAY_ORDER
+    </select>
+    
+    <select id="getRoleMenuListByParentId" parameterType="java.util.Map" resultType="com.fla.common.entity.SysMenu">
+       SELECT
+       		distinct C.ID id,
+            C.NAME name,
+			C.TITLE title,
+			C.STATUS status,
+			C.LEVEL level,
+			C.DISPLAY_ORDER displayOrder,
+			C.URL url,
+			C.CODE code,
+			C.CLASS_NAME className,
+			C.ICON icon,
+			C.PARENT_ID parentId,
+			C.CREATED_TIME createdTime,
+			C.CREATED_OPERATOR createdOperator,
+			C.LAST_DATE lastDate,
+			C.LAST_OPERATOR lastOperator,
+			C.ABSTRACT_LEVEL abstractLevel,
+			C.REMARK remark
+	   FROM TF_ROLE_MENU A
+	   LEFT JOIN TF_USER_ROLE B ON B.ROLE_ID = A.ROLE_ID
+	   LEFT JOIN TF_MENU C ON C.ID = A.MENU_ID
+	   <where> 
+	    <if test="userId != null and userId != '' ">
+	         B.USER_ID = #{userId}
+	    </if>
+	    <if test="parentId != null and parentId != '' ">
+	         AND C.PARENT_ID = #{parentId}
+	    </if>
+	    <if test="status != null and status != '' ">
+	         AND C.STATUS = #{status}
+	    </if>
+	  </where>
+	  ORDER BY DISPLAY_ORDER
+    </select>
+    
+    <select id="getUserRoleList" parameterType="java.util.Map" resultType="com.fla.common.entity.SysUserRole">
+      SELECT
+            ur.ID id,
+			ur.USER_ID userId,
+			su.NICK_NAME nickName,
+			su.LOGIN_NAME loginName,
+			ur.ROLE_ID roleId,
+			TR.NAME roleName,
+			ur.AREA_CODE areaCode,
+			ur.STATUS status,
+			ur.CODE code,
+			ur.LIMIT_PURVIEW limitPurview,
+			ur.LIMIT_CODE limitCode,
+			ur.START_DATE startDate,
+			ur.END_DATE endDate,
+			ur.REMARK remark
+		FROM TF_USER_ROLE ur
+		LEFT JOIN TF_SYSTEM_USER SU ON SU.ID = UR.USER_ID
+		LEFT JOIN TF_ROLE TR ON TR.ID = UR.ROLE_ID
+       <where>
+       	<if test="userId != null">
+	        USER_ID = #{userId}
+	    </if>
+	    <if test="roleId != null">
+	        ROLE_ID = #{roleId}
+	    </if>
+	    <if test="status != null">
+	        AND STATUS = #{status}
+	    </if>
+	  </where>
+	  ORDER BY ID
+    </select>
+    
+    <delete id="deleteUserRole" parameterType="java.util.Map">
+    	DELETE FROM TF_USER_ROLE WHERE ROLE_ID =#{roleId} AND USER_ID = #{userId} and ID= #{id}
+    </delete>
+	
+	<select id="getRoleList" parameterType="java.util.Map" resultType="com.fla.common.entity.SystemRole">
+      SELECT
+            ID id,
+			NAME name,
+			TITLE title,
+			STATUS status,
+			DISPLAY_ORDER displayOrder,
+			CODE code,
+			PARENT_ID parentId,
+			CREATED_TIME createdTime,
+			CREATED_OPERATOR createdOperator,
+			LAST_DATE lastDate,
+			LAST_OPERATOR lastOperator,
+			REMARK remark
+		FROM TF_ROLE
+       <where>
+		<if test="name != null and name != '' and name !='undefined' ">
+	        AND NAME = #{name}
+	    </if>
+	  </where>
+	  ORDER BY DISPLAY_ORDER
+    </select>
+    
+    <select id="getUserList" parameterType="java.util.Map" resultType="com.fla.common.entity.SystemUser">
+      SELECT
+            STU.ID id,
+			STU.LOGIN_NAME loginName,
+			STU.PASSWORD password,
+			STU.AREA_CODE areaCode,
+			TA.NAME areaName,
+			STU.NICK_NAME nickName,
+			STU.SERVICE_SHOP_CODE serviceShopCode,
+			TSI.NAME shopName,
+			STU.REMARK remark,
+			STU.TYPE type,
+			STU.PHONE_NUMBER phoneNumber,
+			STU.USER_MODE userMode,
+			STU.OPEN_IM openIm,
+			STU.CREATE_DATE createDate,
+			STU.VERSION version
+		FROM TF_SYSTEM_USER STU
+		LEFT JOIN TF_SHOP_INFO TSI ON TSI.SHOP_CODE = STU.SERVICE_SHOP_CODE
+		LEFT JOIN TF_AREA_INFO TA ON TA.CODE = STU. AREA_CODE
+       <where>
+       	<if test="nickName != null and nickName != '' and nickName !='undefined' ">
+	        NICK_NAME = #{nickName}
+	    </if>
+	  </where>
+	  ORDER BY ID
+    </select>
+    
+    <insert id="addUserRole" parameterType="java.util.Map">
+	    INSERT INTO TF_USER_ROLE(
+			USER_ID,
+			ROLE_ID,
+			AREA_CODE,
+			STATUS,
+			CODE,
+			LIMIT_PURVIEW,
+			LIMIT_CODE,
+			START_DATE,
+			END_DATE,
+			REMARK
+		) values (
+			#{userId,jdbcType=INTEGER},
+			#{roleId,jdbcType=INTEGER},
+			#{areaCode,jdbcType=VARCHAR},
+			#{status,jdbcType=VARCHAR},
+			#{code,jdbcType=VARCHAR},
+			#{limitPurview,jdbcType=VARCHAR},
+			#{limitCode,jdbcType=VARCHAR},
+			#{startDate,jdbcType=DATE},
+			#{endDate,jdbcType=DATE},
+			#{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="checkUserRoleCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+      SELECT count(*) FROM TF_USER_ROLE
+       <where>
+		<if test="userId != null and userId != '' ">
+	        USER_ID = #{userId}
+	    </if>
+	    <if test="roleId != null and roleId != '' ">
+	        AND ROLE_ID = #{roleId}
+	    </if>
+	  </where>
+    </select>
+    
+</mapper>

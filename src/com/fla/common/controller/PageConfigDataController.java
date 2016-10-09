@@ -4,17 +4,22 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
+
 import com.fla.common.base.SuperController;
 import com.fla.common.entity.SystemUser;
 import com.fla.common.service.interfaces.LoginServiceInterface;
@@ -218,13 +223,14 @@ public class PageConfigDataController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/pageconfig/getServiceShopName.light")
 	public void getServiceShopName(HttpServletRequest request,HttpServletResponse response) {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		PrintWriter printWriter = null;
-		String areaCode = null;
-		if (s != null) {
-			areaCode = s.getAreaCode();
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		Map<String, String> params =  new HashMap<String, String>();
+		params.put("loginName", s.getLoginName());
+		if (!s.getLoginName().equals("admin")) {
+			params.put("areaCode", s.getAreaCode());
 		}
-		JSONArray jsonArray = systemServiceInterface.getShopInfoList(0, 0, null);
+		JSONArray jsonArray = systemServiceInterface.getShopInfoList(0, 0, params);
 		try 
 		{
 			response.setCharacterEncoding("utf-8");          

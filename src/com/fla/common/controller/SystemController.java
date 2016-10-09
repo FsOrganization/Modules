@@ -76,11 +76,12 @@ public class SystemController extends SuperController {
 
 	@ResponseBody
 	@RequestMapping("/pages/system/getAreaInfoForSelect.light")
-	public ModelAndView getAreaInfoForSelect(HttpServletRequest request,
-			HttpServletResponse response) {
+	public ModelAndView getAreaInfoForSelect(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, String> params = new HashMap<String, String>();
-		JSONArray jsonArray = systemServiceInterface
-				.getAreaInfoForSelect(params);
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		params.put("areaCode", s.getAreaCode());
+		params.put("loginName", s.getLoginName());
+		JSONArray jsonArray = systemServiceInterface.getAreaInfoForSelect(params);
 		PrintWriter printWriter = null;
 		try {
 			response.setCharacterEncoding("utf-8");
@@ -101,8 +102,10 @@ public class SystemController extends SuperController {
 	public ModelAndView getShopInfoForSelect(HttpServletRequest request,
 			HttpServletResponse response) {
 		Map<String, String> params = new HashMap<String, String>();
-		JSONArray jsonArray = systemServiceInterface
-				.getShopInfoForSelect(params);
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		params.put("areaCode", s.getAreaCode());
+		params.put("loginName", s.getLoginName());
+		JSONArray jsonArray = systemServiceInterface.getShopInfoForSelect(params);
 		PrintWriter printWriter = null;
 		try {
 			response.setCharacterEncoding("utf-8");
@@ -123,8 +126,7 @@ public class SystemController extends SuperController {
 	public ModelAndView getShopInfoForSelectForWechat(
 			HttpServletRequest request, HttpServletResponse response) {
 		Map<String, String> params = new HashMap<String, String>();
-		JSONArray jsonArray = systemServiceInterface
-				.getSpecialShopInfoForSelect(params);
+		JSONArray jsonArray = systemServiceInterface.getSpecialShopInfoForSelect(params);
 		PrintWriter printWriter = null;
 		try {
 			response.setCharacterEncoding("utf-8");
@@ -155,8 +157,12 @@ public class SystemController extends SuperController {
 			pageSize = Integer.valueOf(page);
 		}
 		Map<String, String> params = new HashMap<String, String>();
-		JSONArray jsonArray = systemServiceInterface.getShopInfoList(rowSize,
-				pageSize, params);
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		params.put("loginName", s.getLoginName());
+		if (!s.getLoginName().equals("admin")) {
+			params.put("areaCode", s.getAreaCode());
+		}
+		JSONArray jsonArray = systemServiceInterface.getShopInfoList(rowSize,pageSize, params);
 		PrintWriter printWriter = null;
 		try {
 			response.setCharacterEncoding("utf-8");
@@ -174,8 +180,7 @@ public class SystemController extends SuperController {
 
 	@ResponseBody
 	@RequestMapping("/pages/system/getUserInfoList.light")
-	public void getUserInfoList(HttpServletRequest request,
-			HttpServletResponse response) {
+	public void getUserInfoList(HttpServletRequest request, HttpServletResponse response) {
 		String rows = request.getParameter("rows");
 		String page = request.getParameter("page");
 		int rowSize = 0;
@@ -186,7 +191,12 @@ public class SystemController extends SuperController {
 		if (page != null) {
 			pageSize = Integer.valueOf(page);
 		}
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		Map<String, String> params = new HashMap<String, String>();
+		params.put("loginName", s.getLoginName());
+		if (!s.getLoginName().equals("admin")) {
+			params.put("areaCode", s.getAreaCode());
+		}
 		JSONArray jsonArray = systemServiceInterface.getUserInfoList(rowSize,
 				pageSize, params);
 		PrintWriter printWriter = null;
@@ -196,7 +206,7 @@ public class SystemController extends SuperController {
 			printWriter = response.getWriter();
 			printWriter.write(jsonArray.toString());
 		} catch (IOException e) {
-
+			e.printStackTrace();
 		} finally {
 			printWriter.flush();
 			printWriter.close();
@@ -558,8 +568,7 @@ public class SystemController extends SuperController {
 	@RequestMapping("/pages/system/queryAreaInfos.light")
 	public ModelAndView queryAreaInfos(String queryParams,
 			HttpServletRequest request, HttpServletResponse response) {
-		SystemUser s = (SystemUser) request.getSession().getAttribute(
-				"systemUser");
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
 		if (s == null) {
 			return JumpModelAndView();
 		}

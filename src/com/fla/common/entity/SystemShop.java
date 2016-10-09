@@ -4,10 +4,13 @@ import java.io.Serializable;
 
 import org.springframework.stereotype.Service;
 
-@Service
+import com.fla.common.base.PrimaryKey;
+
 public class SystemShop implements Serializable{
 
 	private static final long serialVersionUID = -6842795270336937771L;
+	
+	@PrimaryKey
 	private Integer id ;
 	private String shopCode;
 	private String name;

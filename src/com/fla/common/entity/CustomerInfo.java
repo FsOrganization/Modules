@@ -5,17 +5,17 @@ package com.fla.common.entity;
 
 import java.io.Serializable;
 
+import com.fla.common.base.PrimaryKey;
+
 /**
  * @author Administrator
  *
  */
 public class CustomerInfo implements Serializable{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -6380837878276571351L;
 	
+	@PrimaryKey
 	private Integer id;
 	private String name;
 	private String phoneNumber;

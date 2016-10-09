@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,11 +35,14 @@ import org.springframework.web.servlet.view.InternalResourceView;
 
 import com.fla.common.base.SuperController;
 import com.fla.common.entity.ExpressInfo;
+import com.fla.common.entity.SysMenu;
 import com.fla.common.entity.SystemUser;
 import com.fla.common.service.interfaces.LoginServiceInterface;
+import com.fla.common.service.interfaces.MenuServiceInterface;
 import com.fla.common.service.interfaces.MsgServiceInterface;
 import com.fla.common.service.interfaces.ScanneServiceInterface;
 import com.fla.common.service.interfaces.SystemServiceInterface;
+import com.fla.common.service.interfaces.UserRoleServiceInterface;
 import com.fla.common.util.MD5Utils;
 
 @Controller
@@ -48,6 +52,12 @@ public class LoginController extends SuperController{
 	
 	@Autowired
 	private ScanneServiceInterface scanneService;
+	
+	@Autowired
+	private MenuServiceInterface menuService;
+	
+	@Autowired
+	private UserRoleServiceInterface userRoleService;
 	
 	@Autowired
 	public MsgServiceInterface msgService;
@@ -129,15 +139,16 @@ public class LoginController extends SuperController{
 				}else {
 					request.getSession().setAttribute("msgTag", false);
 				}
-				String lateFeeLimitUpper = (String) request.getSession().getAttribute("lateFeeLimitUpper");
-				if (lateFeeLimitUpper == null || lateFeeLimitUpper.trim().equals("")) {
-					Map<String,JSONObject> tmp = systemServiceInterface.getAllConfigValues(null);
-					JSONObject jtmp = tmp.get("8");
-					lateFeeLimitUpper = jtmp.get("VAlUE").toString();
-					request.getSession().setAttribute("lateFeeLimitUpper", lateFeeLimitUpper);
-				}
-				model.addObject("lateFeeLimitUpper", lateFeeLimitUpper);
-				
+//				String lateFeeLimitUpper = (String) request.getSession().getAttribute("lateFeeLimitUpper");
+//				if (lateFeeLimitUpper == null || lateFeeLimitUpper.trim().equals("")) {
+//					Map<String,JSONObject> tmp = systemServiceInterface.getAllConfigValues(null);
+//					JSONObject jtmp = tmp.get("8");
+//					lateFeeLimitUpper = jtmp.get("VAlUE").toString();
+//					request.getSession().setAttribute("lateFeeLimitUpper", lateFeeLimitUpper);
+//				}
+//				model.addObject("lateFeeLimitUpper", lateFeeLimitUpper);
+				List<SysMenu> mList = getMenu(request);
+		 		model.addObject("sysMainMenuList", mList);
 			}
 		} else {
 			iv = new InternalResourceView("/pages/login.jsp");
@@ -146,16 +157,72 @@ public class LoginController extends SuperController{
 			model.addObject("msgType", "-1");
 		}
 		model.addObject("time", System.currentTimeMillis());
-		
-//		ModelAndView() 常用来面跳转
-//		ModelAndview(String viewName)  跳转到viewName.suffix页面，可以使用addObject(Object obj)来添加
-//		ModelandView(View view) 返回一个视图页面：
-//		return new ModelAndView(new InternalResourceView("/WEB-INF/web/show.jsp"))，这样就无需配置ViewResolver了
-//		ModelAndView(String viewName, Map model) 返回一个视图，并将Map值显示在视图上
-//		Modelandview(View view, Map model) 
-//		ModelAndView(String viewName, String modelName, Object modelObject) 跳转到viewName.jsp页面，并将modelObject对象封装到modelName中，引用${modelName}就可以直接引用userName了。
-//		ModelAndView(View view, String modelName, Object modelobject) /
 		return model;
+	}
+	
+	private List<SysMenu> getMenu(HttpServletRequest request){
+		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		Integer userId = s.getId();
+		List<SysMenu> mList = null;
+		if (s.getLoginName().equals("admin")) {
+			SysMenu ss = new SysMenu(); 
+			ss.setLevel(1);
+			mList = menuService.getMainLevelMenuList(ss);
+			Map<String,Object> params = new HashMap<String,Object>(2);
+	 		for (SysMenu sm : mList) {
+	 			params.put("parentId", sm.getId());
+	 			params.put("status", "Y");
+	 			List<SysMenu> childNodes = menuService.getMenuListByParentId(params);
+	 			for (SysMenu cNode : childNodes) {
+	 				Map<String,Object> params2 = new HashMap<String,Object>(2);
+	 				params2.put("parentId", cNode.getId());
+	 				params2.put("status", "Y");
+	 				List<SysMenu> cNodeChildNodes = menuService.getMenuListByParentId(params2);
+	 				cNode.setChildSysMenuNodes(cNodeChildNodes);
+				}
+	 			sm.setChildSysMenuNodes(childNodes);
+			}
+		} else {
+			Map<String,Object> smMap = new HashMap<String,Object>(2);
+			smMap.put("userId", userId);
+			smMap.put("level", 1);
+			mList = userRoleService.getRoleMenuListByUserId(smMap);
+			Map<String,Object> params = new HashMap<String,Object>(2);
+	 		for (SysMenu sm : mList) {
+	 			params.put("parentId", sm.getId());
+	 			params.put("userId", userId);
+	 			params.put("status", "Y");
+	 			init(request, sm);
+	 			List<SysMenu> childNodes = userRoleService.getRoleMenuListByParentId(params);
+	 			for (SysMenu cNode : childNodes) {
+	 				Map<String,Object> params2 = new HashMap<String,Object>(2);
+	 				params2.put("parentId", cNode.getId());
+	 				params2.put("userId", userId);
+	 				params2.put("status", "Y");
+	 				init(request, cNode);
+	 				List<SysMenu> cNodeChildNodes = userRoleService.getRoleMenuListByParentId(params2);
+	 				cNode.setChildSysMenuNodes(cNodeChildNodes);
+				}
+	 			sm.setChildSysMenuNodes(childNodes);
+			}
+		}
+ 		return mList;
+	}
+	
+	private  void init(HttpServletRequest request,SysMenu menu) {
+		String lateFeeLimitUpper = (String) request.getSession().getAttribute("lateFeeLimitUpper");
+		if (lateFeeLimitUpper == null || lateFeeLimitUpper.trim().equals("")) {
+			Map<String,JSONObject> tmp = systemServiceInterface.getAllConfigValues(null);
+			JSONObject jtmp = tmp.get("8");
+			lateFeeLimitUpper = jtmp.get("VAlUE").toString();
+			request.getSession().setAttribute("lateFeeLimitUpper", lateFeeLimitUpper);
+		}
+		String url = menu.getUrl();
+		String tag = "${lateFeeLimitUpper}";
+		if (url.contains(tag)) {
+			menu.setUrl(url.replace(tag, lateFeeLimitUpper));
+		}
+		
 	}
 	
 	@ResponseBody

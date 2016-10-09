@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fla.common.dao.interfaces.RoleDaoInterface">
+	
+	<select id="findEntity" parameterType="com.fla.common.entity.SystemRole" resultType="com.fla.common.entity.SystemRole">
+       SELECT
+            ID id,
+			NAME name,
+			TITLE title,
+			STATUS status,
+			DISPLAY_ORDER displayOrder,
+			CODE code,
+			PARENT_ID parentId,
+			CREATED_TIME createdTime,
+			CREATED_OPERATOR createdOperator,
+			LAST_DATE lastDate,
+			LAST_OPERATOR lastOperator,
+			REMARK remark
+		FROM TF_ROLE
+       WHERE ID = #{id,jdbcType=NUMERIC}
+    </select>
+    
+    <select id="findEntityList" parameterType="java.util.Map" resultType="com.fla.common.entity.SystemRole">
+      SELECT
+            ID id,
+			NAME name,
+			TITLE title,
+			STATUS status,
+			DISPLAY_ORDER displayOrder,
+			CODE code,
+			PARENT_ID parentId,
+			CREATED_TIME createdTime,
+			CREATED_OPERATOR createdOperator,
+			LAST_DATE lastDate,
+			LAST_OPERATOR lastOperator,
+			REMARK remark
+		FROM TF_ROLE
+       <where> 
+	    <if test="name != null">
+	         NAME like '%'#{name}'%'
+	    </if>
+	    <if test="title != null">
+	        AND TITLE like '%'#{title}'%'
+	    </if>
+	    <if test="status != null">
+	        AND STATUS = #{status}
+	    </if>
+	  </where>
+	  ORDER BY DISPLAY_ORDER
+    </select>
+    
+    <select id="getMenuListByRoleId" parameterType="java.util.Map" resultType="java.lang.Integer">
+      SELECT MENU_ID menuId FROM TF_ROLE_MENU where ROLE_ID = #{roleId}
+    </select>
+    
+    <select id="getSysRoleList" parameterType="java.util.Map" resultType="com.fla.common.entity.SystemRole">
+       SELECT
+            ID id,
+			NAME name,
+			TITLE title,
+			STATUS status,
+			DISPLAY_ORDER displayOrder,
+			CODE code,
+			PARENT_ID parentId,
+			CREATED_TIME createdTime,
+			CREATED_OPERATOR createdOperator,
+			LAST_DATE lastDate,
+			LAST_OPERATOR lastOperator,
+			REMARK remark
+		FROM TF_ROLE
+       <where> 
+	    <if test="name != null">
+	         NAME like '%'#{name}'%'
+	    </if>
+	    <if test="title != null">
+	        AND TITLE like '%'#{title}'%'
+	    </if>
+	    <if test="status != null">
+	        AND STATUS = #{status}
+	    </if>
+	  </where>
+	  ORDER BY DISPLAY_ORDER
+    </select>
+    
+    <select id="findEntityListForPages" parameterType="com.fla.common.entity.SystemRole" resultType="com.fla.common.entity.SystemRole">
+       SELECT
+            ID id,
+			NAME name,
+			TITLE title,
+			STATUS status,
+			DISPLAY_ORDER displayOrder,
+			CODE code,
+			PARENT_ID parentId,
+			CREATED_TIME createdTime,
+			CREATED_OPERATOR createdOperator,
+			LAST_DATE lastDate,
+			LAST_OPERATOR lastOperator,
+			REMARK remark
+		FROM TF_ROLE
+       <where> 
+	    <if test="name != null">
+	         NAME like '%'#{name}'%'
+	    </if>
+	    <if test="title != null">
+	        AND TITLE like '%'#{title}'%'
+	    </if>
+	    <if test="status != null">
+	        AND STATUS = #{status}
+	    </if>
+	  </where>
+	  ORDER BY DISPLAY_ORDER
+    </select>
+    
+    <insert id="addMenuInRole" parameterType="com.fla.common.entity.SysRoleMenu" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO TF_ROLE_MENU (
+			ID,
+			ROLE_ID,
+			MENU_ID,
+			STATUS,
+			CODE,
+			PARENT_ID,
+			START_DATE,
+			END_DATE,
+			REMARK
+		) values (
+			#{id,jdbcType=INTEGER},
+			#{roleId,jdbcType=INTEGER},
+			#{menuId,jdbcType=INTEGER},
+			#{status,jdbcType=VARCHAR},
+			#{code,jdbcType=VARCHAR},
+			#{parentId,jdbcType=INTEGER},
+			#{startDate,jdbcType=DATE},
+			#{endDate,jdbcType=DATE},
+			#{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+    
+	<insert id="insert" parameterType="com.fla.common.entity.SystemRole" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO TF_ROLE (
+			ID,
+			NAME,
+			TITLE,
+			STATUS,
+			DISPLAY_ORDER,
+			CODE,
+			PARENT_ID,
+			CREATED_TIME,
+			CREATED_OPERATOR,
+			LAST_DATE,
+			LAST_OPERATOR,
+			REMARK
+		) values (
+			#{id,jdbcType=INTEGER},
+			#{name,jdbcType=VARCHAR},
+			#{title,jdbcType=VARCHAR},
+			#{status,jdbcType=VARCHAR},
+			#{displayOrder,jdbcType=INTEGER},
+			#{code,jdbcType=VARCHAR},
+			#{parentId,jdbcType=INTEGER},
+			#{createdTime,jdbcType=DATE},
+			#{createdOperator,jdbcType=VARCHAR},
+			#{lastDate,jdbcType=VARCHAR},
+			#{lastOperator,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+    
+    <update id="update" parameterType="com.fla.common.entity.SystemRole">
+        UPDATE TF_ROLE
+        SET
+			<if test="name != null and name != '' ">NAME=#{name},</if>
+			<if test="title != null and title != '' ">TITLE=#{title},</if>
+			<if test="status != null and status != '' ">STATUS=#{status},</if>
+			<if test="displayOrder != null and displayOrder != '' ">DISPLAY_ORDER=#{displayOrder},</if>
+			<if test="code != null and code != '' ">CODE=#{code},</if>
+			<if test="parentId != null and parentId != '' ">PARENT_ID=#{parentId},</if>
+			<if test="createdTime != null and createdTime != '' ">CREATED_TIME=#{createdTime},</if>
+			<if test="createdOperator != null and createdOperator != '' ">CREATED_OPERATOR=#{createdOperator},</if>
+			<if test="lastDate != null and lastDate != '' ">LAST_DATE=#{lastDate},</if>
+			<if test="lastOperator != null and lastOperator != '' ">LAST_OPERATOR=#{lastOperator}</if>
+        WHERE ID = #{id,jdbcType=NUMERIC}
+    </update>
+    
+    <delete id="menuOutRole" parameterType="com.fla.common.entity.SysRoleMenu">
+    	DELETE FROM TF_ROLE_MENU WHERE ROLE_ID =#{roleId} AND MENU_ID = #{menuId}
+    </delete>
+    
+</mapper>

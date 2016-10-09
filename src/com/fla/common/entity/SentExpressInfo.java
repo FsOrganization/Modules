@@ -5,6 +5,8 @@ package com.fla.common.entity;
 
 import java.io.Serializable;
 
+import com.fla.common.base.PrimaryKey;
+
 /**
  * @author Administrator
  *
@@ -13,6 +15,7 @@ public class SentExpressInfo implements Serializable{
 
 	private static final long serialVersionUID = 568085310411718606L;
 	
+	@PrimaryKey
 	private Integer id;
     private String logistics;
     private String code;

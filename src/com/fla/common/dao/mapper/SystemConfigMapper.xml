@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fla.common.dao.interfaces.SystemConfigDaoInterface">
+    
+    <select id="getSystemConfigList" parameterType="java.util.Map" resultType="com.fla.common.entity.SystemConfig">
+      SELECT
+            ID id,
+			CONFIG_ID configId,
+			VAlUE value,
+			VAlUE_TYPE valueType,
+			CONFIG_CODE configCode,
+			CONFIG_NAME configName,
+			ORDER_NUMBER orderNumber,
+			REMARK remark,
+			STATUS status,
+			SERVICE_SHOP_CODE serviceShopCode
+		FROM TF_SYSTEM_CONFIG_VALUES
+       <where>
+       	<if test="configName != null and configName != '' ">
+	        CONFIG_NAME = #{configName}
+	    </if>
+	    <if test="status != null and status != '' ">
+	        AND STATUS = #{status}
+	    </if>
+	  </where>
+	  ORDER BY ID
+    </select>
+    
+    <insert id="addUserRole" parameterType="java.util.Map">
+	    INSERT INTO TF_USER_ROLE(
+			USER_ID,
+			ROLE_ID,
+			AREA_CODE,
+			STATUS,
+			CODE,
+			LIMIT_PURVIEW,
+			LIMIT_CODE,
+			START_DATE,
+			END_DATE,
+			REMARK
+		) values (
+			#{userId,jdbcType=INTEGER},
+			#{roleId,jdbcType=INTEGER},
+			#{areaCode,jdbcType=VARCHAR},
+			#{status,jdbcType=VARCHAR},
+			#{code,jdbcType=VARCHAR},
+			#{limitPurview,jdbcType=VARCHAR},
+			#{limitCode,jdbcType=VARCHAR},
+			#{startDate,jdbcType=DATE},
+			#{endDate,jdbcType=DATE},
+			#{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+    
+</mapper>

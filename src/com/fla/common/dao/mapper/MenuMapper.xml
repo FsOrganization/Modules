@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fla.common.dao.interfaces.MenuDaoInterface">
+	
+	<select id="findEntity" parameterType="com.fla.common.entity.SysMenu" resultType="com.fla.common.entity.SysMenu">
+       SELECT
+            ID id,
+			NAME name,
+			TITLE title,
+			STATUS status,
+			LEVEL level,
+			DISPLAY_ORDER displayOrder,
+			URL url,
+			CODE code,
+			CLASS_NAME className,
+			ICON icon,
+			PARENT_ID parentId,
+			CREATED_TIME createdTime,
+			CREATED_OPERATOR createdOperator,
+			LAST_DATE lastDate,
+			LAST_OPERATOR lastOperator,
+			ABSTRACT_LEVEL abstractLevel,
+			REMARK remark
+	   FROM TF_MENU
+       WHERE ID = #{id,jdbcType=NUMERIC}
+    </select>
+    
+    <select id="getMainLevelMenuList" parameterType="com.fla.common.entity.SysMenu" resultType="com.fla.common.entity.SysMenu">
+       SELECT
+            ID id,
+			NAME name,
+			TITLE title,
+			STATUS status,
+			LEVEL level,
+			DISPLAY_ORDER displayOrder,
+			URL url,
+			CODE code,
+			CLASS_NAME className,
+			ICON icon,
+			PARENT_ID parentId,
+			CREATED_TIME createdTime,
+			CREATED_OPERATOR createdOperator,
+			LAST_DATE lastDate,
+			LAST_OPERATOR lastOperator,
+			ABSTRACT_LEVEL abstractLevel,
+			REMARK remark
+		FROM TF_MENU
+       <where> 
+	    <if test="level != null and level != '' ">
+	         LEVEL = #{level}
+	    </if>
+	  </where>
+	  ORDER BY DISPLAY_ORDER
+    </select>
+    
+    <select id="getAbstractMenuList" parameterType="com.fla.common.entity.SysMenu" resultType="com.fla.common.entity.SysMenu">
+       SELECT
+            ID id,
+			NAME name,
+			TITLE title,
+			STATUS status,
+			LEVEL level,
+			DISPLAY_ORDER displayOrder,
+			URL url,
+			CODE code,
+			CLASS_NAME className,
+			ICON icon,
+			PARENT_ID parentId,
+			CREATED_TIME createdTime,
+			CREATED_OPERATOR createdOperator,
+			LAST_DATE lastDate,
+			LAST_OPERATOR lastOperator,
+			ABSTRACT_LEVEL abstractLevel,
+			REMARK remark
+		FROM TF_MENU
+       <where> 
+	    <if test="abstractLevel != null and abstractLevel != '' ">
+	         ABSTRACT_LEVEL = #{abstractLevel}
+	    </if>
+	     <if test="parentId != null and parentId != '' ">
+	         AND PARENT_ID = #{parentId}
+	    </if>
+	    <if test="status != null and status != '' ">
+	         AND STATUS = #{status}
+	    </if>
+	  </where>
+	  ORDER BY DISPLAY_ORDER
+    </select>
+    
+    <select id="getMenuListByParentId" parameterType="java.util.Map" resultType="com.fla.common.entity.SysMenu">
+       SELECT
+            ID id,
+			NAME name,
+			TITLE title,
+			STATUS status,
+			LEVEL level,
+			DISPLAY_ORDER displayOrder,
+			URL url,
+			CODE code,
+			CLASS_NAME className,
+			ICON icon,
+			PARENT_ID parentId,
+			CREATED_TIME createdTime,
+			CREATED_OPERATOR createdOperator,
+			LAST_DATE lastDate,
+			LAST_OPERATOR lastOperator,
+			ABSTRACT_LEVEL abstractLevel,
+			REMARK remark
+		FROM TF_MENU
+       <where> 
+	    <if test="parentId != null and parentId != '' ">
+	         PARENT_ID = #{parentId}
+	    </if>
+	    <if test="status != null and status != '' ">
+	         AND STATUS = #{status}
+	    </if>
+	  </where>
+    </select>
+    
+    <select id="findEntityList" parameterType="com.fla.common.entity.SysMenu" resultType="com.fla.common.entity.SysMenu">
+       SELECT
+            ID id,
+			NAME name,
+			TITLE title,
+			STATUS status,
+			LEVEL level,
+			DISPLAY_ORDER displayOrder,
+			URL url,
+			CODE code,
+			CLASS_NAME className,
+			ICON icon,
+			PARENT_ID parentId,
+			CREATED_TIME createdTime,
+			CREATED_OPERATOR createdOperator,
+			LAST_DATE lastDate,
+			LAST_OPERATOR lastOperator,
+			ABSTRACT_LEVEL abstractLevel,
+			REMARK remark
+		FROM TF_MENU
+       <where> 
+	    <if test="name != null">
+	         NAME like '%'#{name}'%'
+	    </if>
+	    <if test="title != null">
+	        AND TITLE like '%'#{title}'%'
+	    </if>
+	    <if test="parentId != null">
+	        AND PARENT_ID = #{parentId}
+	    </if>
+	  </where>
+	  ORDER BY DISPLAY_ORDER
+    </select>
+    
+    <select id="getSysMenuList" parameterType="java.util.Map" resultType="com.fla.common.entity.SysMenu">
+       SELECT
+            ID id,
+			NAME name,
+			TITLE title,
+			STATUS status,
+			LEVEL level,
+			DISPLAY_ORDER displayOrder,
+			URL url,
+			CODE code,
+			CLASS_NAME className,
+			ICON icon,
+			PARENT_ID parentId,
+			CREATED_TIME createdTime,
+			CREATED_OPERATOR createdOperator,
+			LAST_DATE lastDate,
+			LAST_OPERATOR lastOperator,
+			ABSTRACT_LEVEL abstractLevel,
+			REMARK remark
+		FROM TF_MENU
+       <where> 
+	    <if test="name != null">
+	         NAME like '%'#{name}'%'
+	    </if>
+	    <if test="title != null">
+	        AND TITLE like '%'#{title}'%'
+	    </if>
+	    <if test="parentId != null">
+	        AND PARENT_ID = #{parentId}
+	    </if>
+	  </where>
+	  ORDER BY DISPLAY_ORDER
+    </select>
+    
+    <select id="findEntityListForPages" parameterType="com.fla.common.entity.SysMenu" resultType="com.fla.common.entity.SysMenu">
+       SELECT
+            ID id,
+			NAME name,
+			TITLE title,
+			STATUS status,
+			LEVEL level,
+			DISPLAY_ORDER displayOrder,
+			URL url,
+			CODE code,
+			CLASS_NAME className,
+			ICON icon,
+			PARENT_ID parentId,
+			CREATED_TIME createdTime,
+			CREATED_OPERATOR createdOperator,
+			LAST_DATE lastDate,
+			LAST_OPERATOR lastOperator,
+			ABSTRACT_LEVEL abstractLevel,
+			REMARK remark
+		FROM TF_MENU
+       <where> 
+	    <if test="name != null">
+	         NAME like '%'#{name}'%'
+	    </if>
+	    <if test="title != null">
+	        AND TITLE like '%'#{title}'%'
+	    </if>
+	    <if test="parentId != null">
+	        AND PARENT_ID = #{parentId}
+	    </if>
+	  </where>
+	  ORDER BY DISPLAY_ORDER
+    </select>
+    
+	<insert id="insert" parameterType="com.fla.common.entity.SysMenu" useGeneratedKeys="true" keyProperty="id">
+          INSERT INTO TF_MENU (
+			NAME,
+			TITLE,
+			STATUS,
+			LEVEL,
+			DISPLAY_ORDER,
+			URL,
+			CODE,
+			CLASS_NAME,
+			ICON,
+			PARENT_ID,
+			CREATED_TIME,
+			CREATED_OPERATOR,
+			LAST_DATE,
+			LAST_OPERATOR,
+			ABSTRACT_LEVEL,
+			REMARK
+          ) values (
+			#{name,jdbcType=VARCHAR},
+			#{title,jdbcType=VARCHAR},
+			#{status,jdbcType=VARCHAR},
+			#{level,jdbcType=INTEGER},
+			#{displayOrder,jdbcType=INTEGER},
+			#{url,jdbcType=VARCHAR},
+			#{code,jdbcType=VARCHAR},
+			#{className,jdbcType=VARCHAR},
+			#{icon,jdbcType=VARCHAR},
+			#{parentId,jdbcType=INTEGER},
+			#{createdTime,jdbcType=DATE},
+			#{createdOperator,jdbcType=INTEGER},
+			#{lastDate,jdbcType=DATE},
+			#{lastOperator,jdbcType=INTEGER},
+			#{abstractLevel,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR}
+          )
+    </insert>
+    
+    <update id="update" parameterType="com.fla.common.entity.SysMenu">
+        UPDATE TF_MENU
+        SET
+        	<if test="name != null and name != '' ">
+        		NAME=#{name},
+            </if>
+			<if test="title != null and title != '' ">
+        		TITLE=#{title},
+            </if>
+            <if test="status != null and status != '' ">
+        		STATUS=#{status},
+            </if>
+			<if test="level != null and level != '' ">
+        		LEVEL=#{level},
+            </if>
+			<if test="displayOrder != null and displayOrder != '' ">
+        		DISPLAY_ORDER=#{displayOrder},
+            </if>
+			<if test="url != null">
+        		URL=#{url},
+            </if>
+			<if test="code != null and code != '' ">
+        		CODE=#{code},
+            </if>
+			<if test="className != null and className != '' ">
+        		CLASS_NAME=#{className},
+            </if>
+			<if test="icon != null and icon != '' ">
+        		ICON=#{icon},
+            </if>
+			<if test="parentId != null and parentId != '' ">
+        		PARENT_ID=#{parentId},
+            </if>
+            <if test="abstractLevel != null and abstractLevel != '' ">
+        		ABSTRACT_LEVEL=#{abstractLevel},
+            </if>
+			<if test="remark != null and remark != '' ">
+        		REMARK=#{remark},
+            </if>
+            <if test="lastDate != null and lastDate != '' ">
+        		LAST_DATE=#{lastDate},
+            </if>
+			<if test="lastOperator != null and lastOperator != '' ">
+        		LAST_OPERATOR=#{lastOperator}
+            </if>
+        WHERE ID = #{id,jdbcType=NUMERIC}
+    </update>
+    
+</mapper>

@@ -2,9 +2,8 @@ package com.fla.common.entity;
 
 import java.io.Serializable;
 
-import org.springframework.stereotype.Service;
+import com.fla.common.base.PrimaryKey;
 
-@Service
 public class SystemUser implements Serializable{
 
 	/**
@@ -12,6 +11,7 @@ public class SystemUser implements Serializable{
 	 */
 	private static final long serialVersionUID = -6842795270336937771L;
 
+	@PrimaryKey
 	private Integer id ;
 	private String loginName;
 	private String password;

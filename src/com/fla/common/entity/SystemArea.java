@@ -4,11 +4,14 @@ import java.io.Serializable;
 
 import org.springframework.stereotype.Service;
 
+import com.fla.common.base.PrimaryKey;
+
 @Service
 public class SystemArea implements Serializable{
 
 	private static final long serialVersionUID = -6842795345457771L;
-
+	
+	@PrimaryKey
 	private Integer id ;
 	private String name;
 	private String type;

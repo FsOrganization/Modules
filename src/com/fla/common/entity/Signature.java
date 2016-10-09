@@ -1,11 +1,18 @@
 package com.fla.common.entity;
 
+import java.io.Serializable;
 
-public class Signature {
+import com.fla.common.base.PrimaryKey;
+
+
+public class Signature  implements Serializable {
 	
+	private static final long serialVersionUID = 3614231265071217290L;
+
 	public Signature() {
 	}
-
+	
+	@PrimaryKey
 	private Integer id ;
 	private String logistics;
 	private String batchNumber;

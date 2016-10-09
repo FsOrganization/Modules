@@ -5,6 +5,8 @@ package com.fla.common.entity;
 
 import java.io.Serializable;
 
+import com.fla.common.base.PrimaryKey;
+
 /**
  * @author Administrator
  *
@@ -14,7 +16,7 @@ public class ScanneInfo implements Serializable{
 	
 	private static final long serialVersionUID = -3255484973996909529L;
 	
-	
+	@PrimaryKey
 	private Integer id;
 	private String loginName;
 	private String scanneName ;

@@ -4,11 +4,14 @@ import java.io.Serializable;
 
 import org.springframework.stereotype.Service;
 
+import com.fla.common.base.PrimaryKey;
+
 @Service
 public class ExpressServiceProvider implements Serializable{
 
 	private static final long serialVersionUID = -2012217503726900795L;
 	
+	@PrimaryKey
 	private Integer id; 
 	private String name;
 	private String code;
