@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fla.common.dao.interfaces.BarcodeExpressDaoInterface">
+	
+	<select id="getBarcodeExpressById" parameterType="java.util.Map" resultType="com.fla.common.entity.BarcodeExpress">
+       SELECT
+			ID id,
+			EXPRESS_ID expressId,
+			BAR_CODE barCode,
+			AREA_CODE areaCode,
+			SERVICE_SHOP_CODE serviceShopCode,
+			TIMESTAMP_SPE timestampSpe,
+			OPERA_TIME operaTime,
+			OPERATOR operator,
+			REMARK remark
+		FROM TD_CUSTOMER_BARCODE_SERVICE
+       WHERE ID = #{id,jdbcType=NUMERIC}
+    </select>
+    
+    <select id="checkExpressIdPrint" parameterType="java.util.Map" resultType="java.lang.Integer">
+       SELECT count(*) FROM TD_CUSTOMER_BARCODE_SERVICE WHERE EXPRESS_ID = #{expressId}
+    </select>
+    
+    <select id="getBarcodeExpressList" parameterType="java.util.Map" resultType="com.fla.common.entity.BarcodeExpress">
+       SELECT
+			ID id,
+			EXPRESS_ID expressId,
+			BAR_CODE barCode,
+			AREA_CODE areaCode,
+			SERVICE_SHOP_CODE serviceShopCode,
+			TIMESTAMP_SPE timestampSpe,
+			OPERA_TIME operaTime,
+			OPERATOR operator,
+			REMARK remark
+		FROM TD_CUSTOMER_BARCODE_SERVICE
+       <where> 
+	    <if test="barCode != null and barCode != '' ">
+	         BAR_CODE = #{barCode}
+	    </if>
+	  </where>
+    </select>
+    
+    <select id="getBarcodeExpressByBarCode" parameterType="java.util.Map" resultType="com.fla.common.entity.BarcodeExpress">
+       SELECT
+			ID id,
+			EXPRESS_ID expressId,
+			BAR_CODE barCode,
+			AREA_CODE areaCode,
+			SERVICE_SHOP_CODE serviceShopCode,
+			TIMESTAMP_SPE timestampSpe,
+			OPERA_TIME operaTime,
+			OPERATOR operator,
+			REMARK remark
+		FROM TD_CUSTOMER_BARCODE_SERVICE
+       <where> 
+	    <if test="barCode != null and barCode != '' ">
+	         BAR_CODE = #{barCode}
+	    </if>
+	  </where>
+    </select>
+    
+    <select id="checkOrderPaymentStatus" parameterType="java.util.Map" resultType="java.lang.Integer">
+       SELECT count(*) FROM TD_PAY_LOG WHERE ORDER_ID = #{orderCode} AND STATUS = 'SUCCESS'
+    </select>
+    
+    <select id="getExpressInfoByParams" parameterType="java.util.Map" resultType="com.fla.common.entity.ExpressInfo">
+    	select  DISTINCT A.ID id,
+				A.LOGISTICS logistics,
+				A.CODE code,
+				A.RECIPIENT_NAME recipientName,
+				A.PHONE_NUMBER phoneNumber,
+				A.LANDLINE_NUMBER landlineNumber,
+				A.EXPRESS_SERVICE_ID expressServiceId,
+				A.ADDRESS address,
+				A.REMARK remark,
+				A.BATCH_NUMBER batchNumber,
+				CASE ifnull(B.EXPRESS_ID,'trueDate')
+				WHEN 'trueDate' THEN date_format(A.OPERA_TIME,'%Y-%c-%d %H:%i:%s')
+					ELSE date_format(current_timestamp ,'%Y-%c-%d %H:%i:%s')
+				END operaTime,
+				A.AREA_CODE areaCode,
+				A.SERVICE_SHOP_CODE serviceShopCode,
+				A.OPERATOR operator,
+				A.EXPRESS_lOCATION expressLocation
+		from  TF_EXPRESS_INFO A
+		LEFT JOIN TD_CUSTOMER_BARCODE_SERVICE B ON A.ID = B.EXPRESS_ID
+		<where>
+		   <if test="serviceShopCode != null and serviceShopCode != '' ">
+		   		A.SERVICE_SHOP_CODE = #{serviceShopCode}
+		   </if>
+		   <if test="areaCode != null and areaCode != '' ">
+		   		AND A.AREA_CODE = #{areaCode}
+		   </if>
+		   <if test="queryParams != null and queryParams != '' ">
+		   		and (
+		   			A.RECIPIENT_NAME like '%${queryParams}%'
+					OR SUBSTRING(A.PHONE_NUMBER, 8, 4) = #{queryParams}
+					OR TRIM(A.LOGISTICS) = #{queryParams}
+					OR A.PHONE_NUMBER = #{queryParams}
+				)
+		   </if>
+		</where>
+    </select>
+    
+	<insert id="insert" parameterType="com.fla.common.entity.BarcodeExpress" useGeneratedKeys="true" keyProperty="id">
+          INSERT INTO TD_CUSTOMER_BARCODE_SERVICE (
+				EXPRESS_ID,
+				BAR_CODE,
+				AREA_CODE,
+				SERVICE_SHOP_CODE,
+				TIMESTAMP_SPE,
+				OPERA_TIME,
+				OPERATOR,
+				ORDER_CODE,
+				REMARK
+			) values (
+				#{expressId,jdbcType=NUMERIC},
+				#{barCode,jdbcType=VARCHAR},
+				#{areaCode,jdbcType=VARCHAR},
+				#{serviceShopCode,jdbcType=VARCHAR},
+				#{timestampSpe,jdbcType=VARCHAR},
+				#{operaTime},
+				#{operator,jdbcType=VARCHAR},
+				#{orderCode,jdbcType=VARCHAR},
+				#{remark,jdbcType=VARCHAR}
+			)
+    </insert>
+
+</mapper>
