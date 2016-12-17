@@ -109,8 +109,8 @@ label:hover:before {
 
 </head>
 <body style="overflow-y: hidden;background: #f2f2f2;">
-	<div style="margin: 4px;background: #f2f2f2;">
-       	&nbsp;&nbsp;用户信息：<input id="queryParams" name="queryParams" style="width: 150px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="登陆名">
+	<div style="margin: 0px;background: #f2f2f2;">
+       	&nbsp;&nbsp;用户信息：<input id="queryParams" name="queryParams" class="inputQueryEle" placeholder="登陆名">
 	</div>
 	<table id="userGrid" style="height: auto;"></table>
     <div id="addUser" class="container" style="min-height: 300px;overflow:hidden;">

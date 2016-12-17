@@ -17,7 +17,7 @@ $(document).ready(function() {
 		});
 		
 		$('#shopNumberOfPeopleStatisticsGrid').datagrid({
-			width : $(window).width() * 1,
+			width : $(window).width() * 0.99,
 			height :($(window).height()-30)*0.99,
 			singleSelect : true,
 			rownumbers : true,
@@ -31,7 +31,7 @@ $(document).ready(function() {
 		$('#statisticalArea').combotree({
 			url : contextPath + "/pages/system/getExpressStatisticalArea.light",
 			panelWitdh : 180,
-			panelHeight : 260,
+			panelHeight : 245,
 			width : 180,
 			height : 30,
 		    required: true,
@@ -57,7 +57,7 @@ function searchExpressInfo(type,code) {
 	$('#shopNumberOfPeopleStatisticsGrid').datagrid({
 		dataType : 'json',
 		url : contextPath+ "/pages/system/getShopNumberOfPeopleGroupCount.light?type="+ type+"&code="+code,
-		width : $(window).width() * 1,
+		width : $(window).width() * 0.99,
 		height :($(window).height()-30)*0.99,
 		singleSelect : true,
 		rownumbers : true,

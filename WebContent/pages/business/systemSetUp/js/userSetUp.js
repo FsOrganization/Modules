@@ -35,7 +35,7 @@ $(document).ready(function() {
 		$('#userGrid').datagrid({
 			dataType : 'json',
 			url : contextPath + '/pages/system/getUserInfoList.light',//getNotOutExpressInfoByFilterConditions
-			width : $(window).width() * 1,
+			width : $(window).width() * 0.99,
 			height :($(window).height()-32)*0.99,
 			singleSelect : true,
 			rownumbers : true,
@@ -56,7 +56,7 @@ $(document).ready(function() {
 //	        },
 	        {
 				text:'新增用户',
-				iconCls: 'icon-search',
+				iconCls: 'icon-add',
 				handler: function(){
 					clearFormData();
 					addUser();

@@ -154,7 +154,7 @@ public class PageToolsController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getExpressServiceProviderInfo.light")
 	public void getExpressServiceProviderInfo(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser s = getSystemUser(request, response);
 		PrintWriter printWriter = null;
 		String areaCode = null;
 		if (s != null) {
@@ -176,7 +176,7 @@ public class PageToolsController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getExpressStatisticalArea.light")
 	public void getExpressStatisticalArea(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser s = getSystemUser(request, response);
 		PrintWriter printWriter = null;
 		Map<String, Object> params = new HashMap<String, Object>();
 		if (s != null) {
@@ -284,7 +284,7 @@ public class PageToolsController extends SuperController{
 	@RequestMapping("/pages/system/initExpressServiceProviders.light")
 	public void initExpressServiceProviders(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
 		PrintWriter printWriter = null;
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser s = getSystemUser(request, response);
 		String areaCode = null;
 		if (s != null) {
 			areaCode = s.getAreaCode();
@@ -314,7 +314,7 @@ public class PageToolsController extends SuperController{
 	@RequestMapping("/pages/system/getCustomeInfoList.light")
 	public void getCustomeInfoList(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
 		PrintWriter printWriter = null;
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser s = getSystemUser(request, response);
 		try 
 		{
 			String areaCode = s.getAreaCode();
@@ -371,7 +371,7 @@ public class PageToolsController extends SuperController{
 	@RequestMapping("/pages/system/downExpressInfoByFilterConditions.light")
 	public void downExpressInfoByFilterConditions(
 			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser s = getSystemUser(request, response);
 		String endDate = request.getParameter("down_endDate");
 		String startDate = request.getParameter("down_startDate");
 		Map<String, String> params = new HashMap<String, String>();

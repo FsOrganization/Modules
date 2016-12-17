@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fla.common.dao.interfaces.ExpressQRCodeDaoInterface">
+	
+	<select id="getBarCodeByExpress" parameterType="java.util.Map" resultType="com.fla.common.entity.BarcodeExpress">
+		select 
+			a.BAR_CODE barCode,
+			c.BASKET_NUMBER basketNumber,
+			a.SERVICE_SHOP_CODE serviceShopCode,
+			group_concat(b.EXPRESS_lOCATION) remark,
+			a.OPERA_TIME operaTime
+		from td_customer_barcode_service a 
+		Inner join tf_express_info b on b.id = a.express_id
+		left join td_barcode_basket_number c on c.BAR_CODE = a.BAR_CODE
+		where 1=1
+			and a.SERVICE_SHOP_CODE = #{serviceShopCode}
+			and date_format(a.opera_time,'%Y%c%d') = date_format(now(),'%Y%c%d')
+			<if test="barCode != null and barCode != '' ">
+	         	and a.BAR_CODE = #{barCode}
+	    	</if>
+		group by a.BAR_CODE,c.BASKET_NUMBER,a.SERVICE_SHOP_CODE
+	</select>
+	
+	<select id="getExpressByBarCode" parameterType="java.util.Map" resultType="com.fla.common.entity.ExpressInfo">
+		select 	a.ID id,
+				a.LOGISTICS logistics,
+				a.CODE code,
+				a.RECIPIENT_NAME recipientName,
+				a.PHONE_NUMBER phoneNumber,
+				a.LANDLINE_NUMBER landlineNumber,
+				c.NAME expressServiceName,
+				a.OPERA_TIME operaTime,
+				a.AREA_CODE areaCode,
+				a.SERVICE_SHOP_CODE serviceShopCode,
+				a.OPERATOR operator,
+				a.EXPRESS_lOCATION expressLocation
+		from tf_express_info a , td_customer_barcode_service b , tf_express_service_provider_info c 
+		where a.id = b.EXPRESS_ID and c.id = a.EXPRESS_SERVICE_ID
+		and b.BAR_CODE = #{barCode,jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="newBarcodeLocationAnnotation" parameterType="com.fla.common.entity.AnnotationBarcodeLocation" useGeneratedKeys="true" keyProperty="id">
+          INSERT INTO TD_ANNOTATION_BARCODE_LOCATION (
+			EXPRESS_lOCATION,
+			BAR_CODE,
+			SERVICE_SHOP_CODE,
+			OPERA_TIME,
+			OPERATOR
+		  ) values (
+			#{expressLocation,jdbcType=VARCHAR},
+			#{barCode,jdbcType=VARCHAR},
+			#{serviceShopCode,jdbcType=VARCHAR},
+			#{operaTime},
+			#{operator,jdbcType=VARCHAR}
+		  )
+    </insert>
+    
+    <delete id="deleteBarcodeLocationAnnotation" parameterType="com.fla.common.entity.AnnotationBarcodeLocation">
+    	DELETE FROM TD_ANNOTATION_BARCODE_LOCATION WHERE SERVICE_SHOP_CODE =#{serviceShopCode} AND EXPRESS_lOCATION = #{expressLocation} and BAR_CODE = #{barCode}
+    </delete>
+    
+    <select id="getBarcodeLocationAnnotationList" parameterType="java.util.Map" resultType="com.fla.common.entity.AnnotationBarcodeLocation">
+		select 	ID id,
+				EXPRESS_lOCATION expressLocation,
+				BAR_CODE barCode,
+				SERVICE_SHOP_CODE serviceShopCode,
+				OPERA_TIME operaTime,
+				OPERATOR operator
+		from TD_ANNOTATION_BARCODE_LOCATION a
+		where a.BAR_CODE = #{barCode} and a.SERVICE_SHOP_CODE = #{serviceShopCode}
+		order by a.EXPRESS_lOCATION
+	</select>
+    
+    <select id="getBarcodeExpressNumber" parameterType="java.util.Map" resultType="com.fla.common.entity.AnnotationBarcodeBasketNumber">
+		select 	ID id,
+				BASKET_NUMBER basketNumber,
+				BAR_CODE barCode,
+				SERVICE_SHOP_CODE serviceShopCode,
+				OPERA_TIME operaTime,
+				OPERATOR operator
+		from TD_BARCODE_BASKET_NUMBER a
+		where a.BAR_CODE = #{barCode} and a.SERVICE_SHOP_CODE = #{serviceShopCode}
+	</select>
+	
+	<insert id="numberingBarcode" parameterType="com.fla.common.entity.AnnotationBarcodeBasketNumber" useGeneratedKeys="true" keyProperty="id">
+          INSERT INTO TD_BARCODE_BASKET_NUMBER (
+			BASKET_NUMBER,
+			BAR_CODE,
+			SERVICE_SHOP_CODE,
+			OPERA_TIME,
+			OPERATOR
+		  ) values (
+			#{basketNumber,jdbcType=VARCHAR},
+			#{barCode,jdbcType=VARCHAR},
+			#{serviceShopCode,jdbcType=VARCHAR},
+			#{operaTime},
+			#{operator,jdbcType=VARCHAR}
+		  )
+    </insert>
+    
+    <delete id="deleteNumberingBarcode" parameterType="com.fla.common.entity.AnnotationBarcodeBasketNumber">
+    	DELETE FROM TD_BARCODE_BASKET_NUMBER WHERE SERVICE_SHOP_CODE =#{serviceShopCode} and BAR_CODE = #{barCode}
+    </delete>
+    
+    <select id="getBarcodeExpressNumberList" parameterType="java.util.Map" resultType="com.fla.common.entity.AnnotationBarcodeBasketNumber">
+		select 	ID id,
+				BASKET_NUMBER basketNumber,
+				BAR_CODE barCode,
+				SERVICE_SHOP_CODE serviceShopCode,
+				OPERA_TIME operaTime,
+				OPERATOR operator
+		from TD_BARCODE_BASKET_NUMBER a
+		where a.SERVICE_SHOP_CODE = #{serviceShopCode}
+	</select>
+	
+	 <delete id="releaseNumberingByBarcode" parameterType="java.util.Map">
+    	DELETE FROM TD_BARCODE_BASKET_NUMBER WHERE SERVICE_SHOP_CODE =#{serviceShopCode} and BAR_CODE = #{barCode}
+    </delete>
+    
+    <delete id="releaseNumberingByElapsed" parameterType="java.util.Map">
+    	DELETE FROM TD_BARCODE_BASKET_NUMBER a WHERE date_format(a.opera_time,'%Y%c%d') != date_format(now(),'%Y%c%d')
+    </delete>
+    
+</mapper>

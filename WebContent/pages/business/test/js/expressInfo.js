@@ -30,7 +30,7 @@ $(document).ready(function() {
 			valueField : "id",
 			textField : "text",
 			panelWitdh : 180,
-			panelHeight : 260,
+			panelHeight : 245,
 			width : 180,
 			height : 30,
 			value : "",
@@ -49,8 +49,8 @@ $(document).ready(function() {
 		$('#areaCodeGrid').datagrid({
 //			dataType : 'json',
 			url : contextPath + '/pages/system/getExpressInfoByFilterConditions.light',//getNotOutExpressInfoByFilterConditions
-			width : $(window).width(),
-			height :($(window).height()-32)*0.99,
+			width : $(window).width()*0.99,
+			height :($(window).height()-22)*0.99,
 			singleSelect : true,
 			rownumbers : true,
 			pagination : true,
@@ -74,7 +74,7 @@ $(document).ready(function() {
 				}
 			},{
 				text:'导出',
-				iconCls: 'icon-search',
+				iconCls: 'icon-print',
 				handler: function(){
 					exportExpressList();
 				}

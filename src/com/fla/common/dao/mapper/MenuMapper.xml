@@ -51,6 +51,9 @@
 	    <if test="level != null and level != '' ">
 	         LEVEL = #{level}
 	    </if>
+	    <if test="name != null and name != '' ">
+	         AND NAME  like '%${name}%'
+	    </if>
 	  </where>
 	  ORDER BY DISPLAY_ORDER
     </select>
@@ -141,10 +144,10 @@
 		FROM TF_MENU
        <where> 
 	    <if test="name != null">
-	         NAME like '%'#{name}'%'
+	         NAME like '%${name}%'
 	    </if>
 	    <if test="title != null">
-	        AND TITLE like '%'#{title}'%'
+	        AND TITLE like '%${title}%'
 	    </if>
 	    <if test="parentId != null">
 	        AND PARENT_ID = #{parentId}
@@ -175,10 +178,10 @@
 		FROM TF_MENU
        <where> 
 	    <if test="name != null">
-	         NAME like '%'#{name}'%'
+	         NAME like '%${name}%'
 	    </if>
 	    <if test="title != null">
-	        AND TITLE like '%'#{title}'%'
+	        AND TITLE like '%${title}%'
 	    </if>
 	    <if test="parentId != null">
 	        AND PARENT_ID = #{parentId}
@@ -209,10 +212,10 @@
 		FROM TF_MENU
        <where> 
 	    <if test="name != null">
-	         NAME like '%'#{name}'%'
+	         NAME like '%${name}%'
 	    </if>
 	    <if test="title != null">
-	        AND TITLE like '%'#{title}'%'
+	        AND TITLE like '%${title}%'
 	    </if>
 	    <if test="parentId != null">
 	        AND PARENT_ID = #{parentId}
@@ -252,7 +255,7 @@
 			#{parentId,jdbcType=INTEGER},
 			#{createdTime,jdbcType=DATE},
 			#{createdOperator,jdbcType=INTEGER},
-			#{lastDate,jdbcType=DATE},
+			#{lastDate},
 			#{lastOperator,jdbcType=INTEGER},
 			#{abstractLevel,jdbcType=VARCHAR},
 			#{remark,jdbcType=VARCHAR}

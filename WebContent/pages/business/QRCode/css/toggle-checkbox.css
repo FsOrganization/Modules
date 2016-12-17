@@ -1,0 +1,112 @@
+/**
+ * Toggle-Checkbox
+ * A Pure HTML and CSS3 Toggle Switch as Checkbox Input
+ *
+ * Copyright (c) 2016 Yu H.
+ * 
+ * @author Yu H.
+ * @version 1.0.0
+ * @license The MIT License (MIT)
+ * https://opensource.org/licenses/MIT
+ **/
+
+.toggle-checkbox {
+    display: inline-block;
+    /* remove the tap highligh color */
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+.toggle-checkbox > input[type=checkbox] {
+    display: none;
+}
+
+.toggle-bg {
+    position: relative;
+    cursor: pointer;
+    /* border color */
+    border: 1px solid #CCC;
+    border-radius: 50px;
+    width: 50px;
+    line-height: 27px;
+    /* background color when un-toggle */
+    background-color: #FFF;
+}
+.toggle-bg:before {
+    /* maintain width-to-height ration of 2:1 */
+    display: block;
+    padding-top: 50%;
+    content: "";
+}
+.toggle-fixedheight > .toggle-bg:before {
+    padding-top: 0 !important;
+} 
+input[type=checkbox]:checked + .toggle-bg {
+    /* border color when toggle */
+    border: 1px solid #CCC;
+    /* background color when toggle */
+    background-color: #6cedf4;/*#4FBE79*/
+}
+/* applicable when background has text */
+.toggle-bg-texton {
+    display: block;
+    position: absolute;
+    right: 50%;
+    width: 50%;
+    text-align: center;
+    color: #FFF;
+}
+.toggle-bg-textoff {
+    display: block;
+    position: absolute;
+    left: 50%;
+    width: 50%;
+    text-align: center;
+    visibility: visible;
+}
+input[type=checkbox]:checked + .toggle-bg > .toggle-bg-textoff {
+    visibility: hidden;
+}
+
+.toggle-btn {
+    position: absolute;
+    top: 50%;
+    left: 1px;
+    border-radius: 50px;
+    /* button border color when un-toggle */
+    border: 1px solid #FFF;
+    width: 45%;
+    height: 90%;
+    -ms-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    text-align: center;
+    /* button color when un-toggle */
+    background-color: #FFF;
+    /* button shadow */
+    -moz-box-shadow: 0 1px 3px #888;
+    -webkit-box-shadow: 0 1px 3px #888;
+    box-shadow: 0 1px 3px #888;
+    -webkit-transition: left 0.3s;
+    transition: left 0.3s;
+}
+input[type=checkbox]:checked + .toggle-bg > .toggle-btn {
+    margin-left: -3px;
+    left: 55%;
+    /* button border color when toggle */
+    border: 1px solid #CCC;
+    /* button color when toggle */
+    background-color: #FFF;
+}
+.toggle-btn-yes {
+    display: block;
+}
+.toggle-btn-no {
+    display: none;
+}
+input[type=checkbox]:checked + .toggle-bg > .toggle-btn > .toggle-btn-yes {
+    display: none;
+}
+input[type=checkbox]:checked + .toggle-bg > .toggle-btn > .toggle-btn-no {
+    display: block;
+}

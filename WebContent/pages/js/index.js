@@ -1,10 +1,12 @@
 $(document).ready(function() {
-	$('#tabs').height(($(window).height()-101)*1);
+	$('#mainBody').height(($(window).height()-85)*1);
+	$('#tabs').height(($(window).height()-75)*1);
 	$('#tabs').width(($(window).width()-132)*1);
 	$(window).bind('resize', function(e) {
 			clearTimeout(window.resizeEvt);
 			window.resizeEvt = setTimeout(function() {
-				$('#tabs').height(($(window).height()-101)*1);
+				$('#mainBody').height(($(window).height()-85)*1);
+				$('#tabs').height(($(window).height()-75)*1);
 				$('#tabs').width(($(window).width()-132)*1);
 				$('#searchList').datagrid('resize',{
 					width : '100%',
@@ -19,8 +21,6 @@ $(document).ready(function() {
 		$('#statistics').hide();
 		$('#configSeting').hide();
 //		$('#customerSeting').hide();
-		
-		
 	}
 	
 	$("#modfiyPassWord").click(function(){
@@ -109,14 +109,13 @@ $(document).ready(function() {
 				hideOnUnhover:true,
 	            left: e.pageX,
 	            top: e.pageY
-	        }).data("tabTitle", title);;
+	        }).data("tabTitle", title);
 			$('.menu-line').hide();
 			$('#currentIndex').val(index);
 			$('#currentName').val(title);
 			
 		  }
 	});
-	
 });
 
 var closeTabs = function(name){

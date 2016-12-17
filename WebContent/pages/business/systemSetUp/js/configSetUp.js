@@ -49,7 +49,7 @@ $(document).ready(function() {
 		$('#configGrid').treegrid({
 			dataType : 'json',
 			url : contextPath + '/pages/system/getConfigInfoList.light',
-			width : $(window).width() * 0.98,
+			width : $(window).width() * 0.99,
 			height :($(window).height()-32)*0.99,
 			singleSelect : true,
 			rownumbers : true,

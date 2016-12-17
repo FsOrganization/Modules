@@ -16,7 +16,7 @@
 <body style="overflow-y: hidden;background: #f2f2f2;margin: 4px 0px;">
 	<div style="margin: 4px;font-weight: 700;background: #f2f2f2;">
 		<span>
-       		&nbsp;&nbsp;请选择统计网点：<input id="statisticalArea" name="statisticalArea"/>
+       		&nbsp;&nbsp;请选择统计网点：<input id="statisticalArea" name="statisticalArea" class="inputQueryEle"/>
        	</span>
        	<span id="speCycle" style="display: none;">
        		&nbsp;&nbsp;统计周期：<input id="dateStyle" name="dateStyle" value="">

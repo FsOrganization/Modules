@@ -6,8 +6,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <link rel="stylesheet" type="text/css" href="<%=contextPath%>/common/form-style/css/demo.css" />
 <link rel="stylesheet" type="text/css" href="<%=contextPath%>/common/form-style/css/style3.css" />
+<%-- <link rel="stylesheet" type="text/css" href="<%=contextPath%>/css/bootstrap.min.css" /> --%>
 <script type="text/javascript" src="<%=contextPath%>/common/form-style/js/modernizr.custom.04022.js"></script>
 <script src="<%=contextPath%>/pages/business/customer/js/customerInfo.js" type="text/javascript"></script>
+<%-- <link rel="stylesheet" type="text/css" href="<%=contextPath%>/css/bootstrap.min.css" /> --%>
+
 <style type="text/css">
 table.contacts { 
 	width: 100%;
@@ -109,12 +112,25 @@ label:hover:before {
 
 </head>
 <body style="overflow-y: hidden;background: #f2f2f2;">
-	<div style="margin: 4px;">
-       	&nbsp;&nbsp;用户信息：<input id="queryParams" name="queryParams" style="width: 150px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="姓名、电话">
+	<div style="margin: 0px;">
+       	&nbsp;&nbsp;用户信息：<input id="queryParams" name="queryParams" class="inputQueryEle" placeholder="姓名、电话">
        	<span id="shopSpan" style="display: none;">
        		&nbsp;&nbsp;网点：<input id="expressServiceId" name="expressServiceId" style="width: 150px;border-style: solid;border-color: antiquewhite;" class="easyui-combobox">
        	</span>
+<!--        	<div class="btn-group" style=""> -->
+<!-- 	         <button id="importUsingClass" type="button" class="btn btn-link" title=""> -->
+<!-- 	             <span class="glyphicon glyphicon-import" >导入</span> -->
+<!-- 	         </button> -->
+<!-- 	         <button id="exportUsingClass" type="button" class="btn btn-link" > -->
+<!-- 	             <span class="glyphicon glyphicon-export">导出</span> -->
+<!-- 	         </button> -->
+	
+<!-- 	         <button id="downloadTemplateUsingClass" type="button" class="btn btn-link"> -->
+<!-- 	             <span class="glyphicon glyphicon-download">下载模板</span> -->
+<!-- 	         </button> -->
+<!--     	</div> -->
 	</div>
+	
 	<table id="customerGrid"></table>
     <div id="addUser" class="container" style="min-height: 300px;overflow:hidden;">
 			<section class="af-wrapper">
@@ -201,13 +217,13 @@ label:hover:before {
 							<input type="text" name="address" id="address" style="width: 279px;"/>
 						</div>
 					</div>
-<!-- 					<div class="af-outer af-required"> -->
-<!-- 						<div class="af-inner"> -->
-<!-- 						  <label for="isCheck">是否启用:</label> -->
-<!-- 						  <input type="checkbox" name="isCheck" value="YES" id="isCheck"/> -->
-<!-- 						  <label for="isCheck" style="margin: 8px 15px; font-size:12px;"></label> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
+					<div class="af-outer af-required">
+						<div class="af-inner">
+						  <label for="isInterest">是否已关注微信:</label>
+						  <input type="checkbox" name="isInterest" value="Y" id="isInterest"/>
+						  <label for="isInterest" style="margin: 8px 15px; font-size:12px;"></label>
+						</div>
+					</div>
 				</form>
 				<div style="text-align:center;">
 				  	<input id="saveBtn" type="button" value="保存" style="height: 30px;width: 49px;"/>

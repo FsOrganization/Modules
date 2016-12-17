@@ -94,12 +94,7 @@
 		   		AND A.AREA_CODE = #{areaCode}
 		   </if>
 		   <if test="queryParams != null and queryParams != '' ">
-		   		and (
-		   			A.RECIPIENT_NAME like '%${queryParams}%'
-					OR SUBSTRING(A.PHONE_NUMBER, 8, 4) = #{queryParams}
-					OR TRIM(A.LOGISTICS) = #{queryParams}
-					OR A.PHONE_NUMBER = #{queryParams}
-				)
+		   		and A.PHONE_NUMBER = #{queryParams}
 		   </if>
 		</where>
     </select>
@@ -127,5 +122,9 @@
 				#{remark,jdbcType=VARCHAR}
 			)
     </insert>
+    
+    <select id="checkMember" parameterType="java.util.Map" resultType="java.lang.Integer">
+       select count(*) from tf_customer_info a where a.PHONE_NUMBER = #{phoneNumber} and a.IS_INTEREST = #{isInterest}
+    </select>
 
 </mapper>

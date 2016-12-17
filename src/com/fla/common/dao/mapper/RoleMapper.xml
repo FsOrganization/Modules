@@ -39,10 +39,10 @@
 		FROM TF_ROLE
        <where> 
 	    <if test="name != null">
-	         NAME like '%'#{name}'%'
+	         NAME like '%${name}%'
 	    </if>
 	    <if test="title != null">
-	        AND TITLE like '%'#{title}'%'
+	        AND TITLE like '%${title}%'
 	    </if>
 	    <if test="status != null">
 	        AND STATUS = #{status}
@@ -72,10 +72,10 @@
 		FROM TF_ROLE
        <where> 
 	    <if test="name != null">
-	         NAME like '%'#{name}'%'
+	         NAME like '%${name}%'
 	    </if>
 	    <if test="title != null">
-	        AND TITLE like '%'#{title}'%'
+	        AND TITLE like '%${title}%'
 	    </if>
 	    <if test="status != null">
 	        AND STATUS = #{status}
@@ -101,10 +101,10 @@
 		FROM TF_ROLE
        <where> 
 	    <if test="name != null">
-	         NAME like '%'#{name}'%'
+	         NAME like '%${name}%'
 	    </if>
 	    <if test="title != null">
-	        AND TITLE like '%'#{title}'%'
+	        AND TITLE like '%${title}%'
 	    </if>
 	    <if test="status != null">
 	        AND STATUS = #{status}
@@ -161,7 +161,7 @@
 			#{parentId,jdbcType=INTEGER},
 			#{createdTime,jdbcType=DATE},
 			#{createdOperator,jdbcType=VARCHAR},
-			#{lastDate,jdbcType=VARCHAR},
+			#{lastDate},
 			#{lastOperator,jdbcType=VARCHAR},
 			#{remark,jdbcType=VARCHAR}
 		)

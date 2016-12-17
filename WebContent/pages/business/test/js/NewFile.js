@@ -3,6 +3,7 @@ var obj;
 var tempIds;
 var expressServiceMap = {};
 var shopNameMap = {};
+var tempSpeDate = '2016-3-31';
 function queryData() {
 	searchExpressInfo();
 }
@@ -138,13 +139,36 @@ function updateCustomerGender(){
 	}
 }
 
+function getDays(strDateStart, strDateEnd) {
+	var strSeparator = "-"; // 日期分隔符
+	var oDate1;
+	var oDate2;
+	var days;
+	oDate1 = strDateStart.split(strSeparator);
+	oDate2 = strDateEnd.split(strSeparator);
+//	alert(strDateStart+","+strDateEnd);
+	var strDateS = new Date(oDate1[0], oDate1[1] - 1, oDate1[2]);
+	var strDateE = new Date(oDate2[0], oDate2[1] - 1, oDate2[2]);
+	days = parseInt(Math.abs(strDateS-strDateE)/1000/60/60/24);//把相差的毫秒数转换为天数
+	return days;
+}
+var lateFeeLimitUpper=null;
 $(document).ready(function(){
+		lateFeeLimitUpper = getUrlParam("lateFeeLimitUpper");
 		initExpressServiceProviders();
 		//输入框按回车
 		$("#queryParams").bind("keydown",function(e){
 			var keycode = e.which;
 			if(keycode == 13){//输入回车判定
 				queryData();
+				e.preventDefault();						
+			}
+		});
+		
+		$("#barCode").bind("keydown",function(e){
+			var keycode = e.which;
+			if(keycode == 13){//输入回车判定
+				searchExpressInfoByBarCode();
 				e.preventDefault();						
 			}
 		});
@@ -182,11 +206,24 @@ $(document).ready(function(){
 			obj.HWSetCtlFrame(0, 0x000000);
 		};
 		
+		$('#ss').slider({
+		    mode: 'h',
+		    showTip:true,
+		    value:3, 
+		    min:1, 
+		    max:9,
+		    height:100,
+		    rule:[1,'|',3,'|',5,'|',7,'|',9],
+		    tipFormatter: function(value){
+		        return value + '天';
+		    }
+		});
+		
 		$('#areaCodeGrid').datagrid({
 			dataType : 'json',
 			url : contextPath + '/pages/system/getExpressInfoList.light',
-			width : $(window).width(),
-			height :($(window).height()-30)*0.99,
+			width : $(window).width()*0.99,
+			height :($(window).height()-22)*0.99,
 			singleSelect:true,
 			rownumbers : true,
 			pagination : true,
@@ -197,6 +234,23 @@ $(document).ready(function(){
 			queryParams:{
 				batchNumber: ''
 			},
+			rowStyler: function(index,row){
+				var expressDate = row.OPERA_TIME.split(' ');
+				var count = getDays(expressDate[0],getCurrDateFormat());
+				var tag = checkSpeDate(tempSpeDate, expressDate[0]);
+				var delayDays = parseInt(count);
+				var finalDays = delayDays-2;
+				if (tag) {
+					finalDays = 0;
+				}
+				var isInterest = row.IS_INTEREST;
+				if (isInterest == 'Y') {
+					finalDays = finalDays -1;
+				}
+				if (0<finalDays){
+					return 'color:#EC920F;';
+				} 
+			},
 			toolbar: [
 	        {
 				text:'查询快件',
@@ -206,11 +260,18 @@ $(document).ready(function(){
 				}
 			},{
 				text:'批量取件',
-				iconCls: 'icon-search',
+				iconCls: 'icon-large-smartart',
 				handler: function(){
 					batchLetExpressOutStorehouse();
 				}
 			}
+//			{
+//				text:'查询超时件',
+//				iconCls: 'icon-filter',
+//				handler: function(){
+//					timeOutExpressInfo();
+//				}
+//			}
 //			,{
 //				text:'打印出库单',
 //				iconCls: 'icon-print',
@@ -226,14 +287,6 @@ $(document).ready(function(){
 				width : 100,
 				align : 'center',
 				hidden : true
-			},{  
-				field : 'opara', 
-				title : '操作',
-				width : 100, 
-				align : 'center',
-				formatter : function(value,row,index){
-					return "<button style='width: inherit;' id='expressOpara' onclick=\"letExpressOutStorehouse("+row.ID+",'"+row.RECIPIENT_NAME+"','"+row.PHONE_NUMBER+"','"+row.EXPRESS_lOCATION+"','"+row.EXPRESS_SERVICE_ID+"','"+row.GENDER+"')\">取件</button>";
-				}
 			},{
 				field : 'LOGISTICS',
 				title : '快件运单号',
@@ -292,7 +345,25 @@ $(document).ready(function(){
 				title : '入库时间',
 				width : 200,
 				align : 'center',
-				hidden : false
+				hidden : false,
+				formatter : function(value, row, index){
+					var expressDate = row.OPERA_TIME.split(' ');
+					var tempDate = expressDate[0];
+//					var tag = checkSpeDate(tempSpeDate, expressDate[0]);
+					if (getDays(tempDate,getCurrDateFormat())>0){
+						var delayDays = getDays(tempDate,getCurrDateFormat());
+						var finalDays = delayDays-2;
+						if (finalDays <=0) {
+							return value;
+						} else {
+							return "<span title='"+finalDays+"天未取件!'>"+value+"</span>";
+						}
+						
+					} else {
+						return value;
+					}
+					
+				}
 			},{
 				field : 'BATCH_NUMBER',
 				title : '入库批次号',
@@ -311,6 +382,20 @@ $(document).ready(function(){
 				width : 200,
 				align : 'center',
 				hidden : true
+			},{
+				field : 'IS_INTEREST',
+				title : '是否关注微信',
+				width : 80,
+				align : 'center',
+				hidden : true,
+				formatter : function(value, row, index){
+					if (value == 'Y') {
+						return '已关注';
+					} else {
+						return '未关注';
+					}
+					
+				}
 			},{  
 				field : 'WEIXIN_ID',
 				title : '推送微信通知',
@@ -321,7 +406,7 @@ $(document).ready(function(){
 					if (row.WEIXIN_ID === '' || row.WEIXIN_ID ==null) {
 						return value;
 					} else {
-						return "<button onclick=\"pushWechatNotification('"+row.WEIXIN_ID+"','"+formatShopCodeColumnTitle(row.SERVICE_SHOP_CODE)+"','"+formatColumnTitle(row.EXPRESS_SERVICE_ID)+"','"+row.LOGISTICS+"','"+row.OPERA_TIME+"')\">推送微信通知</button>";
+						return "<button onclick=\"pushWechatNotification('"+row.WEIXIN_ID+"','"+formatShopCodeColumnTitle(row.SERVICE_SHOP_CODE)+"','"+formatColumnTitle(row.EXPRESS_SERVICE_ID)+"','"+row.LOGISTICS+"')\">推送微信通知</button>";
 					}
 				}
 			},{  field : 'showBarCode', 
@@ -332,6 +417,47 @@ $(document).ready(function(){
 				formatter : function(value,row,index){
 					return "<button onclick=\"getBarCode("+row.LOGISTICS+",'"+row.RECIPIENT_NAME+"')\">查看条码</button>";
 				}
+			},{
+				field : 'delayDay',
+				title : '是否延期',
+				width : 100,
+				align : 'center',
+				hidden : false,
+				formatter : function(value, row, index){
+					var expressDate = row.OPERA_TIME.split(' ');
+					var tag = checkSpeDate(tempSpeDate, expressDate[0]);
+					var tempDate = expressDate[0];
+					var msgTemp = '延期';
+					var delayDays = parseInt(getDays(tempDate,getCurrDateFormat()));
+					var finalDays = delayDays-2;
+					var isInterest = row.IS_INTEREST;
+					if (isInterest == 'Y') {
+						finalDays = finalDays -1;
+					}
+//					if (finalDays < 0) {
+//						finalDays = 0;
+//					}
+					if (tag) {
+						finalDays = 0;
+					}
+					if (finalDays < 0) {
+						finalDays = 0;
+					}
+					row['delayDay'] = finalDays;
+					if (finalDays >0 ) {
+						return '延期';//+'('+finalDays+'天)';
+					} else {
+						return '未延期 ';
+					}
+				}
+			},{  
+				field : 'opara', 
+				title : '操作',
+				width : 100, 
+				align : 'center',
+				formatter : function(value,row,index){
+					return "<button style='width: inherit;' id='expressOpara' onclick=\"letExpressOutStorehouse("+row.ID+",'"+row.RECIPIENT_NAME+"','"+row.PHONE_NUMBER+"','"+row.EXPRESS_lOCATION+"','"+row.EXPRESS_SERVICE_ID+"','"+row.GENDER+"','"+row.delayDay+"')\">取件</button>";
+				}
 			}] ],
 			onLoadSuccess : function(){
 				$('#areaCodeGrid').datagrid('clearSelections');
@@ -341,7 +467,7 @@ $(document).ready(function(){
 					valueField : "id",
 					textField : "text",
 					panelWitdh : 180,
-					panelHeight : 260,
+					panelHeight : 245,
 					width : 180,
 					height : 30,
 					value : "",
@@ -487,6 +613,22 @@ $(document).ready(function(){
 		return expressServiceMap[value];
 	}
 	
+	function checkSpeDate(speDate,expressDate) {
+		var d1 = getDateForStr(speDate);
+		var d2 = getDateForStr(expressDate);
+		if (expressDate == speDate) {
+			return true;
+		}
+		var date3 = d1.getTime()-d2.getTime();  //时间差的毫秒数
+		//计算出相差天数
+		var days=Math.floor(date3/(24*3600*1000));
+		if (days > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	function formatPhoneNumber(value){
 		var t=value.substring(0,3);
 		var firstTemp = value.substring(3,7);
@@ -601,14 +743,35 @@ $(document).ready(function(){
 		var selectedRows = $('#areaCodeGrid').datagrid('getSelections');
 		if (selectedRows.length != 0){
 			var cInfo = '';
-			for(var i = 0; i < selectedRows.length; i ++){
-//				if(cInfo != ''){
-//					cInfo += ",";
-//				}
-				cInfo += selectedRows[i].RECIPIENT_NAME+':'+selectedRows[i].PHONE_NUMBER+',货位:'+selectedRows[i].EXPRESS_lOCATION+" ("+formatColumnTitle(selectedRows[i].EXPRESS_SERVICE_ID)+")"+"</br></br>";
+			for(var i = 0; i < selectedRows.length; ++i){
+				if (selectedRows[i].delayDay >0) {
+					cInfo += selectedRows[i].RECIPIENT_NAME+':'+selectedRows[i].PHONE_NUMBER+',货位:'+selectedRows[i].EXPRESS_lOCATION+" ("+formatColumnTitle(selectedRows[i].EXPRESS_SERVICE_ID)+")"+"	<span style='color:red;'>延迟"+selectedRows[i].delayDay+"天</span>"+"</br></br>";
+				} else {
+					cInfo += selectedRows[i].RECIPIENT_NAME+':'+selectedRows[i].PHONE_NUMBER+',货位:'+selectedRows[i].EXPRESS_lOCATION+" ("+formatColumnTitle(selectedRows[i].EXPRESS_SERVICE_ID)+")"+"</br></br>";
+				}
 			}
 		}
 		return cInfo;
+	}
+	
+	function getSelectRowsDelayDays(){
+		var dataArray = new Array();
+		var selectedRows = $('#areaCodeGrid').datagrid('getSelections');
+		if (selectedRows.length != 0){
+			var money = parseInt("0");
+			var delayDays = parseInt("0");
+			for(var i = 0; i < selectedRows.length; ++i){
+				var day = parseInt(selectedRows[i].delayDay);
+				delayDays += parseInt(day);
+				if (parseInt(day) > parseInt(lateFeeLimitUpper)) {
+					day = lateFeeLimitUpper;
+				}
+				money += parseInt(day);
+			}
+			dataArray.push(money);
+			dataArray.push(delayDays);
+		}
+		return dataArray;
 	}
 	
 	function batchLetExpressOutStorehouse(){
@@ -618,7 +781,7 @@ $(document).ready(function(){
 		if (ids===undefined ){
 			showMsg("请选择快件...", "提示");
 			return;
-		} else{
+		} else {
 			var tempValue = getFirstSelectRowGender();
 			if (tempValue != null && tempValue ==='unknown') {
 				$('#genderSpan').show();
@@ -628,20 +791,65 @@ $(document).ready(function(){
 			$('#content').empty();
 			$('#content').append(titleInfo+cInfo);
 			$('#my-button').click();
+			var delayDays = getSelectRowsDelayDays();
+			var mTemp = delayDays[0];
+			var dTemp = delayDays[1];
+//			var finalDays = delayDays-2;
+			if (dTemp >0) {
+//				if (parseInt(delayDays) > parseInt(lateFeeLimitUpper)) {
+//					$('#delayDayDiv').append('<H2 id="delayDayContent"></H2>');
+//					$('#delayDayContent').empty();
+//					$('#delayDayContent').append('<span style="text-decoration:underline;color:#0086D0;"> 延迟'+delayDays+"天，"+"请付￥"+lateFeeLimitUpper+"元 (封顶)。谢谢！</span>");
+//				} else {
+					$('#delayDayDiv').append('<H2 id="delayDayContent"></H2>');
+					$('#delayDayContent').empty();
+					$('#delayDayContent').append('<span style="text-decoration:underline;color:#0086D0;"> 延迟'+dTemp+"天，"+"请付￥"+mTemp+"元。谢谢！</span>");
+//				}
+			} else {
+				var dc = document.getElementById("delayDayContent");
+			    if (dc != null)
+			    	dc.parentNode.removeChild(dc);
+			}
 			tempIds = null;
 	    	tempIds = ids;
 		}
 
 	}
 
-	function letExpressOutStorehouse(id,name,phone,expressLocation,expressServiceId,gender){
+	
+	function timeOutExpressInfo() {
+		$('#query').dialog('open');
+	}
+
+	function letExpressOutStorehouse(id,name,phone,expressLocation,expressServiceId,gender,delayDays){
+		var cInfo = "";
 		if (gender === 'unknown') {
 			$('#genderSpan').show();
 		}
-		var cInfo = '请核对取件人: '+'</br></br>'+name+','+phone+",货位:"+expressLocation+" ("+formatColumnTitle(expressServiceId)+")" +"</br></br>";
+		if (delayDays > 0) {
+			if (parseInt(delayDays) > parseInt(lateFeeLimitUpper)) {
+				cInfo = '请核对取件人: '+'</br></br>'+name+','+phone+",货位:"+expressLocation+" ("+formatColumnTitle(expressServiceId)+")"+"	<span style='color:red;'>延期"+delayDays+"天</span>"+"</br></br>";
+				$('#delayDayDiv').append('<H2 id="delayDayContent"></H2>');
+				$('#delayDayContent').empty();
+				$('#delayDayContent').append('<span style="text-decoration:underline;color:#0086D0;"> 延期'+delayDays+"天，"+"请付￥"+lateFeeLimitUpper+"元 (封顶)。谢谢！</span>");
+			} else {
+				cInfo = '请核对取件人: '+'</br></br>'+name+','+phone+",货位:"+expressLocation+" ("+formatColumnTitle(expressServiceId)+")"+"	<span style='color:red;'>延期"+delayDays+"天</span>"+"</br></br>";
+				$('#delayDayDiv').append('<H2 id="delayDayContent"></H2>');
+				$('#delayDayContent').empty();
+				$('#delayDayContent').append('<span style="text-decoration:underline;color:#0086D0;"> 延期'+delayDays+"天，"+"请付￥"+delayDays+"元。谢谢！</span>");
+			}
+		} else {
+			cInfo = '请核对取件人: '+'</br></br>'+name+','+phone+",货位:"+expressLocation+" ("+formatColumnTitle(expressServiceId)+")" +"</br></br>";
+			var dc = document.getElementById("delayDayContent");
+		    if (dc != null)
+		    	dc.parentNode.removeChild(dc);
+		}
+		
 		$('#content').empty();
 		$('#content').append(cInfo);
 		$('#my-button').click();
+		
+		
 		tempIds = null;
     	tempIds = id;
     	$('#hiddenPhoneNumber').val(phone);
@@ -758,5 +966,22 @@ $(document).ready(function(){
 		});
 	}
 	
+	function searchExpressInfoByBarCode(){
+		var barCode = $("#barCode").val();
+		var obj = 
+		{
+				"barCode":barCode
+		};
+		$('#areaCodeGrid').datagrid('loadData', { total: 0, rows: [] })
+		$('#areaCodeGrid').datagrid("clearSelections");
+		$('#areaCodeGrid').datagrid({
+			url : contextPath + "/pages/system/searchExpressInfoByBarCode.light?barCode="+barCode
+		});
+		
+//		$("#number").focus();
+		var paper = $('#areaCodeGrid').datagrid('getPager');
+		$(paper).pagination('refresh',{ pageNumber: 1 });
+//		$('.datagrid-body').focus();
+	}
 	
 	

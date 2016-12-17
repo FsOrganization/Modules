@@ -46,7 +46,7 @@ $(document).ready(function() {
 		$('#shopGrid').datagrid({
 			dataType : 'json',
 			url : contextPath + '/pages/system/getShopInfoList.light',//getNotOutExpressInfoByFilterConditions
-			width : $(window).width() * 1,
+			width : $(window).width() * 0.99,
 			height :($(window).height()-32)*0.99,
 			singleSelect : true,
 			rownumbers : true,
@@ -67,8 +67,9 @@ $(document).ready(function() {
 //	        },
 	        {
 				text:'新增网点',
-				iconCls: 'icon-search',
+				iconCls: 'icon-add',
 				handler: function(){
+					clearFormData();
 					addShop();
 					operatingTag = false;
 				}

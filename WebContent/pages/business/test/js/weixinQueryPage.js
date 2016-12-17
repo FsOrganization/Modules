@@ -35,7 +35,7 @@ $(document).ready(function(){
 		$('#areaCodeGrid').datagrid({
 			dataType : 'json',
 //			url : contextPath + '/pages/system/getExpressInfoList.light',
-			width : $(window).width() * 1,
+			width : $(window).width() * 0.99,
 			height :($(window).height()-60)*0.95,
 			singleSelect : false,
 			rownumbers : true,

@@ -35,6 +35,33 @@ td.contact {
   background: #e6e6e6;
 }
 
+#searchresult {
+	width: 130px;
+	position: absolute;
+	z-index: 1;
+	overflow: hidden;
+	left: 130px;
+	top: 71px;
+	background: #E0E0E0;
+	border-top: none;
+}
+
+.line {
+	font-size: 12px;
+	background: #FFFFFF;
+	width: 130px;
+	padding: 2px;
+}
+
+.hover {
+	background: #718BA6;
+	width: 130px;
+	color: #fff;
+}
+
+.std {
+	width: 150px;
+}
 </style>
 <script type="text/javascript">
 </script>
@@ -58,37 +85,19 @@ td.contact {
 					<input type="hidden" id="sentExpressId" name="sentExpressId">
 					<div class="af-outer af-required">
 						<div class="af-inner">
-						  <label for="input-email">快递服务商:</label>
-						  <input id="formExpressServiceId" class="easyui-combobox" name="formExpressServiceId" data-options="
-								                url: '<%=contextPath%>/pages/system/getExpressServiceProviderInfo.light',
-								                method: 'get',
-								                valueField: 'id',
-								                textField: 'text',
-								                panelWitdh: 380,
-								                panelHeight: 260,
-								                width:280,
-								                height: 35,
-								                formatter: formatItem" />
-								                <span style="color:red;"> (*必填项)</span>
+						  <label for="formExpressServiceId">快递服务商:</label>
+						  <input id="formExpressServiceId" name="formExpressServiceId" style="width: 150px;border-style: solid;border-color: antiquewhite;" class="easyui-combobox">
+						  <span style="color:red;"> (*必填项)</span>
 						</div>
 					</div>
-<!-- 					<div class="af-outer af-required"> -->
-<!-- 						<div class="af-inner"> -->
-<!-- 							<label for="input-name">收件人姓名:</label> -->
-<!-- 							<input type="text" name="recipientName" id="recipientName" style="width: 279px;"/> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-<!-- 					<div class="af-outer af-required"> -->
-<!-- 						<div class="af-inner"> -->
-<!-- 						  <label for="input-country">收件人地址:</label> -->
-<!-- 						  <input type="text" name="destination" id="destination" style="width: 279px;"> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
 					<div class="af-outer af-required">
 						<div class="af-inner">
-							<label for="input-name">寄件人手机号码:</label>
-							<input type="text" name="senderNumber" id="senderNumber" style="width: 279px;">
-							<span style="color:red;"> (*必填项)</span>
+							<label for="senderNumber">寄件人手机号码:</label>
+							<div>
+								<input type="text" name="senderNumber" id="senderNumber" style="width: 279px;"/>
+								<img id='cat' alt="" style="margin: -13px -45px;display: none;" src="<%=contextPath%>/pages/images/cat.gif"/>
+								<div id="searchresult" style="display: none;position: absolute;z-index: 999999999;width: 280px;border: 1px solid #E4E4E4;background: #FFF" id="searchDiv"></div>
+							</div>
 						</div>
 					</div>
 					
@@ -96,15 +105,17 @@ td.contact {
 						<div class="af-inner">
 							<label for="input-name">寄件人姓名:</label>
 							<input type="text" name="senderName" id="senderName" style="width: 279px;"/>
-							<span style="color:red;"> (*必填项)</span>
 						</div>
+						<span style="color:red;"> (*必填项)</span>
 					</div>
-<!-- 					<div class="af-outer af-required"> -->
-<!-- 						<div class="af-inner"> -->
-<!-- 						  <label for="input-country">寄件人地址:</label> -->
-<!-- 						  <input type="text" name="address" id="address" style="width: 279px;"> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
+					
+					<div class="af-outer af-required">
+						<div class="af-inner">
+							<label for="input-name">寄件人身份证号:</label>
+							<input type="text" name="idNumber" id="idNumber" style="width: 279px;"/>
+						</div>
+						<span style="color:red;"> (*必填项)</span>
+					</div>
 					<div class="af-outer">
 						<div class="af-inner">
 							<label for="input-title">快件运单号:</label>
