@@ -70,6 +70,8 @@ public interface LoginDaoInterface {
 		 */
 		public Pagination getNotOutExpressInfoByFilterConditions(final int rowSize, final int pageSize, Map<String,String> params);
 		
+		public Pagination searchExpressInfoByBarCode(final int rowSize, final int pageSize, Map<String,String> params);
+		
 		public List<Map<String, Object>> getSimplyConstructedNotOutExpressInfoByFilter(int rowSize, int pageSize, Map<String, String> params) throws SQLException ;
 		
 		/**

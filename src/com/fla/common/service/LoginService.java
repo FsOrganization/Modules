@@ -269,6 +269,13 @@ public class LoginService implements LoginServiceInterface{
 	}
 	
 	@Override
+	public Pagination searchExpressInfoByBarCode(int rowSize, int pageSize,
+			Map<String, String> params) throws SQLException {
+		Pagination rowPage = loginDao.searchExpressInfoByBarCode(rowSize, pageSize,params);
+		return rowPage;
+	}
+
+	@Override
 	public JSONArray getSimplyConstructedNotOutExpressInfoByFilter(int rowSize,int pageSize, Map<String, String> params) throws SQLException {
 		List<Map<String, Object>> rowMap = loginDao.getSimplyConstructedNotOutExpressInfoByFilter(rowSize, pageSize,params);
 		JSONArray ja = new JSONArray();

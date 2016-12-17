@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fla.common.dao.interfaces.ActionLogDaoInterface">
+	
+	<insert id="saveActionLog" parameterType="com.fla.common.entity.ActionLog">
+        INSERT INTO td_action_log(
+			USER_ID,
+			USER_NAME,
+			AREA_CODE,
+			CODE,
+			STATUS,
+			ACTION_MSG,
+			CLASS_NAME,
+			ACTION_METHOD,
+			ACTION_DATE,
+			REMARK,
+			EXECUTE_TIME
+		) values (
+			#{userId,jdbcType=INTEGER},
+			#{userName,jdbcType=VARCHAR},
+			#{areaCode,jdbcType=VARCHAR},
+			#{code,jdbcType=VARCHAR},
+			#{status,jdbcType=VARCHAR},
+			#{actionMsg,jdbcType=VARCHAR},
+			#{className,jdbcType=VARCHAR},
+			#{actionMethod,jdbcType=VARCHAR},
+			#{actionDate},
+			#{remark,jdbcType=VARCHAR},
+			#{executeTime,jdbcType=INTEGER}
+		)
+    </insert>
+
+</mapper>

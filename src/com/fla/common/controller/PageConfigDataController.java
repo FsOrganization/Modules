@@ -224,7 +224,7 @@ public class PageConfigDataController extends SuperController{
 	@RequestMapping("/pages/system/pageconfig/getServiceShopName.light")
 	public void getServiceShopName(HttpServletRequest request,HttpServletResponse response) {
 		PrintWriter printWriter = null;
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser s = getSystemUser(request, response);
 		Map<String, String> params =  new HashMap<String, String>();
 		params.put("loginName", s.getLoginName());
 		if (!s.getLoginName().equals("admin")) {

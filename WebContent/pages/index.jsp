@@ -1,6 +1,5 @@
-
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@include file="/base/base.jsp"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -13,22 +12,75 @@
 <link rel="stylesheet" type="text/css" href="<%=contextPath%>/mochaui-0.9.7/themes/default/css/Layout.css" />
 <link rel="stylesheet" type="text/css" href="<%=contextPath%>/mochaui-0.9.7/themes/default/css/Dock.css" />
 <link rel="stylesheet" type="text/css" href="<%=contextPath%>/mochaui-0.9.7/themes/default/css/Window.css" />
-<%-- <link rel="stylesheet" type="text/css" href="<%=contextPath%>/mochaui-0.9.7/themes/default/css/Tabs.css" /> --%>
-
-<!--[if IE]>
-<script type="text/javascript" src="<%=contextPath%>/mochaui-0.9.7/scripts/excanvas_r43.js"></script>
-<![endif]-->
-<%-- <script type="text/javascript" src="<%=contextPath%>/mochaui-0.9.7/scripts/mootools-1.2.4-core-yc.js"></script> --%>
-<%-- <script type="text/javascript" src="<%=contextPath%>/mochaui-0.9.7/scripts/mootools-1.2.4-more-yc.js"></script> --%>
-<%-- <script type="text/javascript" src="<%=contextPath%>/mochaui-0.9.7/scripts/mocha.js"></script> --%>
-<%-- <script type="text/javascript" src="<%=contextPath%>/mochaui-0.9.7/scripts/mocha-init.js"></script> --%>
-
-	
+<link rel="stylesheet" type="text/css" href="<%=contextPath%>/pages/menuStyle/menuButton/menuButtonStyle.css" />
 <style type="text/css">
 .speli {
 	margin: 2px 25px;
 }
 
+.als-container {
+	position: relative;
+	width: 100%;
+	margin: 0px auto;
+	z-index: 0;
+}
+
+.als-viewport {
+	position: relative;
+	overflow: hidden;
+	margin: 0px auto;
+}
+
+.als-wrapper {
+	position: relative;
+	list-style: none;
+}
+
+.als-item {
+	position: relative;
+	display: block;
+	text-align: center;
+	cursor: pointer;
+	float: left;
+}
+
+.als-prev, .als-next {
+	position: absolute;
+	cursor: pointer;
+	clear: both;
+}
+/*************************************
+			 * specific styling for #demo3
+			 ************************************/
+#demo3 {
+	margin: 40px auto;
+}
+
+#demo3 .als-item {
+	margin: 0px 5px;
+	padding: 4px 0px;
+	min-height: 120px;
+	min-width: 100px;
+	text-align: center;
+}
+
+#demo3 .als-item img {
+	display: block;
+	margin: 0 auto;
+	vertical-align: middle;
+}
+
+#demo3 .als-prev, #demo3 .als-next {
+	top: 40px;
+}
+
+#demo3 .als-prev {
+	left: 200px;
+}
+
+#demo3 .als-next {
+	right: 200px;
+}
 </style>
 <title>源信幸福快递</title>
 <script type="text/javascript" src="<%=contextPath%>/pages/js/menu.js"></script>
@@ -38,200 +90,184 @@
 <script type="text/javascript" src="<%=contextPath%>/pages/js/index.js"></script>
 <script type="text/javascript" src="<%=contextPath%>/js/ZeroClipboard.min.js"></script>
 <script type="text/javascript" src="<%=contextPath%>/js/sockjs-0.3.min.js"></script>
-<script type="text/javascript">	
-	
+<script type="text/javascript" src="<%=contextPath%>/pages/js/jquery.als-1.7.js"></script>
+
+<script type="text/javascript">
 	function logout(){
 		$('#logout').submit();
 	}
+	$(document).ready(function() {
+// 		var list = $('#MenuData').val();
+// 		alert(list.length);
+// 		$.each(list, function(i,item){
+// 			$('#MenuData').val(list);
+// 		});
+		$("#demo3").als({
+			visible_items: 4,
+			scrolling_items: 2,
+			orientation: "horizontal",
+			circular: "yes",
+			autoscroll: "yes",
+			interval: 4000
+		});
+	});
 </script>  
 </head>
-<body id="indexbody" style="background: #fff;overflow-y:auto;overflow-x:hidden;" topmargin="0">
+<body id="indexbody" style="background: #fff;overflow: hidden;" topmargin="0">
 	<input type="hidden" id="loginTag" value="${loginName}"/>
+	<input type="hidden" id="MenuData" value="${sysMenuList}"/>
 	<input type="hidden" id="redirectTag" value="${redirect}"/>
-	
-	<table border="0" cellpadding="0" cellspacing="0" width="100%" height="473" style="border-collapse: collapse" bordercolor="#111111">
-		<tr>
-			<td colspan="10">
-	<div id="desktopHeader">
-		<div id="desktopTitlebarWrapper">
-			<div id="desktopTitlebar">
-				<h2 class="tagline">
-					<span class="taglineEm">
-						<h2>源信幸福快递 </h2>
-					</span>
-				</h2>
-				<div id="topNav">
-					<ul class="menu-right" style="margin: 0px 16px 9px 16px;">
-						<h4><li>您好 <a>${loginName}</a></li>
-						<li><a id="modfiyPassWord">修改密码</a></li>
-						<li><a onclick="logout();">退出系统</a></li></h4>
-					</ul>
-				</div>
-			</div>
-		</div>
-	
-		<div id="desktopNavbar">	
-<!-- 			<ul> -->
-<!-- 				<li><a class="returnFalse" href="">File</a>	 -->
-<!-- 					<ul> -->
-<!-- 						<li><a href="#" onclick="MochaUI.notification('Do Something');return false;">Open</a></li>				 -->
-<!-- 						<li class="divider"><a class="returnFalse arrow-right" href="">Tests</a> -->
-<!-- 							<ul> -->
-<!-- 								<li><a id="windoweventsLinkCheck" href="pages/events.html">Window Events</a></li> -->
-<!-- 								<li><a id="containertestLinkCheck" href="pages/lipsum.html">Container Test</a></li> -->
-<!-- 								<li><a id="iframetestsLinkCheck" href="pages/iframetests.html">Iframe Tests</a></li> -->
-<!-- 								<li><a id="formtestsLinkCheck" href="pages/formtests.html">Form Tests</a></li>						 -->
-<!-- 								<li><a id="noCanvasLinkCheck" href="pages/lipsum.html">No Canvas Body</a></li> -->
-<!-- 							</ul> -->
-<!-- 						</li> -->
-<!-- 						<li class="divider"><a class="returnFalse arrow-right" href="">Starters</a> -->
-<!-- 							<ul> -->
-<!-- 								<li><a target="_blank" href="demo-virtual-desktop.html">Virtual Desktop</a></li> -->
-<!-- 								<li><a target="_blank" href="demo-fixed-width.html">Fixed Width</a></li> -->
-<!-- 								<li><a target="_blank" href="demo-dock-only.html">Fixed Width 2</a></li> -->
-<!-- 								<li><a target="_blank" href="demo-no-toolbars.html">No Toolbars</a></li> -->
-<!-- 								<li><a target="_blank" href="demo-no-desktop.html">No Desktop</a></li> -->
-<!-- 								<li><a target="_blank" href="demo-modal-only.html">Modal Only</a></li> -->
-<!-- 							</ul> -->
-<!-- 						</li> -->
-<!-- 					</ul> -->
-<!-- 				</li> -->
-<!-- 				<li><a class="returnFalse" href="">Help</a> -->
-<!-- 					<ul> -->
-<!-- 						<li><a id="featuresLinkCheck" href="pages/features.html">Features</a></li> -->
-<!-- 						<li class="divider"><a target="_blank" href="http://mochaui.com/docs/">Documentation</a></li> -->
-<!-- 						<li class="divider"><a id="aboutLink" href="pages/about.html">About</a></li> -->
-<!-- 					</ul> -->
-<!-- 				</li> -->
-<!-- 			</ul> -->
-			<div class="toolbox divider">
-				<div id="spinnerWrapper"><div id="spinner"></div></div>
-			</div>
-
-<!-- 			<div class="toolbox divider" style="margin: 5px 0px;">	 -->
-<!-- 				<select id="themeControl" name="themeControl" size="1" onchange="MochaUI.Themes.init(this.options[this.selectedIndex].value)"> -->
-<!-- 					<option id="chooseTheme" value="" selected>活跃</option> -->
-<!-- 					<option value="default">睡眠</option> -->
-<!-- 				</select>	 -->
-<!-- 			</div> -->
-			
-		</div><!-- desktopNavbar end -->
-	</div><!-- desktopHeader end -->
-			</td>
-		</tr>
-		<tr>
-			<td style="background: #f2f2f2;height:500px;" valign="top">
-			<div>
-				<div align="center">
-					<center>
-						<ul id="css3menu1" class="topmenu">
-									<input type="checkbox" id="css3menu-switcher" class="switchbox">
-									<label onclick="" class="switch" for="css3menu-switcher"></label>	
-									<li class="topmenu"><a href="#" style="width:125px;height:25px;line-height:25px;cursor:default;"><img src="<%=contextPath%>/pages/menuStyle/refresh.png" alt=""/>快件管理</a></li>
-									<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("快件入库", "<%=contextPath%>/pages/business/test/infinished.jsp","icon-sz",undefined,"infinished");'>快件入库</a></li>
-									<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("快件出库", "<%=contextPath%>/pages/business/test/NewFile.jsp","icon-sz");'>快件出库</a></li>
-									<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("寄件管理", "<%=contextPath%>/pages/business/test/sentExpress.jsp","icon-sz");'>寄件管理</a></li>
-									<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("快件日志", "<%=contextPath%>/pages/business/test/expressInfo.jsp","icon-sz");'>快件日志</a></li>
+	<input type="hidden" id="lateFeeLimitUpper" value="${lateFeeLimitUpper}"/>
+	<input type="hidden" id="lateDayLimit" value="${lateDayLimit}"/>
+	<input type="hidden" id="memberLateFeeLimitUpper" value="${memberLateFeeLimitUpper}"/>
+	<input type="hidden" id="memberLateDayLimit" value="${memberLateDayLimit}"/>
+	<div style="overflow-y:hidden;overflow-x:hidden;">
+		<div id="desktopHeader">
+			<div id="desktopTitlebarWrapper"> <!-- id="desktopTitlebarWrapper" -->
+				<div id="desktopTitlebar">
+					<h2 class="tagline">
+						<span class="taglineEm">
+							<h2>源信幸福快递 </h2>
+						</span>
+					</h2>
+					<div id="topNav">
+						<ul class="menu-right" style="margin: 0px 16px 9px 16px;">
+							<h4><li style='color: #6dbdc7;font-weight: 900;font-size: 12px;font-family: 微软雅黑;'>您好 <span>${loginName} </span><span>[${areaName}-></span><span>${shopName}]</span></li>
+							<li><a style='color: #6dbdc7;font-weight: 900;font-size: 12px;font-family: 微软雅黑;' id="modfiyPassWord">修改密码</a></li>
+							<li><a style='color: #6dbdc7;font-weight: 900;font-size: 12px;font-family: 微软雅黑;' onclick="logout();">退出系统</a></li></h4>
 						</ul>
-					</center>
-				</div>
-				<div align="center" id="customerSeting">
-					<center>
-							<ul id="css3menu1" class="topmenu">
-								<input type="checkbox" id="css3menu-switcher" class="switchbox">
-								<label onclick="" class="switch" for="css3menu-switcher"></label>	
-								<li class="topmenu"><a href="#" style="width:125px;height:25px;line-height:25px;cursor:default;"><img src="<%=contextPath%>/pages/menuStyle/users.png" alt=""/>客户管理</a></li>
-								<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("客户信息管理", "<%=contextPath%>/pages/business/customer/customerInfo.jsp?loginName=${loginName}","icon-sz",undefined,"customer");'>客户信息管理</a></li>
-							</ul>
-					</center>
-				</div>
-				<div align="center" id="statistics">
-					<center>
-						<ul id="css3menu1" class="topmenu">
-									<input type="checkbox" id="css3menu-switcher" class="switchbox">
-									<label onclick="" class="switch" for="css3menu-switcher"></label>	
-									<li class="topmenu"><a href="#" style="width:125px;height:25px;line-height:25px;cursor:default;"><img src="<%=contextPath%>/pages/menuStyle/chart.png" alt=""/>统计分析 </a></li>
-									<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("网点人数统计表", "<%=contextPath%>/pages/report/shopNumberOfPeopleStatistics.jsp","icon-sz",undefined,"statistics");'>网点人数统计表</a></li>
-									<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("网点收寄件统计", "<%=contextPath%>/pages/report/shopInAndSendExpressGroupCount.jsp","icon-sz",undefined,"statistics");'>网点收寄件统计</a></li>
-									<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("收寄件人数月报", "<%=contextPath%>/pages/report/shopOutAndSendExpressMonthly.jsp","icon-sz",undefined,"statistics");'>收寄件人数月报</a></li>
-									<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("收寄件分组统计", "<%=contextPath%>/pages/report/shopOutAndSendExpressGroup.jsp","icon-sz",undefined,"statistics");'>收寄件分组统计</a></li>
-								</ul>
-					</center>
-				</div>
-				
-				<div align="center" id="configSeting">
-					<center>
-						<ul id="css3menu1" class="topmenu">
-							<input type="checkbox" id="css3menu-switcher" class="switchbox">
-							<label onclick="" class="switch" for="css3menu-switcher"></label>	
-							<li class="topmenu"><a href="#" style="width:125px;height:25px;line-height:25px;cursor:default;"><img src="<%=contextPath%>/pages/menuStyle/process1.png" alt=""/>系统设置</a></li>
-							<li class="topmenu"><a href="#" style="width:125px;text-align: center;"><span>区域&网点设置</span></a>
-								<ul>
-									<li><a href="javascript:void(0);" onclick='addTab("区域设置", "<%=contextPath%>/pages/business/systemSetUp/areaSetUp.jsp","icon-sz",undefined,"infinished");'>区域设置</a></li>
-									<li><a style="font-weight: 100;" href="javascript:void(0);" onclick='addTab("网点设置", "<%=contextPath%>/pages/business/systemSetUp/shopSetUp.jsp","icon-sz",undefined,"shopSet");'>网点设置</a></li>
-								</ul>
-							</li>
-							<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("用户设置", "<%=contextPath%>/pages/business/systemSetUp/userSetUp.jsp","icon-sz",undefined,"systemSet");'>用户设置</a></li>
-<%-- 							<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("快递服务商设置", "<%=contextPath%>/pages/business/systemSetUp/expressServiceProviderSetUp.jsp","icon-sz",undefined,"infinished");'>快递服务商设置</a></li> --%>
-<!-- 							<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("短信监控配置", "http://sms.sms.cn/login.php","icon-sz",undefined,"sms");'>短信监控配置</a></li> -->
-						</ul>
-					</center>
-				</div>
-				<div align="center">
-					<center>
-						<ul id="css3menu1" class="topmenu">
-							<input type="checkbox" id="css3menu-switcher" class="switchbox">
-							<label onclick="" class="switch" for="css3menu-switcher"></label>	
-							<li class="topmenu"><a href="#" style="width:125px;height:25px;line-height:25px;cursor:default;"><img src="<%=contextPath%>/pages/menuStyle/process1.png" alt=""/>参数设置</a></li>
-							<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("快递服务商设置", "<%=contextPath%>/pages/business/systemSetUp/expressServiceProviderSetUp.jsp?loginName=${loginName}","icon-sz",undefined,"provider");'>快递服务商设置</a></li>
-							<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("商品管理", "<%=contextPath%>/pages/E-commerce/itemQRCode.jsp?loginName=${loginName}","icon-sz",undefined,"provider");'>商品管理</a></li>
-<%-- 							<li class="topmenu"><a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("网点间通信平台", "<%=contextPath%>/pages/business/shopCommunicate/shopCommunicate.jsp?loginName=${loginName}","icon-sz",undefined,"provider");'>网点间通信平台</a></li> --%>
-						</ul>
-					</center>
-				</div>
-			</div>
-			</td>
-			<td colspan="2" style="background: #fff;" valign="top" height="100%">
-				<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border-width: 0;" id="AutoNumber3">
-					<div id="tabs" class="easyui-tabs">
-						<div title="特别说明" style="padding:10px">
-<!-- 							<ul> -->
-<!-- 								<li class="speli" style="font-size: large;">签字板功能仅支持IE浏览器 -->
-<!-- 	 								<span class="formInfo"> -->
-<%-- 										<a href="<%=contextPath%>/pages/system/getToolTipMsgById.light" class="jTip" id="one" name="重要提示!">!</a> --%>
-<!-- 									</span> -->
-<!-- 								</li> -->
-<!-- 							</ul> -->
-								<div style="margin: 5px 5px;">你好：${nickName} [${userMode}]</div>
-						</div>
 					</div>
-				</table>
-			</td>
-		</tr>
-	</table>
-	<div id="desktopFooterWrapper">
-		<div id="desktopFooter">			
-			<p align="right" style="margin: 1px 0px;" ><a target="_blank" style="margin: 0px 205px;font-weight: 900;">Copyright 光艺软件科技. 2013-2016 All Rights Reserved.</a></p>
+				</div>
+			</div>
+<!-- 			<ul id="menu_button_css" class="top_menu_css"> -->
+<!-- 			<input type="checkbox" id="css3menu-switcher" class="switch_box_css"> -->
+<!-- 				<label onclick="" class="switch" for="css3menu-switcher"></label>	 -->
+<!-- 				<li class="top_menu_css"><a href="#" style="height:16px;line-height:16px;">主 页</a></li> -->
+<!-- 				<li class="top_menu_css"><a href="#" style="height:16px;line-height:16px;"><span>系统管理</span></a> -->
+<!-- 				<ul> -->
+<!-- 					<li><a href="#">Item 1 0</a></li> -->
+<!-- 					<li><a href="#">Item 1 1</a></li> -->
+<!-- 					<li><a href="#">Item 1 2</a></li> -->
+<!-- 					<li><a href="#"><span>Item 1 3</span></a> -->
+<!-- 					<ul> -->
+<!-- 						<li><a href="#"><span>Item 1 3 0</span></a> -->
+<!-- 						<ul> -->
+<!-- 							<li><a href="#"><span>Item 1 3 0 0</span></a> -->
+<!-- 							<ul> -->
+<!-- 								<li><a href="#">Item 1 3 0 0 0</a></li> -->
+<!-- 							</ul></li> -->
+<!-- 						</ul></li> -->
+<!-- 					</ul></li> -->
+<!-- 				</ul></li> -->
+<!-- 				<li class="top_menu_css"><a href="#" style="height:16px;line-height:16px;"><span>报表系统</span></a> -->
+<!-- 				<ul> -->
+<!-- 					<li><a href="#">Item 2 0</a></li> -->
+<!-- 				</ul></li> -->
+<!-- 				<li class="top_menu_css"><a href="#" style="height:16px;line-height:16px;">快递管理</a></li> -->
+<!-- 				<li class="top_menu_css"><a href="#" style="height:16px;line-height:16px;">商品维护</a></li> -->
+<!-- 				<li class="top_menu_css"><a href="#" style="height:16px;line-height:16px;">用户管理</a></li> -->
+<!-- 				<li class="top_menu_css"><a href="#" style="height:16px;line-height:16px;">日志管理</a></li> -->
+<!-- 				<li class="top_menu_css"><a href="#" style="height:16px;line-height:16px;">日志管理</a></li> -->
+<!-- 			</ul> -->
+		</div>
+	</div>
+	<div style="overflow-y:auto;overflow-x:hidden;">
+		<table id="mainBody" style="border-collapse:collapse;border:0px;cellpadding:0px;cellspacing:0px;width:100%;bordercolor:#111111;">
+			<tr>
+				<td style="background: #f2f2f2;height:520px;" valign="top">
+					<div id="menuTdDiv">
+					<c:forEach items="${sysMainMenuList}" var="mainMenu" varStatus="status">
+						<div align="center">
+							<center>
+								<ul id="css3menu1" class="topmenu">
+									<input type="checkbox" id="css3menu-switcher" class="switchbox">
+									<label onclick="" class="switch" for="css3menu-switcher"></label>	
+									<li class="topmenu">
+										<a href="#" style="width:125px;height:25px;line-height:25px;cursor:default;">
+											<img src="<%=contextPath%>${mainMenu.className}" alt=""/>${mainMenu.name}
+										</a>
+									</li>
+									<c:if test="${mainMenu.childSysMenuNodes.size() != 0}">
+										<c:forEach items="${mainMenu.childSysMenuNodes}" var="child" varStatus="status">
+											<c:if test="${child.abstractLevel == 'Y'}">
+												<li class="topmenu"><a href="#" style="width:125px;text-align: center;"><span>${child.name}</span></a>
+													<ul>
+														<c:forEach items="${child.childSysMenuNodes}" var="endNode" varStatus="status">
+															<li>
+																<a href="javascript:void(0);" onclick='addTab("${endNode.name}", "<%=contextPath%>${endNode.url}","${endNode.icon}",undefined,"infinished");'>${endNode.name}</a>
+															</li>
+	           											</c:forEach>
+         											</ul>
+												</li>
+		                    				</c:if>
+		                    				<c:if test="${child.abstractLevel == 'N'}">
+												<li class="topmenu">
+													<a style="font-weight: 100;text-align: center;" href="javascript:void(0);" onclick='addTab("${child.name}", "<%=contextPath%>${child.url}","${endNode.icon}",undefined,"statistics");'>${child.name}</a>
+												</li>
+		                    				</c:if>
+							            </c:forEach>
+                    				</c:if>
+								</ul>
+							</center>
+						</div>
+		            </c:forEach>
+				</td>
+				<td colspan="2" style="background: #fff;" valign="top" height="100%">
+					<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border-width: 0;" id="AutoNumber3">
+						<div id="tabs" class="easyui-tabs">
+							<div title="特别说明" style="padding:10px">
+								<div style="margin: 5px 5px;">你好：${nickName} [${userMode}]</div>
+							</div>
+						</div>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div>
+		<div class="als-container" id="demo3" style="background: #fff url(<%=contextPath%>/mochaui-0.9.7/themes/default/images/bg-header.gif) repeat-x;">
+<!-- 		  <span class="als-prev"><img src="images/thin_left_arrow_333.png" alt="prev" title="previous" /></span> -->
+<!-- 		  <div class="als-viewport"> -->
+<!-- 		    <ul class="als-wrapper"> -->
+<!-- 		      <li class="als-item"><img src="images/fruits/arancio.png" alt="orange" title="orange" />orange</li> -->
+<!-- 		      <li class="als-item"><img src="images/fruits/mela.png" alt="apple" title="apple" />apple</li> -->
+<!-- 		      <li class="als-item"><img src="images/fruits/banana.png" alt="banana" title="banana" />banana</li> -->
+<!-- 		      <li class="als-item"><img src="images/fruits/mirtillo.png" alt="blueberry" title="blueberry" />blueberry</li> -->
+<!-- 		      <li class="als-item"><img src="images/fruits/anguria.png" alt="watermelon" title="watermelon" />watermelon</li> -->
+<!-- 		      <li class="als-item"><img src="images/fruits/ciliegia.png" alt="cherry" title="cherry" />cherry</li> -->
+<!-- 		      <li class="als-item"><img src="images/fruits/fragola.png" alt="strawberry" title="strawberry" />strawberry</li> -->
+<!-- 		      <li class="als-item"><img src="images/fruits/avocado.png" alt="avocado" title="avocado" />avocado</li> -->
+<!-- 		      <li class="als-item"><img src="images/fruits/pera.png" alt="pear" title="pear" />pear</li> -->
+<!-- 		      <li class="als-item"><img src="images/fruits/ananas.png" alt="pineapple" title="pineapple" />pineapple</li> -->
+<!-- 		      <li class="als-item"><img src="images/fruits/papaya.png" alt="papaya" title="papaya" />papaya</li> -->
+<!-- 		      <li class="als-item"><img src="images/fruits/lampone.png" alt="raspberry" title="raspberry" />raspberry</li> -->
+<!-- 		    </ul> -->
+<!-- 		  </div> -->
+<!-- 		  <span class="als-next"><img src="images/thin_right_arrow_333.png" alt="next" title="next" /></span> -->
+		</div>
+		<div id="desktopFooterWrapper" style="background: #fff url(<%=contextPath%>/mochaui-0.9.7/themes/default/images/bg-header.gif) repeat-x;height: 30px;">
+			<div id="desktopFooter">			
+<!-- 				<p align="right" style="margin: 1px 0px;" ><a target="_blank" style="margin: 0px 205px;font-weight: 900;">Copyright 光艺软件科技. 2013-2016 All Rights Reserved.</a></p> -->
+			</div>
 		</div>
 	</div>
 	<div id="modfiyPassWordWindow">
 		<input type="hidden" name="loginName" id="loginName" value="${loginName}">
-		<div style="margin: 10px 10px;text-align:center;" class="pwModfiy">
-				<table>
-					<tr>
-						<td align="right">
-								<label for="pw">新密码：</label>
-								<input type='password' id="pw" name="pw" style="width: 210px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="新密码">
-						</td>
-						
-					<tr>
-					<tr>
-						<td align="right">
-							<label for="confirmPw">确认新密码：</label>
-								<input type="password" name="confirmPw" id="confirmPw" style="width: 210px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="确认新密码">
-						</td>
-					</tr>
-				</table>
+		<div style="margin: 10px 10px;text-align:center;font-size: 12px; " class="pwModfiy">
+			<table>
+				<tr>
+					<td align="right">
+						<label for="pw" style="font-size: 12px;">新密码：</label>
+						<input type='password' id="pw" name="pw" style="width: 210px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="新密码">
+					</td>
+				<tr>
+				<tr>
+					<td align="right">
+						<label for="confirmPw" style="font-size: 12px;">确认新密码：</label>
+							<input type="password" name="confirmPw" id="confirmPw" style="width: 210px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="确认新密码">
+					</td>
+				</tr>
+			</table>
 		</div>
 		<div style="text-align:center;margin: 15px 0px;">
 		  	<input id="saveBtn" type="button" value="保存" style="height: 30px;width: 49px;"/>
@@ -239,7 +275,6 @@
 		</div>
 	</div>
 </body>
-
 
 <div id="right_menu" class="easyui-menu" style="width:240px;">
 	<input type="hidden" id="currentIndex"/>
@@ -257,7 +292,7 @@
 <div style="display: none;">
   <div>
     <form action="<%=contextPath%>/pages/system/welcome.light" method="post" id='logout'>
-		<input type="submit" style="height: 30px;width: 60px;" class="l-btn-text" value="退出系统">
+		<input type="submit" style="height: 30px;width: 60px;" class="l-btn-text btn" value="退出系统">
 	</form>
   </div>
 </div>

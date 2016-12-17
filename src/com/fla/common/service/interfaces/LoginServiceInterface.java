@@ -53,6 +53,8 @@ public interface LoginServiceInterface {
 	
 	public Pagination getNotOutExpressInfoByFilterConditions(final int rowSize, final int pageSize,Map<String,String> params) throws SQLException ;
 	
+	public Pagination searchExpressInfoByBarCode(final int rowSize, final int pageSize,Map<String,String> params) throws SQLException ;
+	
 	public JSONObject insertSignature(Signature sign) throws SQLException;
 	
 	public JSONObject getSignatureByBatchNumber(String batchNumber,  String type);

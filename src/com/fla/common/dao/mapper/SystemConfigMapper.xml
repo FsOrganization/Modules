@@ -5,7 +5,7 @@
 <mapper namespace="com.fla.common.dao.interfaces.SystemConfigDaoInterface">
     
     <select id="getSystemConfigList" parameterType="java.util.Map" resultType="com.fla.common.entity.SystemConfig">
-      SELECT
+      	SELECT
             ID id,
 			CONFIG_ID configId,
 			VAlUE value,
@@ -18,40 +18,96 @@
 			SERVICE_SHOP_CODE serviceShopCode
 		FROM TF_SYSTEM_CONFIG_VALUES
        <where>
-       	<if test="configName != null and configName != '' ">
-	        CONFIG_NAME = #{configName}
+       	<if test="status != null and status != '' ">
+	         STATUS = #{status}
 	    </if>
-	    <if test="status != null and status != '' ">
-	        AND STATUS = #{status}
+       	<if test="configName != null and configName != '' ">
+	         AND CONFIG_NAME like '%${configName}%'
 	    </if>
 	  </where>
 	  ORDER BY ID
     </select>
     
-    <insert id="addUserRole" parameterType="java.util.Map">
-	    INSERT INTO TF_USER_ROLE(
-			USER_ID,
-			ROLE_ID,
-			AREA_CODE,
+    <insert id="insert" parameterType="com.fla.common.entity.SystemConfig" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO TF_SYSTEM_CONFIG_VALUES (
+			CONFIG_ID,
+			VALUE,
+			VALUE_TYPE,
+			CONFIG_CODE,
+			CONFIG_NAME,
+			ORDER_NUMBER,
+			REMARK,
 			STATUS,
-			CODE,
-			LIMIT_PURVIEW,
-			LIMIT_CODE,
-			START_DATE,
-			END_DATE,
-			REMARK
-		) values (
-			#{userId,jdbcType=INTEGER},
-			#{roleId,jdbcType=INTEGER},
-			#{areaCode,jdbcType=VARCHAR},
+			SERVICE_SHOP_CODE
+		) VALUES (
+			#{configId,jdbcType=NUMERIC},
+			#{value,jdbcType=VARCHAR},
+			#{valueType,jdbcType=VARCHAR},
+			#{configCode,jdbcType=VARCHAR},
+			#{configName,jdbcType=VARCHAR},
+			#{orderNumber,jdbcType=NUMERIC},
+			#{remark,jdbcType=VARCHAR},
 			#{status,jdbcType=VARCHAR},
-			#{code,jdbcType=VARCHAR},
-			#{limitPurview,jdbcType=VARCHAR},
-			#{limitCode,jdbcType=VARCHAR},
-			#{startDate,jdbcType=DATE},
-			#{endDate,jdbcType=DATE},
-			#{remark,jdbcType=VARCHAR}
+			#{serviceShopCode,jdbcType=VARCHAR}
 		)
 	</insert>
+	
+	<update id="update" parameterType="com.fla.common.entity.SystemConfig">
+        UPDATE TF_SYSTEM_CONFIG_VALUES
+        SET
+			<if test="configId != null">CONFIG_ID=#{configId,jdbcType=NUMERIC},</if>
+			<if test="value != null">VAlUE=#{value,jdbcType=VARCHAR},</if>
+			<if test="valueType != null">VAlUE_TYPE=#{valueType,jdbcType=VARCHAR},</if>
+			<if test="configCode != null">CONFIG_CODE=#{configCode,jdbcType=VARCHAR},</if>
+			<if test="orderNumber != null">ORDER_NUMBER=#{orderNumber,jdbcType=NUMERIC},</if>
+			<if test="status != null">STATUS=#{status,jdbcType=VARCHAR},</if>
+			<if test="serviceShopCode != null">SERVICE_SHOP_CODE=#{serviceShopCode,jdbcType=VARCHAR},</if>
+			<if test="configName != null">CONFIG_NAME=#{configName,jdbcType=VARCHAR},</if>
+			<if test="remark != null">REMARK=#{remark,jdbcType=VARCHAR}</if>
+        WHERE ID = #{id,jdbcType=NUMERIC}
+    </update>
+    
+    <select id="getLateDayLimit" parameterType="java.util.Map" resultType="java.lang.String">
+      	select value 
+      	from TF_SYSTEM_CONFIG_VALUES a 
+      	where a.CONFIG_CODE = #{configCode,jdbcType=VARCHAR} 
+      		and a.STATUS = #{status,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="getLateFeeLimitUpper" parameterType="java.util.Map" resultType="java.lang.String">
+      	select value 
+      	from TF_SYSTEM_CONFIG_VALUES a 
+      	where a.CONFIG_CODE = #{configCode,jdbcType=VARCHAR} 
+      		and a.STATUS = #{status,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="getMemberLateFeeAddition" parameterType="java.util.Map" resultType="java.lang.String">
+      	select value 
+      	from TF_SYSTEM_CONFIG_VALUES a 
+      	where a.CONFIG_CODE = #{configCode,jdbcType=VARCHAR} 
+      		and a.STATUS = #{status,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="getMemberLateDayAddition" parameterType="java.util.Map" resultType="java.lang.String">
+      	select value 
+      	from TF_SYSTEM_CONFIG_VALUES a 
+      	where a.CONFIG_CODE = #{configCode,jdbcType=VARCHAR} 
+      		and a.STATUS = #{status,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="getConfigValueByCode" parameterType="java.util.Map" resultType="com.fla.common.entity.SystemConfig">
+      	SELECT
+			b.CONFIG_ID configId,
+			b.VAlUE value,
+			b.VAlUE_TYPE valueType,
+			a.CONFIG_CODE configCode,
+			a.CONFIG_NAME configName,
+			a.AREA_CODE areaCode,
+			a.SERVICE_SHOP_CODE serviceShopCode
+		FROM
+			TF_SYSTEM_CONFIG A LEFT JOIN TF_SYSTEM_CONFIG_VALUES B ON A.ID = B.CONFIG_ID AND B.STATUS = #{status}
+		WHERE
+			A.CONFIG_CODE = #{configCode} AND A.STATUS = #{status}
+    </select>
     
 </mapper>

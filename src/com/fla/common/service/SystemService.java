@@ -451,10 +451,10 @@ public class SystemService implements SystemServiceInterface{
 	}
 
 	@Override
-	public JSONArray getExpressStatisticalArea(String areaCode)
+	public JSONArray getExpressStatisticalArea(Map<String, Object> params)
 			throws SQLException {
 		JSONArray ja = new JSONArray();
-		List<Map<String, Object>> rowMap = systemDao.getExpressStatisticalArea(areaCode);
+		List<Map<String, Object>> rowMap = systemDao.getExpressStatisticalArea(params);
 		if (rowMap != null && rowMap.size() != 0) {
 			for (Map<String, Object> map : rowMap) {
 				JSONObject json = new JSONObject();

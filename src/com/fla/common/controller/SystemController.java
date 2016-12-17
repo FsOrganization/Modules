@@ -78,7 +78,7 @@ public class SystemController extends SuperController {
 	@RequestMapping("/pages/system/getAreaInfoForSelect.light")
 	public ModelAndView getAreaInfoForSelect(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, String> params = new HashMap<String, String>();
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser s = getSystemUser(request, response);
 		params.put("areaCode", s.getAreaCode());
 		params.put("loginName", s.getLoginName());
 		JSONArray jsonArray = systemServiceInterface.getAreaInfoForSelect(params);
@@ -102,7 +102,7 @@ public class SystemController extends SuperController {
 	public ModelAndView getShopInfoForSelect(HttpServletRequest request,
 			HttpServletResponse response) {
 		Map<String, String> params = new HashMap<String, String>();
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser s = getSystemUser(request, response);
 		params.put("areaCode", s.getAreaCode());
 		params.put("loginName", s.getLoginName());
 		JSONArray jsonArray = systemServiceInterface.getShopInfoForSelect(params);
@@ -157,7 +157,7 @@ public class SystemController extends SuperController {
 			pageSize = Integer.valueOf(page);
 		}
 		Map<String, String> params = new HashMap<String, String>();
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser s = getSystemUser(request, response);
 		params.put("loginName", s.getLoginName());
 		if (!s.getLoginName().equals("admin")) {
 			params.put("areaCode", s.getAreaCode());
@@ -191,7 +191,7 @@ public class SystemController extends SuperController {
 		if (page != null) {
 			pageSize = Integer.valueOf(page);
 		}
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser s = getSystemUser(request, response);
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("loginName", s.getLoginName());
 		if (!s.getLoginName().equals("admin")) {
@@ -568,7 +568,7 @@ public class SystemController extends SuperController {
 	@RequestMapping("/pages/system/queryAreaInfos.light")
 	public ModelAndView queryAreaInfos(String queryParams,
 			HttpServletRequest request, HttpServletResponse response) {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser s = getSystemUser(request, response);
 		if (s == null) {
 			return JumpModelAndView();
 		}
@@ -682,11 +682,9 @@ public class SystemController extends SuperController {
 	@RequestMapping("/pages/system/getLocationCodeByExpressType.light")
 	public ModelAndView getLocationCodeByExpressType(String type,
 			HttpServletRequest request, HttpServletResponse response) {
-		SystemUser s = (SystemUser) request.getSession().getAttribute(
-				"systemUser");
+		SystemUser s = getSystemUser(request, response);
 		String shopCode = s.getServiceShopCode();
-		JSONObject json = systemServiceInterface.getLocationCodeByExpressType(
-				type, shopCode);
+		JSONObject json = systemServiceInterface.getLocationCodeByExpressType(type, shopCode);
 		PrintWriter printWriter = null;
 		try {
 			response.setCharacterEncoding("utf-8");

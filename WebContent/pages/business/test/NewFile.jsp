@@ -17,16 +17,16 @@
 	<script src="<%=contextPath%>/common/jquery.bpopup/jquery.bpopup.min.js" ></script>
 
 <style type="text/css">
-table.contacts { 
+table.contacts {
 	width: 100%;
 	background-color: #fafafa;
 	border: 0px #000000 solid;
 	border-collapse: collapse;
-	border-spacing: 0px; 
+	border-spacing: 0px;
 	height: inherit;
 }
 
-td.contact { 
+td.contact {
 	border-bottom: 1px #6699CC dotted;
 	text-align: left;
 	font-family: Verdana, sans-serif, Arial;
@@ -37,93 +37,104 @@ td.contact {
 	padding-top: 4px;
 	padding-bottom: 4px;
 	padding-left: 8px;
-	padding-right: 0px; 
+	padding-right: 0px;
 }
 
 .contactinput:hover {
-  background: #e6e6e6;
+	background: #e6e6e6;
 }
-#element_to_pop_up { display:none; }
+
+#element_to_pop_up {
+	display: none;
+}
 
 #element_to_pop_up, .bMulti {
-    background-color: #FFF;
-    border-radius: 10px 10px 10px 10px;
-    box-shadow: 0 0 25px 5px #999;
-    color: #111;
-    display: none;
-    min-width: 450px;
-    min-height: 250px;
-    padding: 25px;
+	background-color: #FFF;
+	border-radius: 10px 10px 10px 10px;
+	box-shadow: 0 0 25px 5px #999;
+	color: #111;
+	display: none;
+	min-width: 450px;
+	min-height: 250px;
+	padding: 25px;
 }
 
 #element_to_pop_up .logo {
-    color: #2B91AF;
-    font: bold 325% 'Petrona',sans;
+	color: #2B91AF;
+	font: bold 325% 'Petrona', sans;
 }
 
 .button.b-close, .button.bClose {
-   border-radius: 7px 7px 7px 7px;
-    box-shadow: none;
-    font: bold 131% sans-serif;
-    padding: 0 6px 2px;
-    position: absolute;
-    right: -7px;
-    top: -7px;
+	border-radius: 7px 7px 7px 7px;
+	box-shadow: none;
+	font: bold 131% sans-serif;
+	padding: 0 6px 2px;
+	position: absolute;
+	right: -7px;
+	top: -7px;
 }
 
 .button {
-    background-color: #2B91AF;
-    border-radius: 10px;
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
-    color: #FFF;
-    cursor: pointer;
-    display: inline-block;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
+	background-color: #2B91AF;
+	border-radius: 10px;
+	box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+	color: #FFF;
+	cursor: pointer;
+	display: inline-block;
+	padding: 10px 20px;
+	text-align: center;
+	text-decoration: none;
 }
+
+.rowStyle {
+	background-color: #6293BB;
+	color: #fff;
+	font-weight: bold;
+}
+
 </style>
 <script type="text/javascript">
-	function iEsc() {
-		return false;
-	}
-	function iRec() {
-		return true;
-	}
-	function DisableKeys() {
-		if (event.ctrlKey || event.shiftKey || event.altKey) {
-			window.event.returnValue = false;
-			iEsc();
-		}
-	}
-	document.ondragstart = iEsc;
-	document.onkeydown = DisableKeys;
-	document.oncontextmenu = iEsc;
-	if (typeof document.onselectstart != "undefined")
-		document.onselectstart = iEsc;
-	else {
-		document.onmousedown = iEsc;
-		document.onmouseup = iRec;
-	}
-	function DisableRightClick(qsyzDOTnet) {
-		if (window.Event) {
-			if (qsyzDOTnet.which == 2 || qsyzDOTnet.which == 3)
-				iEsc();
-		} else if (event.button == 2 || event.button == 3) {
-			event.cancelBubble = true
-			event.returnValue = false;
-			iEsc();
-		}
-	}
+	// 	function iEsc() {
+	// 		return false;
+	// 	}
+	// 	function iRec() {
+	// 		return true;
+	// 	}
+	// 	function DisableKeys() {
+	// 		if (event.ctrlKey || event.shiftKey || event.altKey) {
+	// 			window.event.returnValue = false;
+	// 			iEsc();
+	// 		}
+	// 	}
+	// 	document.ondragstart = iEsc;
+	// 	document.onkeydown = DisableKeys;
+	// 	document.oncontextmenu = iEsc;
+	// 	if (typeof document.onselectstart != "undefined")
+	// 		document.onselectstart = iEsc;
+	// 	else {
+	// 		document.onmousedown = iEsc;
+	// 		document.onmouseup = iRec;
+	// 	}
+	// 	function DisableRightClick(qsyzDOTnet) {
+	// 		if (window.Event) {
+	// 			if (qsyzDOTnet.which == 2 || qsyzDOTnet.which == 3)
+	// 				iEsc();
+	// 		} else if (event.button == 2 || event.button == 3) {
+	// 			event.cancelBubble = true
+	// 			event.returnValue = false;
+	// 			iEsc();
+	// 		}
+	// 	}
 </script>
 <script src="<%=contextPath%>/pages/business/test/js/NewFile.js" type="text/javascript"></script>
 </head>
 <body style="overflow-y: hidden;background: #f2f2f2;" onkeydown="javascript:keyPress(event,'areaCodeGrid');" onkeyup="javascript:keyRelease(event,'areaCodeGrid');">
 	<div style="margin: 0px;background-color: #f2f2f2;">
-       	&nbsp;&nbsp;客户信息：<input id="queryParams" name="queryParams" style="width: 210px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="手机后四位、客户姓名、快件运单号">
-       	&nbsp;&nbsp;快递服务商：<input id="expressServiceId" name="expressServiceId" style="width: 150px;border-style: solid;border-color: antiquewhite;" class="easyui-combobox">
-       	&nbsp;&nbsp;开始日期：<input id="startDateId" name="startDateId" style="width: 120px;height:30px;border-style: solid;border-color: antiquewhite;" onclick="WdatePicker()" >
-       	&nbsp;&nbsp;截止日期：<input id="endDateId" name="endDateId"  style="width: 120px;height:30px;border-style: solid;border-color: antiquewhite;" onclick="WdatePicker()" >
+       	&nbsp;&nbsp;客户信息：<input type="text" id="queryParams" name="queryParams" style="width: 225px;" class="inputQueryEle" placeholder="手机后四位、客户姓名、快件运单号">
+<!--        	&nbsp;&nbsp;取件码：<input type="text" id="barCode" name="barCode" style="width: 225px;" class="inputQueryEle" placeholder="取件码"> -->
+       	&nbsp;&nbsp;快递服务商：<input type="text" id="expressServiceId" name="expressServiceId" class="inputQueryEle" class="easyui-combobox">
+       	&nbsp;&nbsp;开始日期：<input type="text" id="startDateId" name="startDateId" class="inputQueryEle" style="width: 100px;" onclick="WdatePicker()" >
+       	&nbsp;&nbsp;截止日期：<input type="text" id="endDateId" name="endDateId"  class="inputQueryEle" style="width: 100px;" onclick="WdatePicker()" >
             <button style="display: none;" id="my-button"></button>
             <div id="element_to_pop_up" style="display: none;">
     			<span class="button b-close"><span>X</span></span>
@@ -131,6 +142,9 @@ td.contact {
     					<img src="<%=contextPath%>/mobile-style/images/box.png">
     				</div>
     				<div id="content" style="font-size:14px;text-align: center;" class="content"></div>
+    				<div id="delayDayDiv" style="text-align:center;">
+       					<H2 id="delayDayContent"></H2>
+       				</div>
     				<div style="height:20px;margin-top:0px;text-align: center;">
 	        				<a id="getExpressBtn" class="easyui-linkbutton">确 定</a>
 	        				<input type="hidden" id="hiddenPhoneNumber">
@@ -146,12 +160,8 @@ td.contact {
        	
 	</div>
 	<table id="areaCodeGrid" style="height: auto;"></table>
-<!-- 	<div id="grid" style="height: 380px"></div> -->
 	<div id="detail" class="easyui-dialog" title="修改快件信息" style="width:460px;height:350px;padding:10px;overflow: hidden;"
-	            data-options="
-	                iconCls: 'icon-save',
-	                toolbar: '#dlg-toolbar',
-	                buttons: '#dlg-buttons',closed: true">
+	            data-options="iconCls: 'icon-save',toolbar: '#dlg-toolbar',buttons: '#dlg-buttons',closed: true">
 		    <form id="ff" action="<%=contextPath%>/pages/system/editDataById.light" method="post" class="af-form" style="height: inherit;">
 				<div class="af-outer">
 							<div class="af-inner">
@@ -162,7 +172,7 @@ td.contact {
 				</div>
 				<div class="af-outer">
 							<div class="af-inner">
-								<label for="input-title">收件人姓名:</label>
+								<label for="input-title">收件人姓名                 :</label>
 								<input type="text" name="modify_recipientName" id="modify_recipientName" style="width: 220px;margin:-10px 0px;">
 							</div>
 				</div>
@@ -185,19 +195,31 @@ td.contact {
         <a id="close" class="easyui-linkbutton" onclick="javascript:$('#detail').dialog('close')">Close</a>
     </div>
     
+    <div id="query" class="easyui-dialog" title="选择超时天数 " style="width:460px;height:150px;padding:10px;overflow: hidden;"
+	            data-options="iconCls: 'icon-filter',toolbar: '#dlg-toolbar',buttons: '#query-buttons',closed: true">
+		    <form id="ff" action="<%=contextPath%>/pages/system/editDataById.light" method="post" class="af-form" style="height: inherit;">
+		    	<div style="height: 18px;"></div>
+		    	<div id="ss" style="margin: 15px 0px;"></div> 
+			</form>
+	</div>
+    <div id="query-buttons">
+        <a id="modifyBtn" class="easyui-linkbutton">确定</a>
+        <a id="close" class="easyui-linkbutton" onclick="javascript:$('#query').dialog('close')">关闭</a>
+    </div>
+    
 	<!-- 条码显示 -->
-    <div id="imgDetail" class="easyui-dialog" title="Complex Toolbar on Dialog" style="width:400px;height:200px;padding:10px;"
-            data-options="buttons: '#dlg-buttons',closed: true">
-            <div style="margin: 20px 70px;">
-            	<img id="barimg" src=""></img>
-                <span id="fileName" style="margin: inherit;"></span>
-            </div>
+<!--     <div id="imgDetail" class="easyui-dialog" title="Complex Toolbar on Dialog" style="width:400px;height:200px;padding:10px;" -->
+<!--             data-options="buttons: '#dlg-buttons',closed: true"> -->
+<!--             <div style="margin: 20px 70px;"> -->
+<!--             	<img id="barimg" src=""></img> -->
+<!--                 <span id="fileName" style="margin: inherit;"></span> -->
+<!--             </div> -->
                 
-    </div>
-    <div id="dlg-buttons">
-        <a id="submitBtn" class="easyui-linkbutton">打印条码</a>
-        <a id="close" class="easyui-linkbutton" onclick="javascript:$('#imgDetail').dialog('close')">Close</a>
-    </div>
+<!--     </div> -->
+<!--     <div id="dlg-buttons"> -->
+<!--         <a id="submitBtn" class="easyui-linkbutton">打印条码</a> -->
+<!--         <a id="close" class="easyui-linkbutton" onclick="javascript:$('#imgDetail').dialog('close')">Close</a> -->
+<!--     </div> -->
     
     <!-- 签字区域 -->
     <div id="signatureRegion" style="overflow: hidden;">

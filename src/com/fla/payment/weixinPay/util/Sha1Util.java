@@ -3,7 +3,6 @@ package com.fla.payment.weixinPay.util;
 
 
 
-import java.net.URLDecoder;
 import java.security.MessageDigest;
 import java.util.Iterator;
 import java.util.Map;
@@ -19,7 +18,6 @@ import java.util.SortedMap;
 '============================================================================
 '*/
 public class Sha1Util {
-
 	public static String getNonceStr() {
 		Random random = new Random();
 		return MD5Util.MD5Encode(String.valueOf(random.nextInt(10000)), "UTF-8");
@@ -27,7 +25,6 @@ public class Sha1Util {
 	public static String getTimeStamp() {
 		return String.valueOf(System.currentTimeMillis() / 1000);
 	}
-	
    //创建签名SHA1
 	public static String createSHA1Sign(SortedMap<String, String> signParams) throws Exception {
 		StringBuffer sb = new StringBuffer();

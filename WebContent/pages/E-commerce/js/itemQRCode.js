@@ -17,12 +17,12 @@ $(document).ready(function() {
 		    closed:true,
 		    maximizable:false
 		});
-		loginName = getUrlParam("loginName");
-		if (loginName === 'admin') {
-			textMsg = "新增商品";
-		} else {
-			textMsg = "普通工号无法新增或修改商品基础信息";
-		}
+//		loginName = getUrlParam("loginName");
+//		if (loginName === 'admin') {
+//			textMsg = "新增商品";
+//		} else {
+//			textMsg = "普通工号无法新增或修改商品基础信息";
+//		}
 		$("#saveBtn").click(function() {
 			if (operatingTag) {
 				modifyForm();
@@ -101,7 +101,7 @@ $(document).ready(function() {
 		$('#expressServiceProviderGrid').datagrid({
 			dataType : 'json',
 			url : contextPath + '/pages/system/getMerchandiseList.light',
-			width : $(window).width() * 1,
+			width : $(window).width() * 0.99,
 			height :($(window).height()) * 0.99,
 			singleSelect : true,
 			rownumbers : true,
@@ -114,14 +114,14 @@ $(document).ready(function() {
 			},
 			toolbar: [
 	        {
-				text:textMsg,
-				iconCls: 'icon-search',
+				text:"新增商品",
+				iconCls: 'icon-add',
 				handler: function(){
-					if (loginName === 'admin') {
+//					if (loginName === 'admin') {
 						clearFormData();
 						addMerchandise();
 						operatingTag = false;
-					} 
+//					} 
 				}
 			}],
 			columns : [ [{
@@ -177,10 +177,10 @@ $(document).ready(function() {
 				parent.location.href=contextPath+'/pages/system/welcome.light';
 			},
 			onDblClickRow : function(rowIndex, rowData) {
-				if (loginName === 'admin') {
+//				if (loginName === 'admin') {
 					openWindow(rowIndex, rowData);
 					operatingTag = true;
-				}
+//				}
 				
 			},
 			loadFilter : pagerFilter

@@ -8,12 +8,19 @@
 %>
 <link rel="stylesheet" type="text/css" href="<%=contextPath%>/pages/css/jquery-tooltip/css/global.css" />
 <link rel="stylesheet" type="text/css" href="<%=contextPath%>/css/base.css" />
+<link rel="stylesheet" type="text/css" href="<%=contextPath%>/pages/css/input.css" />
+
+<%-- <link rel="stylesheet" href="<%=contextPath%>/common/ajaxMagicContainer/css/styles.css"> --%>
 
 <script type="text/javascript" src="<%=contextPath%>/js/jquery-2.1.3.min.js"></script>
 <script type="text/javascript" src="<%=contextPath%>/js/imagesloaded.pkgd.js"></script>
 
 <%-- <script src="<%=contextPath%>/js/ModulesImport.js"></script> --%>
 <script type="text/javascript" src="<%=contextPath%>/js/ModulesEasyUI.js"></script>
+
+<%-- menu index mode --%>
+<%-- <script type="text/javascript" src="<%=contextPath%>/common/index-menu-master/Gruntfile.js"></script> --%>
+
 <script type="text/javascript" src="<%=contextPath%>/EasyUI_1.4.1/locale/easyui-lang-zh_CN.js"></script>
 
 <script type="text/javascript" src="<%=contextPath%>/js/util.js"></script>
@@ -34,7 +41,12 @@
 
 <script src="<%=contextPath%>/js/expressDateUtil.js"></script>
 
+<!--ajaxMagicContainer -->
+<%-- <script type="text/javascript" src="<%=contextPath%>/common/ajaxMagicContainer/jquery.mockjax.js"></script> --%>
 
+<!--导入导出 -->
+<%-- <script type="text/javascript" src="<%=contextPath%>/js/namespace.js" type="text/javascript"></script> --%>
+<%-- <script type="text/javascript" src="<%=contextPath%>/js/exceldp.js" type="text/javascript"></script> --%>
 
 <script>
 	var contextPath = "<%=contextPath%>";

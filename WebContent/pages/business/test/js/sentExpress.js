@@ -2,6 +2,7 @@ var obj;
 var tempIds;
 var expressServiceMap = {};
 var operaTag = null;
+var ajaxTag = true;
 function queryData() {
 	searchExpressInfo();
 }
@@ -16,7 +17,8 @@ function modifyExpress() {
 			"logistics":$('#modify_logistics').val(),
 			"recipientName":$('#modify_recipientName').val(),
 			"phoneNumber":$('#modify_phoneNumber').val(),
-			"expressLocation":$('#modify_expressLocation').val()
+			"expressLocation":$('#modify_expressLocation').val(),
+			"idNumber":$('#modify_idNumber').val()
 		},
 		success : function(data) {
 			$('#sentExpressGrid').datagrid('reload');
@@ -58,6 +60,145 @@ $(document).ready(function(){
 		$("#cancelBtn").click(function(){
 			$('#dataForm').window('close');
 		});
+		$('#formExpressServiceId').combobox({
+			url : contextPath + "/pages/system/getExpressServiceProviderInfo.light",
+			valueField : "id",
+			textField : "text",
+			panelWitdh : 180,
+			panelHeight : 260,
+			width : 280,
+			height : 30,
+			value : "",
+			formatter :  function(row){
+				var ip = $("#formExpressServiceId").parent().find('.combo').children().eq(1);
+				var comb = $(this).combobox('options');
+				$(ip).click(function(){
+					$('#formExpressServiceId').combo('showPanel');	
+				});
+			    var s = '<span style="font-weight:bold">' + row.text + '</span><br/>' +
+			            '<span style="color:#888">' + row.desc + '</span>';
+			    return s;
+			}
+		});
+		
+		$('#expressServiceId').combobox({
+			url : contextPath + "/pages/system/getExpressServiceProviderInfo.light",
+			valueField : "id",
+			textField : "text",
+			panelWitdh : 180,
+			panelHeight : 260,
+			width : 180,
+			height : 30,
+			value : "",
+			formatter :  function(row){
+				var ip = $("#expressServiceId").parent().find('.combo').children().eq(1);
+				var comb = $(this).combobox('options');
+				$(ip).click(function(){
+					$('#expressServiceId').combo('showPanel');
+				});
+			    var s = '<span style="font-weight:bold">' + row.text + '</span><br/>' +
+			            '<span style="color:#888">' + row.desc + '</span>';
+			    return s;
+			}
+		});
+		
+		$("#senderNumber").bind("keydown",function(e){
+			var keyCode = e.which;
+			var realkey = String.fromCharCode(e.which);
+			if (realkey==' ') {
+				return false;
+			}
+			if (keyCode == 8 || keyCode == 46) {
+				ajaxTag = true;
+			}
+			
+		});
+		
+		$('#senderNumber').keyup(function(event) {
+			var key = event.keyCode;
+			if ((key >= 48 && key <= 57) || (key >= 96 && key <= 105) || (key >= 65 && key <= 90) || key == 8 || key == 46) {
+			var searchTxt = $('#senderNumber').val();
+			if (searchTxt != '' && searchTxt.length >2 && ajaxTag) {
+				$('#cat').show();
+				$.ajax({
+					type : "POST",
+					url : contextPath + "/pages/system/customer/getCustomerListByTxt.light",
+					data : "queryTxt=" + $('#senderNumber').val(),
+					success: function (data) { //请求成功后处理函数。
+					changeCoords();
+					var objData = eval("(" + data + ")");
+					var height = 50;
+					if (objData.length > 0) {
+						if (objData.length <10) {
+							height = 112;
+						} else {
+							height = 175;
+						}
+						$('#searchresult').css('height',height);
+						$('#searchresult').css('overflow-y','scroll');
+						$('#searchresult').css('overflow-x','hidden');
+						var layer = "";
+						layer = "<table id='aa' style='width: inherit;'>";
+						$.each(objData, function (idx, item) {
+							layer += "<tr class='line' style='line-height:22px;'>" +
+									"<input type='hidden' name='phone' value='"+item.PHONE_NUMBER+"' />"+
+									"<input type='hidden' name='name' value='"+item.NAME+"' />"+
+									"<td class='std'>" + item.PHONE_NUMBER +','+item.NAME+ "</td></tr>";
+						});
+						layer += "</table>";
+						//将结果添加到div中    
+						$("#searchresult").empty();
+						$("#searchresult").append(layer);
+						$(".line:first").addClass("hover");
+						$("#searchresult").css("display", "");
+						//鼠标移动事件
+						$(".line").hover(function () {
+						$(".line").removeClass("hover");
+						$(this).addClass("hover");
+						}, function () {
+						$(this).removeClass("hover");
+						//$("#searchresult").css("display", "none");
+						});
+						//鼠标点击事件
+						$(".line").click(function () {
+							$("#senderNumber").val($(this).find('input[name=phone]').val());
+							$("#senderName").val($(this).find('input[name=name]').val());
+							$("#searchresult").css("display", "none");
+						});
+					} else {
+						ajaxTag = false;
+						$("#searchresult").empty();
+						$("#searchresult").css("display", "none");
+					}
+					$('#cat').hide(500);
+				},
+				error : function() {
+					alert("服务器异常请稍后再试！");
+				}
+				});
+			}
+			} else if (key== 38) {//上箭头
+				$('#aa tr.hover').prev().addClass("hover");
+				$('#aa tr.hover').next().removeClass("hover");
+				$('#senderNumber').val($('#aa tr.hover').text());
+			} else if (key== 40) {//下箭头
+				$('#aa tr.hover').next().addClass("hover");
+				$('#aa tr.hover').prev().removeClass("hover");
+				$('#senderNumber').val($('#aa tr.hover').text());
+			} else if (key== 13) {//回车
+//			 	event.preventDefault();
+//			 	event.stopPropagation();
+				$('#senderNumber').val($('#aa tr.hover').text());
+				$("#senderNumber").val($('#aa tr.hover').find('input[name=phone]').val());
+				$("#senderName").val($('#aa tr.hover').find('input[name=name]').val());
+				$("#searchresult").empty();
+				$("#searchresult").css("display", "none");
+				return false;
+			} else {
+				$("#searchresult").empty();
+				$("#searchresult").css("display", "none");
+			}
+			});
 		
 		//输入框按回车
 		$("#queryParams").bind("keydown",function(e){
@@ -99,46 +240,17 @@ $(document).ready(function(){
 		    	clearDataForm();
 		    },
 		}); 
-		
-		$('#senderNumber').combobox({
-			url : contextPath + "/pages/system/getCustomeInfoList.light",
-			valueField : "text",
-			textField : "id",
-			panelWitdh : 180,
-			panelHeight : 160,
-			width : 280,
-			height : 35,
-			value : "",
-			hasDownArrow : false,
-			formatter :  function(row){
-				var ip = $("#senderNumber").parent().find('.combo').children().eq(1);
-				var comb = $(this).combobox('options');
-				$(ip).click(function(){
-					$('#senderNumber').combo('showPanel');	
-				});
-				$(ip).bind("keydown",function(e){
-					$(this).css("background-color", "#D6D6FF");
-					$(this).css("font-weight", "bolder");
-				});
-			    var s = '<span style="font-weight:bold">' + row.text + '</span><br/>' +
-			            '<span style="color:#888">' + row.desc + '</span>';
-			    return s;
-			},
-			onSelect:function(row){
-				$('#senderName').val(row.text);
-//				$('.combo-panel').hide();
-			}
-		});
-		
+
 		$('#sentExpressGrid').datagrid({
-//			dataType : 'json',
+			dataType : 'json',
 			url : contextPath + '/pages/system/getSentExpressInfo.light',
-			width : $(window).width(),
+			width : $(window).width()*0.99,
 			height :($(window).height()-32)*0.99,
-			singleSelect : false,
+			singleSelect:true,
 			rownumbers : true,
 			pagination : true,
 			striped : true,
+			method : 'post',
 			idField : 'ID',
 			pageSize : 20,
 			showFooter: true,
@@ -152,7 +264,7 @@ $(document).ready(function(){
 				}
 			},{
 				text:'新增寄件',
-				iconCls: 'icon-search',
+				iconCls: 'icon-add',
 				handler: function()
 				{
 					operaTag = 'new';
@@ -161,12 +273,12 @@ $(document).ready(function(){
 //					$('#phoneNumber').val('');
 					$('#recipientName').val('');
 //					$('#destination').val('');
-					$('#senderNumber').combobox('setValue','');
+					$('#senderNumber').val('');
 					$('#senderName').val('');
 					$('#address').val('');
 					$('#res').val('');
 					$('#price').val('');
-					
+					$('#idNumber').val('');
 					$('#formExpressServiceId').combobox('setValue','');
 					$('#dataForm').window('open');
 				}
@@ -210,6 +322,12 @@ $(document).ready(function(){
 				field : 'SENDER_NAME',
 				title : '寄件人姓名',
 				width : 120,
+				align : 'center',
+				hidden : false
+			},{
+				field : 'ID_NUMBER',
+				title : '寄件人身份证号',
+				width : 140,
 				align : 'center',
 				hidden : false
 			},{
@@ -272,41 +390,18 @@ $(document).ready(function(){
 				hidden : true
 			}] ],
 			onLoadSuccess : function(data){
-				$('#expressServiceId').combobox({
-					url : contextPath + "/pages/system/getExpressServiceProviderInfo.light",
-					valueField : "id",
-					textField : "text",
-					panelWitdh : 180,
-					panelHeight : 260,
-					width : 180,
-					height : 30,
-					value : "",
-					formatter :  function(row){
-						var ip = $("#expressServiceId").parent().find('.combo').children().eq(1);
-						var comb = $(this).combobox('options');
-						$(ip).click(function(){
-							$('#expressServiceId').combo('showPanel');
-						});
-					    var s = '<span style="font-weight:bold">' + row.text + '</span><br/>' +
-					            '<span style="color:#888">' + row.desc + '</span>';
-					    return s;
-					}
-				});
-				
 				$("#queryParams").bind("click",function(e){
 					$("#queryParams").focus();
 				});
-				 $('#sentExpressGrid').datagrid('statistics');
+				$('#sentExpressGrid').datagrid('statistics');
 				//totalPrice();
 			},onLoadError : function() {
 				parent.location.href=contextPath+'/pages/system/welcome.light';
 			},
 			onDblClickRow : function(rowIndex, rowData) {
-//				sentExpressId
 				operaTag = 'modify';
 				openWindow(rowIndex, rowData);
-			},
-			loadFilter : pagerFilter
+			}
 		});
 	});
 
@@ -475,6 +570,7 @@ function initExpressServiceProviders() {
 //		var address = rowData.ADDRESS;
 		var res = rowData.RES;
 		var price = rowData.PRICE;
+		var idNumber = rowData.ID_NUMBER;
 		
 		var expressLocation = rowData.EXPRESS_lOCATION;
 		var expressServiceId = rowData.EXPRESS_SERVICE_ID;
@@ -486,8 +582,10 @@ function initExpressServiceProviders() {
 		$("#formExpressServiceId").combobox('setValue',expressServiceId);
 		
 //		$('#destination').val(destination);
-		$('#senderNumber').combobox('setText',senderNumber);
+		$('#senderNumber').val(senderNumber);
 		$('#senderName').val(senderName);
+		$('#idNumber').val(idNumber);
+		
 //		$('#address').val(address);
 		$('#res').val(res);
 		if (price != null && price != 0) {
@@ -510,8 +608,9 @@ function initExpressServiceProviders() {
 		var phoneNumber = $('#phoneNumber').val();
 		var recipientName = $('#recipientName').val();
 //		var destination = $('#destination').val();
-		var senderNumber = $('#senderNumber').combobox('getText');
+		var senderNumber = $('#senderNumber').val();
 		var senderName = $('#senderName').val();
+		var idNumber = $('#idNumber').val();
 //		var address = $('#address').val();
 		var res = $('#res').val();
 		var price = $('#price').val();
@@ -519,6 +618,15 @@ function initExpressServiceProviders() {
 			$.messager.show({
                 title:'提示',
                 msg:'<div class="messager-icon messager-info"></div>'+"价格填写不正确",
+                timeout:3800,
+                showType:'slide'
+			});
+			return;
+		}
+		if (idNumber.length==0 || idNumber.length >20) {
+			$.messager.show({
+                title:'提示',
+                msg:'<div class="messager-icon messager-info"></div>'+"身份证号填写不正确",
                 timeout:3800,
                 showType:'slide'
 			});
@@ -557,6 +665,7 @@ function initExpressServiceProviders() {
 //				"destination":destination,
 				"senderNumber":senderNumber,
 				"senderName":senderName,
+				"idNumber":idNumber,
 //				"address":address,
 				"res":res,
 				"price":price,
@@ -590,12 +699,12 @@ function initExpressServiceProviders() {
 		$('#phoneNumber').val('');
 		$('#recipientName').val('');
 //		$('#destination').val('');
-		$('#senderNumber').combobox('setValue','');
+		$('#senderNumber').val('');
 		$('#senderName').val('');
 //		$('#address').val('');
 		$('#res').val('');
 		$('#price').val('');
-		
+		$('#idNumber').val('');
 		$('#formExpressServiceId').combobox('setValue','');
 	}
 	
@@ -640,7 +749,8 @@ function initExpressServiceProviders() {
 				"queryParams":queryParams,
 				"expressService":expressService
 		};
-		$('#sentExpressGrid').datagrid("loadData",[]);
+//		$('#sentExpressGrid').datagrid("loadData",[]);
+		$('#sentExpressGrid').datagrid('loadData', { total: 0, rows: [] })
 		$('#sentExpressGrid').datagrid("clearSelections");
 //		
 		$('#sentExpressGrid').datagrid({
@@ -695,5 +805,12 @@ function initExpressServiceProviders() {
 	    var s = '<span style="font-weight:bold">' + row.text + '</span><br/>' +
 	            '<span style="color:#888">' + row.desc + '</span>';
 	    return s;
+	}
+	
+	function changeCoords() {
+	    var left = $("#senderNumber").position().left - 1; //获取距离最左端的距离，像素，整型
+	    var top = $("#senderNumber").position().top + 36; ; //获取距离最顶端的距离，像素，整型（20为搜索输入框的高度）
+	    $("#searchresult").css("left", left + "px"); //重新定义CSS属性
+	    $("#searchresult").css("top", top + "px"); //同上
 	}
 	

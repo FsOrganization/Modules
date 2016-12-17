@@ -48,7 +48,7 @@ public class MerchandiseController extends SuperController{
 	@RequestMapping("/pages/system/getMerchandiseList.light")
 	public void getMerchandiseList(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
 		PrintWriter printWriter = null;
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser s = getSystemUser(request, response);
 		try 
 		{
 			String rows = request.getParameter("rows"); 
@@ -80,6 +80,7 @@ public class MerchandiseController extends SuperController{
 		String name = request.getParameter("name");
 		String fee = request.getParameter("fee");
 		JSONObject json = new JSONObject();
+		System.out.println("name:"+name);
 		try 
 		{
 			// 扫码支付
@@ -106,7 +107,7 @@ public class MerchandiseController extends SuperController{
 	public void addMerchandise(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
 		PrintWriter printWriter = null;
 		JSONObject json = new JSONObject();
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser s = getSystemUser(request, response);
 		try 
 		{
 			String areaCode = s.getAreaCode();
@@ -132,7 +133,7 @@ public class MerchandiseController extends SuperController{
 	public void modifyMerchandiseInfo(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
 		PrintWriter printWriter = null;
 		JSONObject json = new JSONObject();
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser s = getSystemUser(request, response);
 		try 
 		{
 			String areaCode = s.getAreaCode();

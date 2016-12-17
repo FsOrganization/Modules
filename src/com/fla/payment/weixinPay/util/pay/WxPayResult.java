@@ -3,33 +3,29 @@ package com.fla.payment.weixinPay.util.pay;
 
 /**
  * description: 微信支付回调
- * @author 
+ * @author
  * @since 
  * @see
  */
 public class WxPayResult {
 	
-	private String appid;
+	private String appid;//微信分配的公众账号ID
 	private String bankType;
 	private String cashFee;
 	private String feeType;
-	private String isSubscribe;
-	private String mchId;
-	private String nonceStr;
-	private String openid;
-	private String outTradeNo;
-	private String resultCode;
-	private String returnCode;
-	private String sign;
+	private String isSubscribe;//用户是否关注公众账号，仅在公众账号类型支付有效，取值范围：Y或N;Y-关注;N-未关注
+	private String mchId;//微信支付分配的商户号
+	private String nonceStr;//随机字符串，不长于32位。推荐随机数生成算法
+	private String openid;//用户在商户appid下的唯一标识
+	private String outTradeNo;//订单号
+	private String resultCode;//SUCCESS/FAIL交易是否成功
+	private String returnCode;//SUCCESS/FAIL,此字段是通信标识，非交易标识，交易是否成功需要查看result_code来判断
+	private String sign;//返回数据签名
 	private String timeEnd;
 	private String totalFee;
 	private String tradeType;
 	private String transactionId;
-   
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -1227026039888867970L;
 	
 	/**

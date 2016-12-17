@@ -1,16 +1,10 @@
 package com.fla.common.security.interceptors;
 
-import java.io.PrintWriter;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import net.sf.json.JSONObject;
-
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.fla.common.entity.SystemUser;
 
 public class SessionTimeoutInterceptor implements HandlerInterceptor {

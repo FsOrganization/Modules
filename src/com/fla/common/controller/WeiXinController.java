@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,6 +40,7 @@ import org.sword.wechat4j.user.AccountManager;
 import org.sword.wechat4j.user.Qrcode;
 
 import com.fla.common.base.SuperController;
+import com.fla.common.dao.interfaces.SystemConfigDaoInterface;
 import com.fla.common.entity.SystemUser;
 import com.fla.common.service.interfaces.CustomerServiceInterface;
 import com.fla.common.service.interfaces.LoginServiceInterface;
@@ -53,9 +53,11 @@ import com.fla.common.weixin.util.xml.ReceiveXmlEntity;
 public class WeiXinController extends SuperController{
 	
 	private static final long serialVersionUID = 8137315174834581896L;
-//	private static Logger logger = Logger.getLogger(WeiXinController.class.getName());
 	
 	public static final String SYS_HTTP = "http://121.41.76.133";
+	
+	@Autowired
+	private SystemConfigDaoInterface systemConfigDao;
 	
 	public static final ArrayList<String> openIds = new ArrayList<String>(
 			Arrays.asList(
@@ -142,12 +144,42 @@ public class WeiXinController extends SuperController{
 				model.addObject("inOperaTime", inOperaTime);
 				String lateFeeLimitUpper = (String) request.getSession().getAttribute("lateFeeLimitUpper");
 				if (lateFeeLimitUpper == null || lateFeeLimitUpper.trim().equals("")) {
-					Map<String,JSONObject> tmp = systemServiceInterface.getAllConfigValues(null);
-					JSONObject jtmp = tmp.get("8");
-					lateFeeLimitUpper = jtmp.get("VAlUE").toString();
+					Map<String,Object> params = new HashMap<String,Object>();
+					params.put("configCode", "lateFeeLimitUpper");
+					params.put("status", "1");
+					lateFeeLimitUpper =systemConfigDao.getLateFeeLimitUpper(params);
 					request.getSession().setAttribute("lateFeeLimitUpper", lateFeeLimitUpper);
 				}
+				
+				String lateDayLimit = (String) request.getSession().getAttribute("lateDayLimit");
+				if (lateDayLimit == null || lateDayLimit.trim().equals("")) {
+					Map<String,Object> params = new HashMap<String,Object>();
+					params.put("configCode", "lateDayLimit");
+					params.put("status", "1");
+					lateDayLimit =systemConfigDao.getLateDayLimit(params);
+					request.getSession().setAttribute("lateDayLimit", lateDayLimit);
+				}
+				
+				String memberLateFeeLimitUpper = (String) request.getSession().getAttribute("memberLateFeeLimitUpper");
+				if (memberLateFeeLimitUpper == null || memberLateFeeLimitUpper.trim().equals("")) {
+					Map<String,Object> params = new HashMap<String,Object>();
+					params.put("configCode", "memberLateFeeLimitUpper");
+					params.put("status", "1");
+					lateDayLimit =systemConfigDao.getMemberLateFeeAddition(params);
+				}
+				
+				String memberLateDayLimit = (String) request.getSession().getAttribute("memberLateDayLimit");
+				if (memberLateDayLimit == null || memberLateDayLimit.trim().equals("")) {
+					Map<String,Object> params = new HashMap<String,Object>();
+					params.put("configCode", "memberLateDayLimit");
+					params.put("status", "1");
+					lateDayLimit =systemConfigDao.getMemberLateDayAddition(params);
+				}
+				
 				model.addObject("lateFeeLimitUpper", lateFeeLimitUpper);
+				model.addObject("lateDayLimit", lateDayLimit);
+				model.addObject("memberLateFeeLimitUpper", memberLateFeeLimitUpper);
+				model.addObject("memberLateDayLimit", memberLateDayLimit);
 			}
 		}
 		return model;
@@ -481,7 +513,7 @@ public class WeiXinController extends SuperController{
 	@RequestMapping("/pages/system/wechat/sendWechatMsgAutomatic.light")
 	public  void sendWechatMsgAutomatic(String msg, String phoneNumber,String expServiceName,
 			String expServiceId,String expressLocation,String logistics,HttpServletRequest request, HttpServletResponse response) {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser s = getSystemUser(request, response);
 		Map<String,String> params = new HashMap<String,String>(1);
 		params.put("phoneNumber", phoneNumber);
 		params.put("loginName", s.getLoginName());

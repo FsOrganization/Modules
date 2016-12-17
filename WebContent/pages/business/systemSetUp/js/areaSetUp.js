@@ -27,7 +27,7 @@ $(document).ready(function() {
 		$('#addArea').window({
 			title:'新增区域',
 		    width:580,
-		    height:265,
+		    height:240,
 		    modal:true,
 		    closed:true,
 		    left:340,    
@@ -47,7 +47,7 @@ $(document).ready(function() {
 		$('#areaGrid').datagrid({
 			dataType : 'json',
 			url : contextPath + '/pages/system/getAreaInfoList.light',//getNotOutExpressInfoByFilterConditions
-			width : $(window).width() * 1,
+			width : $(window).width() * 0.99,
 			height :($(window).height()-32)*0.99,
 			singleSelect : true,
 			rownumbers : true,
@@ -68,7 +68,7 @@ $(document).ready(function() {
 //	        },
 	        {
 				text:'新增区域',
-				iconCls: 'icon-search',
+				iconCls: 'icon-add',
 				handler: function(){
 					clearFormData();
 					addArea();

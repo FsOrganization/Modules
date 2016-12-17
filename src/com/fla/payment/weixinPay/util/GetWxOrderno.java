@@ -91,7 +91,6 @@ public class GetWxOrderno
 	return code_url;
   }
   
-  
   /**
 	 * 解析xml,返回第一级元素键值对。如果第一级元素有子节点，则此节点的值是子节点的xml数据。
 	 * @param strxml

@@ -1,7 +1,6 @@
 package com.fla.common.service.interfaces;
 
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Map;
 
 import net.sf.json.JSONArray;
@@ -74,7 +73,7 @@ public interface SystemServiceInterface {
 
 	public JSONObject modifyExpressServiceProvider(ExpressServiceProvider esp) throws SQLException;
 	
-	public JSONArray getExpressStatisticalArea(String areaCode) throws SQLException;
+	public JSONArray getExpressStatisticalArea(Map<String, Object> params) throws SQLException;
 	
 	public JSONArray getShopNumberOfPeopleGroupCount(String type,String code) throws SQLException;
 	

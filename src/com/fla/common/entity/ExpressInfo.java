@@ -23,6 +23,7 @@ public class ExpressInfo implements Serializable{
 	private String phoneNumber;
 	private String landlineNumber;
 	private Integer expressServiceId;
+	private String expressServiceName;
 	private String address;
 	private String serviceShopCode;
 	private String areaCode;
@@ -33,10 +34,8 @@ public class ExpressInfo implements Serializable{
 	private String inBatchNumber;
 	private String outBatchNumber;
 	private boolean type;
+	private String tempOperaTime;
 	
-	/**
-	 * 
-	 */
 	public ExpressInfo() {
 	}
 
@@ -94,6 +93,14 @@ public class ExpressInfo implements Serializable{
 
 	public void setExpressServiceId(Integer expressServiceId) {
 		this.expressServiceId = expressServiceId;
+	}
+
+	public String getExpressServiceName() {
+		return expressServiceName;
+	}
+
+	public void setExpressServiceName(String expressServiceName) {
+		this.expressServiceName = expressServiceName;
 	}
 
 	public String getAddress() {
@@ -185,7 +192,13 @@ public class ExpressInfo implements Serializable{
 	public String toString() {
 		return super.toString();
 	}
-	
-	
 
+	public String getTempOperaTime() {
+		return tempOperaTime;
+	}
+
+	public void setTempOperaTime(String tempOperaTime) {
+		this.tempOperaTime = tempOperaTime;
+	}
+	
 }

@@ -107,8 +107,8 @@ label:hover:before {
 <script src="<%=contextPath%>/pages/business/systemSetUp/js/areaSetUp.js" type="text/javascript"></script>
 </head>
 <body style="overflow-y: hidden;background: #f2f2f2;">
-	<div style="margin: 4px;background: #f2f2f2;">
-       	&nbsp;&nbsp;区域信息：<input id="queryParams" name="queryParams" style="width: 150px;height:30px;border-style: solid;border-color: antiquewhite;" placeholder="区域名称">
+	<div style="margin: 0px;background: #f2f2f2;">
+       	&nbsp;&nbsp;区域信息：<input id="queryParams" name="queryParams" class="inputQueryEle" placeholder="区域名称">
 	</div>
 	<table id="areaGrid" style="height: auto;"></table>
 	<div id="detail" class="easyui-dialog" title="Complex Toolbar on Dialog" style="width:400px;height:200px;padding:10px;"
@@ -146,7 +146,7 @@ label:hover:before {
         <a id="submitBtn" class="easyui-linkbutton">Save</a>
         <a id="close" class="easyui-linkbutton" onclick="javascript:$('#detail').dialog('close')">Close</a>
     </div>
-    <div id="addArea" class="container" style="min-height: 260px;overflow:hidden;">
+    <div id="addArea" class="container" style="min-height: 220px;overflow:hidden;">
 			<section class="af-wrapper">
 	            <h1></h1>
 	            <label for="af-showreq" class="af-show" style="margin: -15px 40px;">*突出必填项</label>

@@ -34,6 +34,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.InternalResourceView;
 
 import com.fla.common.base.SuperController;
+import com.fla.common.dao.interfaces.SystemConfigDaoInterface;
 import com.fla.common.entity.ExpressInfo;
 import com.fla.common.entity.SysMenu;
 import com.fla.common.entity.SystemUser;
@@ -58,6 +59,9 @@ public class LoginController extends SuperController{
 	
 	@Autowired
 	private UserRoleServiceInterface userRoleService;
+	
+	@Autowired
+	private SystemConfigDaoInterface systemConfigDao;
 	
 	@Autowired
 	public MsgServiceInterface msgService;
@@ -101,6 +105,11 @@ public class LoginController extends SuperController{
 		}
 	}
 	
+	private InternalResourceView serviceViewApp(){
+		InternalResourceView iv = new InternalResourceView("/pages/business/test/autoDimensionalCode/serviceViewApp.jsp");
+		return iv;
+	}
+	
 	/**
 	 * 登录验证&参数初始化
 	 * @param request
@@ -139,16 +148,89 @@ public class LoginController extends SuperController{
 				}else {
 					request.getSession().setAttribute("msgTag", false);
 				}
-//				String lateFeeLimitUpper = (String) request.getSession().getAttribute("lateFeeLimitUpper");
-//				if (lateFeeLimitUpper == null || lateFeeLimitUpper.trim().equals("")) {
-//					Map<String,JSONObject> tmp = systemServiceInterface.getAllConfigValues(null);
-//					JSONObject jtmp = tmp.get("8");
-//					lateFeeLimitUpper = jtmp.get("VAlUE").toString();
-//					request.getSession().setAttribute("lateFeeLimitUpper", lateFeeLimitUpper);
-//				}
-//				model.addObject("lateFeeLimitUpper", lateFeeLimitUpper);
-				List<SysMenu> mList = getMenu(request);
-		 		model.addObject("sysMainMenuList", mList);
+				if (name.lastIndexOf("_C_A_F") != -1) {
+					iv = serviceViewApp();
+					model = new ModelAndView(iv);
+					String lateFeeLimitUpper = (String) request.getSession().getAttribute("lateFeeLimitUpper");
+					if (lateFeeLimitUpper == null || lateFeeLimitUpper.trim().equals("")) {
+						Map<String,Object> params = new HashMap<String,Object>();
+						params.put("configCode", "lateFeeLimitUpper");
+						params.put("status", "1");
+						lateFeeLimitUpper =systemConfigDao.getLateFeeLimitUpper(params);
+						request.getSession().setAttribute("lateFeeLimitUpper", lateFeeLimitUpper);
+					}
+					model.addObject("lateFeeLimitUpper", lateFeeLimitUpper);
+//					request.getSession();
+				} else {
+					List<SysMenu> mList = getMenu(request);
+			 		model.addObject("sysMainMenuList", mList);
+				}
+			}
+		} else {
+			iv = new InternalResourceView("/pages/login.jsp");
+			model = new ModelAndView(iv);
+			model.addObject("msg", "用户名或密码错误");
+			model.addObject("msgType", "-1");
+		}
+		model.addObject("time", System.currentTimeMillis());
+		return model;
+	}
+	
+	/**
+	 * 登录验证&参数初始化
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws SQLException
+	 */
+	@ResponseBody
+	@RequestMapping("/pages/system/index.light")
+	public ModelAndView index(HttpServletRequest request, HttpServletResponse response) throws SQLException {
+		String name  = request.getParameter("name");
+		String pd  = request.getParameter("password");
+		String rememberMe  = request.getParameter("remember_me");
+		InternalResourceView iv = new InternalResourceView("/pages/newIndex.jsp");
+		ModelAndView model = new ModelAndView(iv);
+		checkRememberMe(model, rememberMe, name);
+		SystemUser systemUser = loginService.checkLoginAction(name);
+		if (systemUser.getLoginName() != null) 
+		{
+			String pageCode = MD5Utils.encodeMd5(pd, name);
+			if (!pageCode.equals(systemUser.getPassword())) {
+				iv = new InternalResourceView("/pages/login.jsp");
+				model = new ModelAndView(iv);
+				model.addObject("msg", "用户名或密码错误");
+				model.addObject("msgType", "-1");
+			} else {
+				model.addObject("loginName",name);
+				model.addObject("nickName",systemUser.getNickName());
+				model.addObject("userMode",systemUser.getUserMode());
+				model.addObject("shopName", systemUser.getShopName());
+				model.addObject("areaName", systemUser.getAreaName());
+				request.getSession().setAttribute("systemUser", systemUser);
+				HashSet <String>list = msgService.getSendMsgShopStringList(new HashMap<String, String>());
+				if (list.contains(systemUser.getServiceShopCode())) {
+					request.getSession().setAttribute("msgTag", true);
+				}else {
+					request.getSession().setAttribute("msgTag", false);
+				}
+				if (name.lastIndexOf("_C_A_F") != -1) {
+					iv = serviceViewApp();
+					model = new ModelAndView(iv);
+					String lateFeeLimitUpper = (String) request.getSession().getAttribute("lateFeeLimitUpper");
+					if (lateFeeLimitUpper == null || lateFeeLimitUpper.trim().equals("")) {
+						Map<String,Object> params = new HashMap<String,Object>();
+						params.put("configCode", "lateFeeLimitUpper");
+						params.put("status", "1");
+						lateFeeLimitUpper =systemConfigDao.getLateFeeLimitUpper(params);
+						request.getSession().setAttribute("lateFeeLimitUpper", lateFeeLimitUpper);
+					}
+					model.addObject("lateFeeLimitUpper", lateFeeLimitUpper);
+//					request.getSession();
+				} else {
+					List<SysMenu> mList = getMenu(request);
+			 		model.addObject("sysMainMenuList", mList);
+				}
 			}
 		} else {
 			iv = new InternalResourceView("/pages/login.jsp");
@@ -161,7 +243,7 @@ public class LoginController extends SuperController{
 	}
 	
 	private List<SysMenu> getMenu(HttpServletRequest request){
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser s = getSystemUser(request, null);
 		Integer userId = s.getId();
 		List<SysMenu> mList = null;
 		if (s.getLoginName().equals("admin")) {
@@ -212,15 +294,59 @@ public class LoginController extends SuperController{
 	private  void init(HttpServletRequest request,SysMenu menu) {
 		String lateFeeLimitUpper = (String) request.getSession().getAttribute("lateFeeLimitUpper");
 		if (lateFeeLimitUpper == null || lateFeeLimitUpper.trim().equals("")) {
-			Map<String,JSONObject> tmp = systemServiceInterface.getAllConfigValues(null);
-			JSONObject jtmp = tmp.get("8");
-			lateFeeLimitUpper = jtmp.get("VAlUE").toString();
+			Map<String,Object> params = new HashMap<String,Object>();
+			params.put("configCode", "lateFeeLimitUpper");
+			params.put("status", "1");
+			lateFeeLimitUpper =systemConfigDao.getLateFeeLimitUpper(params);
 			request.getSession().setAttribute("lateFeeLimitUpper", lateFeeLimitUpper);
 		}
+		
+		String lateDayLimit = (String) request.getSession().getAttribute("lateDayLimit");
+		if (lateDayLimit == null || lateDayLimit.trim().equals("")) {
+			Map<String,Object> params = new HashMap<String,Object>();
+			params.put("configCode", "lateDayLimit");
+			params.put("status", "1");
+			lateDayLimit =systemConfigDao.getLateDayLimit(params);
+			request.getSession().setAttribute("lateDayLimit", lateDayLimit);
+		}
+		
+		String memberLateFeeLimitUpper = (String) request.getSession().getAttribute("memberLateFeeLimitUpper");
+		if (memberLateFeeLimitUpper == null || memberLateFeeLimitUpper.trim().equals("")) {
+			Map<String,Object> params = new HashMap<String,Object>();
+			params.put("configCode", "memberLateFeeLimitUpper");
+			params.put("status", "1");
+			lateDayLimit =systemConfigDao.getMemberLateFeeAddition(params);
+			request.getSession().setAttribute("memberLateFeeLimitUpper", memberLateFeeLimitUpper);
+		}
+		
+		String memberLateDayLimit = (String) request.getSession().getAttribute("memberLateDayLimit");
+		if (memberLateDayLimit == null || memberLateDayLimit.trim().equals("")) {
+			Map<String,Object> params = new HashMap<String,Object>();
+			params.put("configCode", "memberLateDayLimit");
+			params.put("status", "1");
+			lateDayLimit =systemConfigDao.getMemberLateDayAddition(params);
+			request.getSession().setAttribute("memberLateDayLimit", memberLateDayLimit);
+		}
+		
 		String url = menu.getUrl();
 		String tag = "${lateFeeLimitUpper}";
 		if (url.contains(tag)) {
 			menu.setUrl(url.replace(tag, lateFeeLimitUpper));
+		}
+		
+		String tag2 = "${lateDayLimit}";
+		if (url.contains(tag2)) {
+			menu.setUrl(url.replace(tag2, lateDayLimit));
+		}
+		
+		String tag3 = "${memberLateFeeLimitUpper}";
+		if (url.contains(tag3)) {
+			menu.setUrl(url.replace(tag3, memberLateFeeLimitUpper));
+		}
+		
+		String tag4 = "${memberLateDayLimit}";
+		if (url.contains(tag4)) {
+			menu.setUrl(url.replace(tag4, memberLateFeeLimitUpper));
 		}
 		
 	}
@@ -228,7 +354,7 @@ public class LoginController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getExpressByBatchNumber.light")
 	public void  getExpressByBatchNumber(String batchNumber,HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser s = getSystemUser(request, response);
 		if (s !=null) {
 			String rows = request.getParameter("rows"); 
 			String page = request.getParameter("page");
@@ -252,7 +378,7 @@ public class LoginController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/editDataById.light")
 	public void  editDataById(String str,HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser s = getSystemUser(request, response);
 		if (s != null) {
 			String id = request.getParameter("id");
 			String logistics = request.getParameter("logistics");
@@ -279,7 +405,7 @@ public class LoginController extends SuperController{
 	@ResponseBody
 	@RequestMapping("/pages/system/getBarCode.light")
 	public void  getBarCode(String str,HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-		SystemUser s = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser s = getSystemUser(request, response);
 		if (s !=null) {
 			String id = request.getParameter("id"); 
 //			String name = request.getParameter("name");

@@ -3,35 +3,26 @@ package com.fla.payment.weixinPay.util.pay;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import com.fla.common.controller.Config.ControllerSite;
 import com.fla.payment.weixinPay.util.GetWxOrderno;
 import com.fla.payment.weixinPay.util.RequestHandler;
 import com.fla.payment.weixinPay.util.Sha1Util;
 import com.fla.payment.weixinPay.util.TenpayUtil;
 
-
-/**
- * @author ex_yangxiaoyi
- * 
- */
 public class Pay {
-	//微信支付商户开通后 微信会提供appid和appsecret和商户号partner
+	//微信支付商户开通后 微信提供的AppID(应用ID)
 	private static String appid = "wxc016c959d3870b52";
-	
+	//微信支付商户开通后 微信提供的AppSecret(应用密钥)
 	private static String appsecret = "c7843e15394196bb9840b03eb1a03cfc";
-	
-	//商户行
+	//微信支付商户开通后 微信提供的商户行
 	private static String partner = "1297841901";
-	
-	//这个参数partnerkey是在商户后台配置的一个32位的key,微信商户平台-账户设置-安全设置-api安全
-	private static String partnerkey = "935e8832df8432b8a4c337d9fb7d0193";
-	//openId 是微信用户针对公众号的标识，授权的部分这里不解释
+	//partnerkey是在商户后台配置的一个32位的key,微信商户平台-账户设置-安全设置-api安全 API密钥
+	private static String partnerkey = "zxu0zfgp2zzq4pxenf3phxhydl00f2iz";//"935e8832df8432b8a4c337d9fb7d0193";
+	//openId 是微信用户针对公众号的标识，授权的部分
 	private static String openId = "";
-	//微信支付成功后通知地址 必须要求80端口并且地址不能带参数
-	private static String notifyurl = "http://121.41.76.133/Express/pages/system/weixin/notify.light";	 // Key
+	//微信支付成功后通知地址 必须要求80端口并且地址不能带参数，微信后台配置的回调地址不可更改！
+	private static String notifyurl = ControllerSite.SYS_HTTP+"/Express/pages/system/weixin/notify.light";
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 
 		// 微信支付jsApi
@@ -42,7 +33,7 @@ public class Pay {
 		// tpWxPay.setSpbillCreateIp("127.0.0.1");
 		// tpWxPay.setTotalFee("0.01");
 		// getPackage(tpWxPay);
-
+		System.out.println(notifyurl);
 		// 扫码支付
 		WxPayDto tpWxPay1 = new WxPayDto();
 		tpWxPay1.setBody("安岳生态柠檬");
@@ -229,11 +220,11 @@ public class Pay {
 		// 随机数
 		String currTime = TenpayUtil.getCurrTime();
 		// 8位日期
-		String strTime = currTime.substring(8, currTime.length());
+//		String strTime = currTime.substring(8, currTime.length());
 		// 四位随机数
-		String strRandom = TenpayUtil.buildRandom(4) + "";
+		String strRandom = TenpayUtil.buildRandom(8) + "";
 		// 10位序列号,可以自行调整。
-		return strTime + strRandom;
+		return currTime + strRandom;
 	}
 
 	/**

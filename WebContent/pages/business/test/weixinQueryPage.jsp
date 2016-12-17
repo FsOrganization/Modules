@@ -54,13 +54,6 @@
 </div>
 <!-- start main -->
 	<div class="main" id="mainDiv">	
-<!-- 		<div class="content"> -->
-<!-- 			<div class="list_img"> -->
-<%-- 				<img src="<%=contextPath%>/mobile-style/images/pic1.jpg"/>	 --%>
-<!-- 			</div>	 -->
-<!-- 		    <h2 class="style"><a href="">天天快递 运单号:25458655419565</a></h2> -->
-<!-- 			<h3 class="style">收件人:傅中  收件时间:2015-05-15</h3> -->
-<!-- 		</div> -->
 </div>
 <!-- start footer -->
 	<div class="footer">

@@ -26,7 +26,7 @@ $(document).ready(function(){
 		$('#addUser').window({
 			title:'新增用户',
 		    width:580,
-		    height:460,
+		    height:520,
 		    modal:true,
 		    closed:true,
 		    left:340,    
@@ -39,14 +39,14 @@ $(document).ready(function(){
 			$('#addUser').window('close');
 		});
 		$("#saveBtn").click(function() {
-				modifyForm();
+			modifyForm();
 		});
 		
 		$('#customerGrid').datagrid({
 			dataType : 'json',
 			url : contextPath + '/pages/system/customer/getCustomerList.light',
-			width : $(window).width() * 1,
-			height :($(window).height()-32)*0.99,
+			width : $(window).width()*0.99,
+			height :($(window).height()-28)*0.99,
 			singleSelect : true,
 			rownumbers : true,
 			pagination : true,
@@ -109,17 +109,19 @@ $(document).ready(function(){
 					return formatShopCodeColumnTitle(value);
 				}
 			},{
-				field : 'eCount',
-				title : '收件数',
+				field : 'IS_INTEREST',
+				title : '是否已关注微信',
 				width : 100,
 				align : 'center',
-				hidden : false
-			},{
-				field : 'sCount',
-				title : '寄件数',
-				width : 100,
-				align : 'center',
-				hidden : false
+				hidden : false,
+				formatter : function(value, row, index){
+					if (value == 'Y') {
+						return '<span style="color:green;">已关注</span>';
+					} else {
+						return '<span style="color:#EC920F;">未关注</span>';
+					}
+					
+				}
 			},{
 				field : 'WEIXIN_ID',
 				title : '微信号',
@@ -167,6 +169,55 @@ $(document).ready(function(){
 				searchExpressInfo();
 	        }
 		});
+		
+		$("#downloadTemplateUsingClass").click(function(){
+            com.fla.common.downloadExcelTemplate({
+                    ctx:contextPath,
+                    excelMapper:"reviseImport-investment-psn"
+            });
+        });
+        
+        $("#exportUsingClass").click(function(){
+            com.fla.common.exportExcel({
+                ctx:contextPath,
+                excelMapper:"reviseImport-investment-psn",
+                targetFileName:"reviseImport-investment-export",
+                queryParams: [
+                              {name: "id", value: $("#id").val()},
+                              {name: "operateTag", value:"2"}
+                ]
+            });
+        });
+        
+        $("#importUsingClass").click(function(){
+            com.fla.common.importExcel({
+                ctx:contextPath,
+                excelMapper:"reviseImport-investment-psn",
+                queryParams:
+                {
+                	id : "f1f",
+                	taskTitle : "fff4f",
+                	year : "f30f",
+                	batchNumber : "f345f",
+                	remark : "fddsdvsdwf"
+                },
+                callbackFun:importExcelCallback
+            });
+        });
+        var importExcelCallback = function(resultData){
+            //导入后返回json对象，自行处理这个返回结果
+            var result = "状态:"+resultData.succeed +  "\n";
+            result += "消息:" + resultData.message + "\n";
+            result += "错误明细：\n";
+            $.each(resultData.errorList,function (index, val){
+                result += index + ":" + val + "\n";
+            });
+            if (resultData.succeed == false) {
+            	alert(result);
+			} else {
+				
+			}
+        }
 
 });
 
@@ -331,13 +382,18 @@ function openWindow(rowIndex, rowData) {
 	var ageSection = rowData.AGE_SECTION;
 	var whetherHaveCar = rowData.WHETHER_HAVE_CAR;
 	var address = rowData.ADDRESS;
-//	var isCheck = rowData.TYPE;
+	var isCheck = rowData.IS_INTEREST;
+	
+	if (isCheck === 'Y') {
+		$("input[id='isInterest']").prop("checked",true);
+	}if (isCheck === 'N') {
+		$("input[id='isInterest']").prop("checked",false);
+	}
 	var phoneNumber = rowData.PHONE_NUMBER;
 	$('#customerId').val(id);
 	$('#gender').combobox('setValue', gender);
 	$('#ageSection').combobox('setValue', ageSection);
 	$('#whetherHaveCar').combobox('setValue', whetherHaveCar);
-	
 	$('#name').val(name);
 	$('#phoneNumber').val(phoneNumber);
 	$('#address').val(address);
@@ -352,7 +408,7 @@ function clearFormData() {
 	$('#whetherHaveCar').combobox('setValue', '');
 	$('#phoneNumber').val('');
 	$('#address').val('');
-	
+	$("input[id='isInterest']").prop("checked",false);
 }
 
 function searchExpressInfo() {
@@ -364,7 +420,6 @@ function searchExpressInfo() {
 	$('#customerGrid').datagrid("loadData", []);
 	$('#customerGrid').datagrid("clearSelections");
 	var shopCode = $("#expressServiceId").combobox('getText');
-//	alert(shopCode);
 	$('#customerGrid').datagrid({
 		url : contextPath+ "/pages/system/customer/getCustomerList.light",
 		queryParams: {
@@ -459,6 +514,12 @@ function modifyForm() {
 	var gender= $('#gender').combo('getValue');
 	var ageSection= $('#ageSection').combo('getValue');
 	var whetherHaveCar= $('#whetherHaveCar').combo('getValue');
+	var isInterest = "";
+	if ($(":checked[name=isInterest]").val() == undefined) {
+		isInterest = "N";
+	} else {
+		isInterest = $(":checked[name=isInterest]").val();
+	}
 	if (!isPhoneNmuber(phoneNumber)) {
 		$.messager.show({
             title:'提示',
@@ -480,7 +541,8 @@ function modifyForm() {
 			"phoneNumber":phoneNumber,
 			"gender":gender,
 			"ageSection":ageSection,
-			"whetherHaveCar":whetherHaveCar
+			"whetherHaveCar":whetherHaveCar,
+			"isInterest":isInterest
 		},
 		success : function(data) {
 			$('#customerGrid').datagrid("reload");

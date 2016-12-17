@@ -426,6 +426,10 @@ public class SystemDao implements SystemDaoInterface {
 		keys.add("seq_locationCodeByExpressType_S");
 		keys.add("seq_locationCodeByExpressType_X");
 		keys.add("seq_locationCodeByExpressType_D");
+		keys.add("seq_locationCodeByExpressType_H");
+		keys.add("seq_locationCodeByExpressType_Q");
+		keys.add("seq_locationCodeByExpressType_R");
+		keys.add("seq_locationCodeByExpressType_Y");
 		
 		String insertSQL = "INSERT INTO sequence(NAME, CURRENT_VALUE, INCREMENT, MODULE, CYCLE, MAX_VALUE, SHOP_CODE) VALUES(?, ?, ?, ?, ?, ?, ?)";
 		st = con.prepareStatement(insertSQL);

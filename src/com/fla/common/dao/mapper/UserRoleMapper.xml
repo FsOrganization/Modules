@@ -93,14 +93,14 @@
 		LEFT JOIN TF_SYSTEM_USER SU ON SU.ID = UR.USER_ID
 		LEFT JOIN TF_ROLE TR ON TR.ID = UR.ROLE_ID
        <where>
-       	<if test="userId != null">
-	        USER_ID = #{userId}
+       	<if test="status != null">
+	        UR.STATUS = #{status}
 	    </if>
-	    <if test="roleId != null">
-	        ROLE_ID = #{roleId}
+       	<if test="nickName != null">
+	        AND SU.NICK_NAME = #{nickName}
 	    </if>
-	    <if test="status != null">
-	        AND STATUS = #{status}
+	    <if test="roleName != null">
+	        AND TR.NAME = #{roleName}
 	    </if>
 	  </where>
 	  ORDER BY ID
@@ -154,8 +154,11 @@
 		LEFT JOIN TF_SHOP_INFO TSI ON TSI.SHOP_CODE = STU.SERVICE_SHOP_CODE
 		LEFT JOIN TF_AREA_INFO TA ON TA.CODE = STU. AREA_CODE
        <where>
-       	<if test="nickName != null and nickName != '' and nickName !='undefined' ">
-	        NICK_NAME = #{nickName}
+       	<if test="loginName != null and loginName != '' and loginName !='undefined' ">
+	        STU.LOGIN_NAME != #{loginName}
+	    </if>
+	    <if test="nickName != null and nickName != '' and nickName !='undefined' ">
+	        AND NICK_NAME = #{nickName}
 	    </if>
 	  </where>
 	  ORDER BY ID

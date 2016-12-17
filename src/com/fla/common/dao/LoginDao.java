@@ -196,8 +196,9 @@ public class LoginDao implements LoginDaoInterface {
 				sql2.append(" and OPERA_TIME <='"+endDate+"'");
 			}
 			sql2.append(" order by OPERA_TIME");
-			String fsql = sql.toString() +" UNION ALL "+sql2.toString();
-			page=new Pagination(fsql.toString(),pageSize,rowSize,jt);
+			String sql3 = "select * from ("+sql.toString() +" UNION ALL "+sql2.toString()+ ") ent order by ent.OPERA_TIME desc";
+//			String fsql = sql.toString() +" UNION ALL "+sql2.toString();
+			page=new Pagination(sql3.toString(),pageSize,rowSize,jt);
 		} finally {
 			Pagination.closeConnection(jt);
 		}
@@ -423,6 +424,30 @@ public class LoginDao implements LoginDaoInterface {
 				String endDate = params.get("endDate");
 				sql.append(" and a.OPERA_TIME <='"+endDate+"'");
 			}
+			sql.append(" order by a.OPERA_TIME desc");
+			
+			page=new Pagination(sql.toString(),pageSize,rowSize,jt);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			Pagination.closeConnection(jt);
+		}
+		return page;
+	}
+	
+	@Override
+	public Pagination  searchExpressInfoByBarCode(int rowSize, int pageSize, Map<String, String> params)  {
+		Pagination page = null;
+		JdbcTemplate jt = getJdbcTemplate();
+		try 
+		{
+			StringBuilder sql = new StringBuilder();
+			sql.append(" "
+					+ " select a.ID, a.LOGISTICS, a.CODE,b.WEIXIN_ID,a.RECIPIENT_NAME, a.PHONE_NUMBER,"
+					+ " a.LANDLINE_NUMBER, a.EXPRESS_SERVICE_ID, a.ADDRESS, a.REMARK, a.BATCH_NUMBER,b.IS_INTEREST, "
+					+ " date_format(a.OPERA_TIME,'%Y-%c-%d %H:%i:%s') OPERA_TIME, a.AREA_CODE, a.SERVICE_SHOP_CODE, a.OPERATOR, a.EXPRESS_lOCATION,1 TYPE "
+					+ " from TF_EXPRESS_INFO a left join tf_customer_info b on a.PHONE_NUMBER = b.PHONE_NUMBER");
+			sql.append(" where a.id in (select EXPRESS_ID from td_customer_barcode_service b where b.BAR_CODE = '"+params.get("barCode")+"') ");
 			sql.append(" order by a.OPERA_TIME desc");
 			
 			page=new Pagination(sql.toString(),pageSize,rowSize,jt);

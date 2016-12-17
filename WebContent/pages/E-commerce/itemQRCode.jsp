@@ -409,18 +409,7 @@
 			</div>
 		</div>
 	</div>
-		<div id="signatureRegion" style="overflow: hidden;">
-		<table width="90%" border="0" align="center" cellpadding="3"
-			cellspacing="0">
-			<tr class="style7">
-				<td align="left">
-					<object id="HWPenSign" name="HWPenSign"
-						classid="clsid:E8F5278C-0C72-4561-8F7E-CCBC3E48C2E3" width="550"
-						height="320"> 
-					</object>
-				</td>
-			</tr>
-		</table>
+	<div id="signatureRegion" style="overflow: hidden;">
 	</div>
 </body>
 </html>

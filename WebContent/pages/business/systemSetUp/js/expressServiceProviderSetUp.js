@@ -3,12 +3,12 @@ var operatingContactsTag=null;
 var loginName = null;
 var textMsg = null;
 $(document).ready(function() {
-		loginName = getUrlParam("loginName");
-		if (loginName === 'admin') {
-			textMsg = "新增服务商";
-		} else {
-			textMsg = "普通工号无法新增或修改服务商基础信息";
-		}
+//		loginName = getUrlParam("loginName");
+//		if (loginName === 'admin') {
+//			textMsg = "新增服务商";
+//		} else {
+//			textMsg = "普通工号无法新增或修改服务商基础信息";
+//		}
 		$("#saveBtn").click(function() {
 			if (operatingTag) {
 				modifyForm();
@@ -80,7 +80,7 @@ $(document).ready(function() {
 			toolbar: [
 	        {
 				text:'新增联系人',
-				iconCls: 'icon-search',
+				iconCls: 'icon-add',
 				handler: function(){
 					clearContactsFormData();
 					addServiceProviderContacts();
@@ -127,7 +127,7 @@ $(document).ready(function() {
 		$('#expressServiceProviderGrid').datagrid({
 			dataType : 'json',
 			url : contextPath + '/pages/system/getExpressServiceProviderList.light',
-			width : $(window).width() * 1,
+			width : $(window).width() * 0.99,
 			height :($(window).height()) * 0.99,
 			singleSelect : true,
 			rownumbers : true,
@@ -140,14 +140,14 @@ $(document).ready(function() {
 			},
 			toolbar: [
 	        {
-				text:textMsg,
-				iconCls: 'icon-search',
+				text:"新增服务商",
+				iconCls: 'icon-add',
 				handler: function(){
-					if (loginName === 'admin') {
+//					if (loginName === 'admin') {
 						clearFormData();
 						addExpressServiceProvider();
 						operatingTag = false;
-					} 
+//					} 
 				}
 			}],
 			columns : [ [{
@@ -208,10 +208,10 @@ $(document).ready(function() {
 				parent.location.href=contextPath+'/pages/system/welcome.light';
 			},
 			onDblClickRow : function(rowIndex, rowData) {
-				if (loginName === 'admin') {
+//				if (loginName === 'admin') {
 					openWindow(rowIndex, rowData);
 					operatingTag = true;
-				}
+//				}
 				
 			},
 			loadFilter : pagerFilter

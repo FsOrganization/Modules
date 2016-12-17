@@ -42,7 +42,7 @@ public class CustomerController extends SuperController{
 	@RequestMapping("/pages/system/customer/getCustomerListByTxt.light")
 	public void getCustomerListByTxt(HttpServletRequest request, HttpServletResponse response,String queryTxt) {
 		PrintWriter printWriter = null;
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser systemUser =getSystemUser(request, response);
 		Map<String, String> params = new HashMap<String, String>();
 //		String queryTxt = request.getParameter("queryTxt");
 		try 
@@ -68,7 +68,7 @@ public class CustomerController extends SuperController{
 	public void getCustomerList(Integer page, Integer rows,
 			HttpServletRequest request, HttpServletResponse response) {
 		PrintWriter printWriter = null;
-		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
+		SystemUser systemUser = getSystemUser(request, response);
 		Map<String, String> params = new HashMap<String, String>();
 		String queryParams = request.getParameter("queryParams");
 		String pageShopCode = request.getParameter("shopCode");

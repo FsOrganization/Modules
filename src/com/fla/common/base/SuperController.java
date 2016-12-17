@@ -4,21 +4,28 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.aop.ThrowsAdvice;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.InternalResourceView;
 
+import com.fla.common.entity.SystemUser;
 import com.fla.common.util.BaseUtil;
 
 public class SuperController  implements Serializable {
 
 	private static final long serialVersionUID = 4424574217359313952L;
+	
+	public static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	protected void setResponse(HttpServletResponse response) {
 		response.setHeader("Cache-Control", "no-cache");
@@ -72,6 +79,28 @@ public class SuperController  implements Serializable {
 		return model;
 	}
 	
+	public void afterRequest(HttpServletResponse response, String json) {
+		PrintWriter printWriter = null;
+		try 
+		{
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("text/html; charset=utf-8");
+			printWriter = response.getWriter();
+			printWriter.write(json);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			printWriter.flush();
+			printWriter.close();
+		}
+	}
 	
-
+	public SystemUser getSystemUser(HttpServletRequest request, HttpServletResponse response){
+		SystemUser systemUser = (SystemUser) request.getSession().getAttribute("systemUser");
+		if (systemUser == null) {
+			throw new RuntimeException("");
+		}
+		return systemUser;
+	}
+	
 }
