@@ -1,2 +1,5 @@
 # Modules
-this is a express project
+	This is a express&shop project.
+	technical framework included spring framework,mybatis,mysql,jquery.
+	
+	
