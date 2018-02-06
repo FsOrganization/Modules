@@ -67,13 +67,6 @@
 		</param-value>
 	</context-param>
 	
-	<jsp-config>
-        <taglib>
-            <taglib-uri>http://www.la-ad.com/tags/form</taglib-uri>
-            <taglib-location>/WEB-INF/flaForm.tld</taglib-location>
-        </taglib>
-    </jsp-config>
-	
 	<!-- session过期时间设置 -->
 	<session-config>
 		<session-timeout>-1</session-timeout>
