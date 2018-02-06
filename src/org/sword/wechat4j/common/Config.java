@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package org.sword.wechat4j.common;
 
 import java.io.IOException;
@@ -9,10 +7,6 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-/**
- * @author ChengNing
- * @date   2014年12月8日
- */
 public class Config {
 	
 	private static Logger logger = Logger.getLogger(Config.class);

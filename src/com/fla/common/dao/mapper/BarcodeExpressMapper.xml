@@ -77,13 +77,14 @@
 				A.REMARK remark,
 				A.BATCH_NUMBER batchNumber,
 				CASE ifnull(B.EXPRESS_ID,'trueDate')
-				WHEN 'trueDate' THEN date_format(A.OPERA_TIME,'%Y-%c-%d %H:%i:%s')
-					ELSE date_format(current_timestamp ,'%Y-%c-%d %H:%i:%s')
+				WHEN 'trueDate' THEN date_format(A.OPERA_TIME,'%Y-%m-%d %H:%i:%s')
+					ELSE date_format(current_timestamp ,'%Y-%m-%d %H:%i:%s')
 				END operaTime,
 				A.AREA_CODE areaCode,
 				A.SERVICE_SHOP_CODE serviceShopCode,
 				A.OPERATOR operator,
-				A.EXPRESS_lOCATION expressLocation
+				A.EXPRESS_lOCATION expressLocation,
+				date_format(A.OPERA_TIME,'%Y-%m-%d') tempOperaTime
 		from  TF_EXPRESS_INFO A
 		LEFT JOIN TD_CUSTOMER_BARCODE_SERVICE B ON A.ID = B.EXPRESS_ID
 		<where>

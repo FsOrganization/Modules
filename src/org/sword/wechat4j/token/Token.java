@@ -12,17 +12,13 @@ import org.sword.lang.HttpUtils;
 
 import com.alibaba.fastjson.JSONObject;
 
-/**
- * @author ChengNing
- * @date   2015年1月29日
- */
 public abstract class Token {
 	private static Logger logger = Logger.getLogger(Token.class);
 	
-	private String token;   //token
-	private long expires;         //token有效时间
+	private String token;//token
+	private long expires;//token有效时间
 	
-	private long tokenTime;       //token产生时间
+	private long tokenTime;//token产生时间
 	private int redundance = 10*1000;  //冗余时间，提前10秒就去请求新的token
 	
 	/**
@@ -64,9 +60,9 @@ public abstract class Token {
 	 * @return
 	 */
 	private boolean parseData(String data){
-		JSONObject jsonObject = JSONObject.parseObject(data);
-		String tokenName = tokenName();
-		String expiresInName = expiresInName();
+		JSONObject jsonObject = JSONObject.parseObject(data);//token json
+		String tokenName = tokenName();//tokenName="access_token"
+		String expiresInName = expiresInName();//expiresInName="expires_in"
 		try {
 			String token = jsonObject.get(tokenName).toString();
 			if(StringUtils.isBlank(token)){
@@ -79,14 +75,11 @@ public abstract class Token {
 			if(StringUtils.isBlank(expiresIn)){
 				logger.error("token获取失败,获取结果" + expiresIn);
 				return false;
-			}
-			else{
+			} else{
 				this.expires = Long.valueOf(expiresIn);
 			}
 		} catch (Exception e) {
-			logger.error("token 结果解析失败，token参数名称: " + tokenName 
-					+ "有效期参数名称:" + expiresInName
-					+ "token请求结果:" + data);
+			logger.error("token 结果解析失败，token参数名称: " + tokenName + "有效期参数名称:" + expiresInName+ "token请求结果:" + data);
 			e.printStackTrace();
 			return false;
 		}

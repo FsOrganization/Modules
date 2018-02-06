@@ -250,7 +250,7 @@ label:hover:before {
           				<div id="qrcode" style="position: relative;margin: 20px; float:left;"></div>
           			</td>
           			<td>
-          				<img alt="" style="margin: -75px;" src="<%=contextPath%>/pages/business/test/autoDimensionalCode/img/wxpay.jpg">
+          				<img alt="" style="margin: -45px;" src="<%=contextPath%>/pages/business/test/autoDimensionalCode/img/wxpay.jpg">
           			</td>
           		</tr>
           		<tr>

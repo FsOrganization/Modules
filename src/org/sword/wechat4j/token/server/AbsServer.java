@@ -1,15 +1,8 @@
-/**
- * 
- */
 package org.sword.wechat4j.token.server;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
-/**
- * @author ChengNing
- * @date   2015年1月29日
- */
 public abstract class AbsServer implements IServer{
 
 	private static Logger logger = Logger.getLogger(AbsServer.class);

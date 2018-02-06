@@ -4,13 +4,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import com.fla.common.entity.CustomerInfo;
 import com.fla.common.util.Pagination;
 
-public interface CustomerDaoInterface {
+public interface CustomerDaoInterface  {
 	
 	public Pagination getCustomerList(final int rowSize, final int pageSize, Map<String,String> params) throws SQLException;
 	

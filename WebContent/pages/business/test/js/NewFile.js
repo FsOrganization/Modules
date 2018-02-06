@@ -4,6 +4,8 @@ var tempIds;
 var expressServiceMap = {};
 var shopNameMap = {};
 var tempSpeDate = '2016-3-31';
+var cancelSignatureTag = null;//cancelSignatureTag
+
 function queryData() {
 	searchExpressInfo();
 }
@@ -153,8 +155,11 @@ function getDays(strDateStart, strDateEnd) {
 	return days;
 }
 var lateFeeLimitUpper=null;
+
 $(document).ready(function(){
-		lateFeeLimitUpper = getUrlParam("lateFeeLimitUpper");
+//		lateFeeLimitUpper = getUrlParam("lateFeeLimitUpper");
+		getLateFeeLimitUpper();
+		initCancelSignatureTag();
 		initExpressServiceProviders();
 		//输入框按回车
 		$("#queryParams").bind("keydown",function(e){
@@ -184,10 +189,29 @@ $(document).ready(function(){
 		});
 		
 		$("#getExpressBtn").click(function() {
-			$('#signatureRegion').window('open');
-			initializationSignatureRegion();
-	    	closeBPopup();
-	    	updateCustomerGender();
+//			alert(tempIds+","+cancelSignatureTag);
+			if(cancelSignatureTag == true){
+				$.ajax({
+					url : contextPath + "/pages/system/letExpressOutStorehouse.light",
+					type : "POST",
+					dataType : 'json',
+					data :{
+						"ids" : tempIds,
+						"signatureImg" : "",
+						"type" : "1"
+					}, success : function(result){
+						$('#areaCodeGrid').datagrid('clearSelections');
+						$('#areaCodeGrid').datagrid("reload");
+						closeBPopup();
+					}
+				});
+			} else {
+				$('#signatureRegion').window('open');
+				initializationSignatureRegion();
+		    	closeBPopup();
+		    	updateCustomerGender();
+			}
+			
 	    	
 		});
 		
@@ -239,7 +263,7 @@ $(document).ready(function(){
 				var count = getDays(expressDate[0],getCurrDateFormat());
 				var tag = checkSpeDate(tempSpeDate, expressDate[0]);
 				var delayDays = parseInt(count);
-				var finalDays = delayDays-2;
+				var finalDays = delayDays;
 				if (tag) {
 					finalDays = 0;
 				}
@@ -352,7 +376,7 @@ $(document).ready(function(){
 //					var tag = checkSpeDate(tempSpeDate, expressDate[0]);
 					if (getDays(tempDate,getCurrDateFormat())>0){
 						var delayDays = getDays(tempDate,getCurrDateFormat());
-						var finalDays = delayDays-2;
+						var finalDays = delayDays;
 						if (finalDays <=0) {
 							return value;
 						} else {
@@ -429,7 +453,8 @@ $(document).ready(function(){
 					var tempDate = expressDate[0];
 					var msgTemp = '延期';
 					var delayDays = parseInt(getDays(tempDate,getCurrDateFormat()));
-					var finalDays = delayDays-2;
+					var finalDays = delayDays;
+//					alert(finalDays);
 					var isInterest = row.IS_INTEREST;
 					if (isInterest == 'Y') {
 						finalDays = finalDays -1;
@@ -444,6 +469,7 @@ $(document).ready(function(){
 						finalDays = 0;
 					}
 					row['delayDay'] = finalDays;
+					
 					if (finalDays >0 ) {
 						return '延期';//+'('+finalDays+'天)';
 					} else {
@@ -605,6 +631,24 @@ $(document).ready(function(){
 			     });
 			},
 			error : function(data) {
+			}
+		});
+	}
+	
+	function initCancelSignatureTag() {
+		$.ajax({
+			url : contextPath + "/pages/system/initCancelSignatureTag.light",
+			type : "POST",
+			dataType : 'json',
+			sync:false,
+			data : {
+				"shop_code" : ""
+			},
+			success : function(data) {
+				cancelSignatureTag = data.cancelSignatureTag;
+			},
+			error : function(data) {
+				cancelSignatureTag = false;
 			}
 		});
 	}
@@ -982,6 +1026,22 @@ $(document).ready(function(){
 		var paper = $('#areaCodeGrid').datagrid('getPager');
 		$(paper).pagination('refresh',{ pageNumber: 1 });
 //		$('.datagrid-body').focus();
+	}
+	
+	function getLateFeeLimitUpper() {
+		$.ajax({
+			url : contextPath + "/pages/system/getLateFeeLimitUpper.light",
+			type : "POST",
+			dataType : 'json',
+			sync:false,
+			data : {},
+			success : function(data) {
+//				alert(data);
+				lateFeeLimitUpper = data;
+			},
+			error : function(data) {
+			}
+		});
 	}
 	
 	

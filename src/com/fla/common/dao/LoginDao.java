@@ -632,32 +632,32 @@ public class LoginDao implements LoginDaoInterface {
 	}
 	
 	public void insertExpressInfo(ExpressInfo ei) throws Exception{
-		SequenceManager sm = SequenceManager.getInstance();
+//		SequenceManager sm = SequenceManager.getInstance();
 		Connection con = null;
 		PreparedStatement st = null;
 		con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
-		Integer id = sm.getSequenceByName("seq_express_info_id",con);
+//		Integer id = sm.getSequenceByName("seq_express_info_id",con);
 		String insertSQL =
 				"INSERT INTO TF_EXPRESS_INFO("+
-				 "id,logistics,code,recipient_name,phone_number,"+
+				 "logistics,code,recipient_name,phone_number,"+
 				 "landline_number,express_service_id,address,remark,opera_time,service_shop_code,area_code,operator,batch_number,express_Location)"+
-			"VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			"VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         st=con.prepareStatement(insertSQL);
-		st.setLong(1, id);
-		st.setString(2, ei.getLogistics());
-		st.setString(3, ei.getCode());
-		st.setString(4, ei.getRecipientName());
-		st.setString(5, ei.getPhoneNumber());
-		st.setString(6, ei.getLandlineNumber());
-		st.setLong(7, ei.getExpressServiceId());
-		st.setString(8, ei.getAddress());
-		st.setString(9, ei.getRemark());
-		st.setString(10, DateUtil.formatDateToString(new Date()));
-		st.setString(11, ei.getServiceShopCode());
-		st.setString(12, ei.getAreaCode());
-		st.setString(13, ei.getOperator());
-		st.setString(14, ei.getInBatchNumber());
-		st.setString(15, ei.getExpressLocation());
+//		st.setLong(1, id);
+		st.setString(1, ei.getLogistics());
+		st.setString(2, ei.getCode());
+		st.setString(3, ei.getRecipientName());
+		st.setString(4, ei.getPhoneNumber());
+		st.setString(5, ei.getLandlineNumber());
+		st.setLong(6, ei.getExpressServiceId());
+		st.setString(7, ei.getAddress());
+		st.setString(8, ei.getRemark());
+		st.setString(9, DateUtil.formatDateToString(new Date()));
+		st.setString(10, ei.getServiceShopCode());
+		st.setString(11, ei.getAreaCode());
+		st.setString(12, ei.getOperator());
+		st.setString(13, ei.getInBatchNumber());
+		st.setString(14, ei.getExpressLocation());
 		try 
 		{
 			st.execute();
@@ -696,31 +696,55 @@ public class LoginDao implements LoginDaoInterface {
 	}
 	
 	@Override
+	public Map<String, Object> initCancelSignatureTag(String configName, String shopCode)  {
+		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement st = null;
+		Map<String, Object> t = null;
+		try 
+		{
+			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
+			st = con.prepareStatement("select VAlUE, CONFIG_CODE from openexpressdb.tf_system_config_values a where a.CONFIG_CODE =? and SERVICE_SHOP_CODE = ?");
+			st.setString(1, configName);
+			st.setString(2, shopCode);
+			rs = st.executeQuery();
+			t = checkOneResultSet(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			connectionManager.closeResultSet(rs);
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+		return t;
+	}
+	
+	@Override
 	public void insertCustomeInfo(CustomerInfo ci) throws Exception {
-		SequenceManager sm = SequenceManager.getInstance();
+//		SequenceManager sm = SequenceManager.getInstance();
 		Connection con = null;
 		PreparedStatement st = null;
 		con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
-		Integer id = sm.getSequenceByName("seq_custome_info_id",con);
+//		Integer id = sm.getSequenceByName("seq_custome_info_id",con);
 		String insertSQL =
 				" INSERT INTO TF_CUSTOMER_INFO("+
-				 " ID, NAME, PHONE_NUMBER ,lANDLINE_NUMBER, WEIXIN_ID, IDENTITY_CARD, GENDER, ADDRESS, AREA_CODE, INITIALS_CODE, SPELLING_CODE,SERVICE_SHOP_CODE)"+
-			    " SELECT ?,?,?,?,?,?,?,?,?,?,?,? FROM DUAL "
+				 " NAME, PHONE_NUMBER ,lANDLINE_NUMBER, WEIXIN_ID, IDENTITY_CARD, GENDER, ADDRESS, AREA_CODE, INITIALS_CODE, SPELLING_CODE,SERVICE_SHOP_CODE)"+
+			    " SELECT ?,?,?,?,?,?,?,?,?,?,? FROM DUAL "
 			+ " WHERE NOT EXISTS(SELECT NULL  FROM  TF_CUSTOMER_INFO  WHERE PHONE_NUMBER = ?) ";
         st=con.prepareStatement(insertSQL);
-		st.setLong(1, id);
-		st.setString(2, ci.getName());
-		st.setString(3, ci.getPhoneNumber());
-		st.setString(4, ci.getLandlineNumber());
-		st.setString(5, ci.getWeixinId());
-		st.setString(6, ci.getIdentityCard());
-		st.setString(7, ci.getGender());
-		st.setString(8, ci.getAddress());
-		st.setString(9, ci.getAreaCode());
-		st.setString(10, ci.getInitialsCode());
-		st.setString(11, ci.getSpellingCode());
-		st.setString(12, ci.getShopCode());
-		st.setString(13, ci.getPhoneNumber());
+//		st.setLong(1, id);
+		st.setString(1, ci.getName());
+		st.setString(2, ci.getPhoneNumber());
+		st.setString(3, ci.getLandlineNumber());
+		st.setString(4, ci.getWeixinId());
+		st.setString(5, ci.getIdentityCard());
+		st.setString(6, ci.getGender());
+		st.setString(7, ci.getAddress());
+		st.setString(8, ci.getAreaCode());
+		st.setString(9, ci.getInitialsCode());
+		st.setString(10, ci.getSpellingCode());
+		st.setString(11, ci.getShopCode());
+		st.setString(12, ci.getPhoneNumber());
 		try 
 		{
 			st.execute();
@@ -843,35 +867,36 @@ public class LoginDao implements LoginDaoInterface {
 
 	@Override
 	public void letExpressOutStorehouse(ExpressInfo ei) {
-		SequenceManager sm = SequenceManager.getInstance();
+//		SequenceManager sm = SequenceManager.getInstance();
 		Connection con = null;
 		PreparedStatement st = null;
 		try 
 		{
 			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
 			con.setAutoCommit(false);
-			Integer id = sm.getSequenceByName("seq_express_out_storehouse_id",con);
+//			Integer id = sm.getSequenceByName("seq_express_out_storehouse_id",con);
 			String insertSQL = "INSERT INTO TF_EXPRESS_OUT_STOREHOUSE("
-					+ "id,logistics,code,recipient_name,phone_number,"
-					+ "landline_number,express_service_id,address,remark,opera_time,service_shop_code,area_code,operator,batch_number,out_batch_number,out_opera_time)"
+					+ "logistics,code,recipient_name,phone_number,"
+					+ "landline_number,express_service_id,address,remark,opera_time,service_shop_code,area_code,operator,batch_number,out_batch_number,out_opera_time,in_express_id)"
 					+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			st = con.prepareStatement(insertSQL);
-			st.setLong(1, id);
-			st.setString(2, ei.getLogistics());
-			st.setString(3, ei.getCode());
-			st.setString(4, ei.getRecipientName());
-			st.setString(5, ei.getPhoneNumber());
-			st.setString(6, ei.getLandlineNumber());
-			st.setLong(7, ei.getExpressServiceId());
-			st.setString(8, ei.getAddress());
-			st.setString(9, ei.getRemark());
-			st.setString(10, ei.getOperaTime());
-			st.setString(11, ei.getServiceShopCode());
-			st.setString(12, ei.getAreaCode());
-			st.setString(13, ei.getOperator());
-			st.setString(14, ei.getInBatchNumber());
-			st.setString(15, ei.getOutBatchNumber());
-			st.setString(16, DateUtil.formatDateToString(new Date()));
+//			st.setLong(1, id);
+			st.setString(1, ei.getLogistics());
+			st.setString(2, ei.getCode());
+			st.setString(3, ei.getRecipientName());
+			st.setString(4, ei.getPhoneNumber());
+			st.setString(5, ei.getLandlineNumber());
+			st.setLong(6, ei.getExpressServiceId());
+			st.setString(7, ei.getAddress());
+			st.setString(8, ei.getRemark());
+			st.setString(9, ei.getOperaTime());
+			st.setString(10, ei.getServiceShopCode());
+			st.setString(11, ei.getAreaCode());
+			st.setString(12, ei.getOperator());
+			st.setString(13, ei.getInBatchNumber());
+			st.setString(14, ei.getOutBatchNumber());
+			st.setString(15, DateUtil.formatDateToString(new Date()));
+			st.setLong(16, ei.getId());
 			st.execute();
 			moveExpress(ei);
 			con.commit();
@@ -900,7 +925,7 @@ public class LoginDao implements LoginDaoInterface {
 	public void moveExpress(ExpressInfo ei) throws SQLException {
 		Connection con = null;
 		PreparedStatement st = null;
-		con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
+		con = connectionManager.getConnection();
 		con.setAutoCommit(false);
 		String insertSQL ="delete from TF_EXPRESS_INFO where id=?";
 		 st=con.prepareStatement(insertSQL);

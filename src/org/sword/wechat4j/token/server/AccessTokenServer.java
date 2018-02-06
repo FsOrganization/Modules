@@ -1,20 +1,11 @@
-/**
- * 
- */
+
 package org.sword.wechat4j.token.server;
-
 import org.sword.wechat4j.common.Config;
+import org.sword.wechat4j.token.AccessToken;
 
-/**
- * 适配器
- * @author ChengNing
- * @date   2015年1月30日
- */
 public class AccessTokenServer extends AbsServer implements TokenServer {
-
-	/**
-	 * 
-	 */
+	private int requestTimes = 5;//token请求失败后重新请求的次数
+	private AccessToken accessToken = new AccessToken();
 	public String token(){
 		return super.token();
 	}
@@ -27,6 +18,17 @@ public class AccessTokenServer extends AbsServer implements TokenServer {
 	@Override
 	public IServer defaultServer() {
 		return AccessTokenMemServer.instance();
+	}
+	
+	/**
+	 * 服务器刷新token
+	 */
+	private void refresh(){
+		for(int i=0;i<requestTimes;i++){
+			//请求成功则退出
+			if(this.accessToken.request())
+				break;
+		}
 	}
 
 }

@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.json.JSONObject;
+
 import com.fla.common.entity.CustomerInfo;
 import com.fla.common.entity.ExpressInfo;
 import com.fla.common.entity.Signature;
@@ -196,6 +198,8 @@ public interface LoginDaoInterface {
 
 		public Pagination getExpressInfoPagination(Integer rowSize, Integer pageSize, Map<String, String> params)throws SQLException;
 		
-		public Map<String, Object> checkExpressLocation(Map<String, String> params) ;
+		public Map<String, Object> checkExpressLocation(Map<String, String> params);
+		
+		public Map<String, Object> initCancelSignatureTag(String configName, String shopCode) throws SQLException ;
 		
 	}

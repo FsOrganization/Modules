@@ -62,18 +62,39 @@ function query() {
 
 var handle = function(){
 	var queryParams = $("#queryParams").val();
-	var sql = $.trim(queryParams).substring(0,6);
-	if(sql.toLowerCase() === 'select') {
-		$.ajax({
-			url : contextPath + '/pages/system/sql/execute.light',
-			type : "POST",
-			dataType : 'json',
-			data :{
-				queryParams:Base64.encode(queryParams),
-				page:1,
-				rows:120
-			},
-			success : function(result){
+	var sqlHeader = $.trim(queryParams).substring(0,6);
+	if(sqlHeader.toLowerCase() === 'select') {
+		getSQLData(queryParams, null,'se');
+	} else if(sqlHeader.toLowerCase() === 'update' || sqlHeader.toLowerCase() === 'insert') {
+		$.messager.prompt('操作授权', '<div style="color:#242525;">请向管理员索取动态密码！</div>', function(r){
+	        if (r){
+	        	getSQLData(queryParams, r,'up');
+	        	//alert(r);
+	        }
+	    });
+	} else {
+		$.messager.show({
+            title:'提示',
+            msg:'<div class="messager-icon messager-info"></div>错误或不支持的语法格式！',
+            timeout:3800,
+            showType:'slide'
+		});
+	}
+	
+}
+
+function getSQLData(queryParams,dynamicPassword,languageTag){
+	$.ajax({
+		url : contextPath + '/pages/system/sql/execute.light',
+		type : "POST",
+		dataType : 'json',
+		data :{
+			queryParams:Base64.encode(queryParams),
+			dynamicPassword:dynamicPassword,
+			page:1,
+			rows:50
+		}, success : function(result){
+			if (languageTag === 'se') {
 //				var res = Base64.decode(result);
 				var columns=new Array();  
 	            $.each(result[0], function(field, v){
@@ -85,7 +106,7 @@ var handle = function(){
 	                if(fieldLength <= 8) column["width"]=80;
 	                if(fieldLength > 8 && fieldLength <=12 ) column["width"]=125;
 	                if(fieldLength > 12) column["width"]=145;
-	                if(v.length >= 25) column["width"]=245;
+	                if(v.length >= 20) column["width"]=235;
 	                column["formatter"] = function(value,row,index){
 	                	if (typeof value === 'object'){
 	                		return getLocalTime(value.time);
@@ -95,30 +116,35 @@ var handle = function(){
 					};
 	                columns.push(column);
 	            });
-	            
 	            $('#sqldata').datagrid({
 	        		dataType : 'json',
 	        		data : result,
-//	        		width : $(window).width() * 0.99,
-	        		height :($(window).height()-68)*0.99,
+	        		width : ($(window).width()-1) * 0.99,
+	        		height :($(window).height()-212)*0.99,
 	        		singleSelect : true,
 	        		rownumbers : true,
 	        		pagination : true,
 	        		striped : true,
-	        		pageSize : 20,
+	        		pageSize : 50,
+	        		pageList: [50],
 	        		columns : [columns],
 	        		onLoadSuccess : function(data) {
 	        		}
 	        	});
+			} else if(languageTag === 'up') {
+				$.messager.alert("操作提示", result.msg, "info", function () {}); 
+			} else {
+				
 			}
-		});
-	} else {
-		$.messager.show({
-            title:'提示',
-            msg:'<div class="messager-icon messager-info"></div>错误或不支持的语法格式！',
-            timeout:3800,
-            showType:'slide'
-		});
-	}
-	
+
+		}
+	});
+}
+
+function promptPassWord(){
+    $.messager.prompt('操作授权', '<div style="color:#242525;">请向管理员索取动态密码！</div>', function(r){
+        if (r){
+            return r;
+        }
+    });
 }

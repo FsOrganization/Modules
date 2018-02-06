@@ -31,7 +31,7 @@ public class TemplateMsg {
 	private String accessToken;
 	
 	public TemplateMsg(){
-		this.accessToken = TokenProxy.accessToken();
+		this.accessToken = TokenProxy.accessTokenRealTime();
 	}
 	
 	/**

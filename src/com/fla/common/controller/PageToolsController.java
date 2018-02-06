@@ -302,6 +302,30 @@ public class PageToolsController extends SuperController{
 		}
 	}
 	
+	@ResponseBody
+	@RequestMapping("/pages/system/initCancelSignatureTag.light")
+	public void initCancelSignatureTag(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
+		PrintWriter printWriter = null;
+		SystemUser s = getSystemUser(request, response);
+		String shopCode = null;
+		String configCode = null;
+		if (s != null) {
+			shopCode = s.getServiceShopCode();
+			configCode = "cancelSignatureTag";
+		}
+		JSONObject json = loginServiceInterface.initCancelSignatureTag(configCode, shopCode);
+		try 
+		{
+			response.setCharacterEncoding("utf-8");          
+			response.setContentType("text/html; charset=utf-8");
+            printWriter = response.getWriter();
+            printWriter.write(json.toString());
+		} finally {
+			printWriter.flush();
+			printWriter.close();
+		}
+	}
+	
 	/**
 	 * 页面客户下拉列表
 	 * @param request

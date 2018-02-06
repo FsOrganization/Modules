@@ -13,7 +13,7 @@ import org.WechatToken.com.qq.weixin.mp.aes.SHATools;
 @SuppressWarnings("serial")
 public class WechatCallbackApi extends HttpServlet {
     // 自定义 token
-    private String TOKEN = "CkjycTk3Zd6ZqFT5g3BXE42f";
+    private String TOKEN = "CkjycTk3Zd5g3g6ZqFT5gdg3BXE42f5g";
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // 微信加密签名

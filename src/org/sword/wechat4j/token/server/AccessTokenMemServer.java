@@ -25,7 +25,7 @@ public class AccessTokenMemServer implements IServer{
 	
 	private AccessToken accessToken = new AccessToken();
 	
-	private int requestTimes = 1;//token请求失败后重新请求的次数
+	private int requestTimes = 5;//token请求失败后重新请求的次数
 	
 	/**
 	 * 私有构造

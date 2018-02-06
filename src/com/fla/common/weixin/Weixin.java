@@ -113,7 +113,7 @@ public class Weixin {
 	public static void main(String[] args) throws KeyManagementException,
 			NoSuchAlgorithmException, IOException {
 		// String accessTokenUrl = getAccessTokenUrl();
-//		String accessToken = TokenProxy.accessToken();// AccessTokenMemServer.instance().token();
+//		String accessToken = TokenProxy.accessTokenRealTime();// AccessTokenMemServer.instance().token();
 //		 String openId = "oharnsu4Pnmz-Zq5fuugdVeKZHLg";
 //		 String charset = "utf-8";
 //		 byte[] c = post(getUserInfo(accessToken, openId), getContent(), charset);

@@ -198,6 +198,29 @@ public class LoginService implements LoginServiceInterface{
 		}
 		return ja;
 	}
+	
+	@Override
+	public JSONObject initCancelSignatureTag(String configName, String shopCode)
+			throws SQLException {
+		Map<String, Object> rMap = loginDao.initCancelSignatureTag(configName, shopCode);
+		JSONObject js = new JSONObject();
+		if (rMap != null) {
+			String tag = rMap.get("VAlUE").toString();
+			if (tag == null || tag.trim().length() == 0) {
+				js.put("cancelSignatureTag", false);
+			} else {
+				boolean t = false;
+				if (tag.equals(shopCode)) {
+					t = true;
+				}
+				js.put("cancelSignatureTag",  t);
+			}
+		} else {
+			js.put("cancelSignatureTag", false);
+		}
+		
+		return js;
+	}
 
 	@Override
 	public JSONObject letExpressOutStorehouse(Integer eId)throws SQLException {

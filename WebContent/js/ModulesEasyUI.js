@@ -73,6 +73,10 @@
         		'/Express/EasyUI_1.4.1/easyloader.js',
         		'/Express/EasyUI_1.4.1/jquery.easyui.min.js'
 //        		'/Express/EasyUI_1.4.1/jquery.min.js'
+//        		'/Express/common/index-menu-master/js/global.js',
+//        		'/Express/common/index-menu-master/build/js/metro.js',
+//        		'/Express/common/index-menu-master/build/js/metro.min.js'
+        		
         );
         var cssfiles = new Array(
         		'/Express/EasyUI_1.4.1/themes/bootstrap/accordion.css',
@@ -106,6 +110,19 @@
         		'/Express/EasyUI_1.4.1/themes/bootstrap/window.css',
         		'/Express/EasyUI_1.4.1/themes/color.css',
         		'/Express/EasyUI_1.4.1/themes/icon.css'
+//        		'/Express/common/index-menu-master/build/css/metro-colors.css',
+//        		'/Express/common/index-menu-master/build/css/metro-colors.min.css',
+//        		'/Express/common/index-menu-master/build/css/metro-icons.css',
+//        		'/Express/common/index-menu-master/build/css/metro-icons.min.css',
+//        		'/Express/common/index-menu-master/build/css/metro-responsive.css',
+//        		'/Express/common/index-menu-master/build/css/metro-responsive.min.css',
+//        		'/Express/common/index-menu-master/build/css/metro-rtl.css',
+//        		'/Express/common/index-menu-master/build/css/metro-rtl.min.css',
+//        		'/Express/common/index-menu-master/build/css/metro-schemes.css',
+//        		'/Express/common/index-menu-master/build/css/metro-schemes.min.css',
+//        		'/Express/common/index-menu-master/build/css/metro.css',
+//        		'/Express/common/index-menu-master/build/css/metro.min.css'
+        		
             );
         var agent = navigator.userAgent;
         var docWrite = (agent.match("MSIE") || agent.match("Safari") || agent.match("Firefox") || agent.match("Gecko") || agent.match("Camino"));

@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,11 +51,14 @@ public class SQLPlusController extends SuperController{
 
 	@ResponseBody
 	@RequestMapping("/pages/system/sql/execute.light")
-	public void  execute(String queryParams,Integer page, Integer rows,
+	public void  execute(String queryParams, String dynamicPassword, Integer page, Integer rows,
 			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 		PageBounds pageBounds = new PageBounds(page, rows);
 		Map<String,Object> params = new HashMap<String,Object>();
-		String exeSql = Base64.decode(queryParams);
+		String exeSql = null;
+		if (queryParams != null) {
+			exeSql = Base64.decode(queryParams.trim());
+		}
 		if (exeSql.startsWith("select") || exeSql.startsWith("SELECT")) {
 			params.put("privatesql", Base64.decode(queryParams));
 			List<Map<String,Object>> list = SQLPlusService.execute(params, pageBounds);
@@ -63,6 +67,36 @@ public class SQLPlusController extends SuperController{
 			response.setContentType("text/html; charset=utf-8");
 			PrintWriter printWriter = response.getWriter();
 			printWriter.write(jsonArray.toString());
+	        printWriter.flush(); 
+	        printWriter.close();
+		} else if(exeSql.startsWith("update") || exeSql.startsWith("UPDATE")){
+			JSONObject json = new JSONObject();
+			if (dynamicPassword == null || !dynamicPassword.equals("n48gj3")) {
+				json.put("msg", "请求被拒绝!");
+			} else {
+				params.put("privatesql", Base64.decode(queryParams));
+				SQLPlusService.executeDML(params);
+				json.put("msg", "操作成功!");
+			}
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("text/html; charset=utf-8");
+			PrintWriter printWriter = response.getWriter();
+			printWriter.write(json.toString());
+	        printWriter.flush(); 
+	        printWriter.close();
+		} else if(exeSql.startsWith("insert") || exeSql.startsWith("INSERT")){
+			JSONObject json = new JSONObject();
+			if (dynamicPassword == null || !dynamicPassword.equals("a5376852cc3797d31d513c8d2c4eca52")) {
+				json.put("msg", "请求被拒绝!");
+			} else {
+				params.put("privatesql", Base64.decode(queryParams));
+				SQLPlusService.executeDML(params);
+				json.put("msg", "操作成功!");
+			}
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("text/html; charset=utf-8");
+			PrintWriter printWriter = response.getWriter();
+			printWriter.write(json.toString());
 	        printWriter.flush(); 
 	        printWriter.close();
 		} else {

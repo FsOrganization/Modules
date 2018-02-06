@@ -1,12 +1,5 @@
 package org.jeewx.api.core.req.model.account;
 
-
-/**
- *  
- * 
- * @author sfli.sir
- * 
- */
 public class QrcodeActionInfo {
 	
 	private QrcodeScene scene;

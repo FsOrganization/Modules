@@ -74,19 +74,19 @@ public class MenuUtil {
 	public static void main(String[] args) {
 		String user_define_menu = 
 		"{\"button\":["
+				+ "{\"type\":\"view\",\"name\":\"幸福拼团\",\"key\":\"WECHAT_EXPRESS_APP\",\"url\":\"http://pintuan.yxzhgroup.com/app/index.php?i=2&c=entry&do=index&m=feng_fightgroups\"},"
 				+ "{\"type\":\"click\",\"name\":\"用户注册\",\"key\":\"WECHAT_USER_REGISTRATION_1\"},"
-//				+ "{\"type\":\"click\",\"name\":\"快递查询\",\"key\":\"WECHAT_EXPRESS_INQUIRY_1\"},"
 				+ "{\"type\":\"view\",\"name\":\"快递查询\",\"key\":\"WECHAT_EXPRESS_INQUIRY_1\",\"url\":\"http://121.41.76.133/Express/pages/system/getSimplyConstructedQueryPage.light\"},"
-				+ "{\"name\":\"源信服务\",\"sub_button\":["
-								+ "{\"type\":\"view\",\"name\":\"快递站点\",\"key\":\"WECHAT_EXPRESS_SITE_1\",\"url\":\"http://121.41.76.133/Express/pages/system/getShopMapQueryPage.light\"}"
+//				+ "{\"name\":\"源信服务\",\"sub_button\":["
+//								+ "{\"type\":\"view\",\"name\":\"快递站点\",\"key\":\"WECHAT_EXPRESS_SITE_1\",\"url\":\"http://121.41.76.133/Express/pages/system/getShopMapQueryPage.light\"}"
 //								+ "{\"type\":\"view\",\"name\":\"快递查询\",\"key\":\"WECHAT_EXPRESS_INQUIRY_1\",\"url\":\"http://121.41.76.133/Express/pages/system/getSimplyConstructedQueryPage.light\"},"
-								+ "]"
-				+ "}"
+//								+ "]"
+//				+ "}"
 			+ "]"
 		+ "}";
 		try 
 		{
-			String accessToken = TokenProxy.accessToken();
+			String accessToken = TokenProxy.accessTokenRealTime();
 			String res = "";
 			res = createMenu(user_define_menu, accessToken);
 			System.out.println(res);

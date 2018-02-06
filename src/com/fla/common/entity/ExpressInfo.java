@@ -34,10 +34,8 @@ public class ExpressInfo implements Serializable{
 	private String inBatchNumber;
 	private String outBatchNumber;
 	private boolean type;
+	private String tempOperaTime;
 	
-	/**
-	 * 
-	 */
 	public ExpressInfo() {
 	}
 
@@ -194,7 +192,13 @@ public class ExpressInfo implements Serializable{
 	public String toString() {
 		return super.toString();
 	}
-	
-	
 
+	public String getTempOperaTime() {
+		return tempOperaTime;
+	}
+
+	public void setTempOperaTime(String tempOperaTime) {
+		this.tempOperaTime = tempOperaTime;
+	}
+	
 }

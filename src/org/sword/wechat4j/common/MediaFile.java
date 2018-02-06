@@ -36,7 +36,7 @@ public class MediaFile {
 	 * @return
 	 */
 	private String uploadUrl(){
-		String url = UPLOAD + TokenProxy.accessToken() + "&" 
+		String url = UPLOAD + TokenProxy.accessTokenRealTime() + "&" 
 	              + PARAM_TYPE + "=" + this.type.name();
 		return url;
 	}
@@ -46,7 +46,7 @@ public class MediaFile {
 	 * @return
 	 */
 	private String downloadUrl(){
-		String url = DOWNLOAD + TokenProxy.accessToken() + "&" 
+		String url = DOWNLOAD + TokenProxy.accessTokenRealTime() + "&" 
 	         + PARAM_MEDIA_ID + "=" + this.mediaId;
 		return url;
 	}

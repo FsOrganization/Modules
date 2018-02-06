@@ -90,7 +90,7 @@
 <script type="text/javascript" src="<%=contextPath%>/pages/js/index.js"></script>
 <script type="text/javascript" src="<%=contextPath%>/js/ZeroClipboard.min.js"></script>
 <script type="text/javascript" src="<%=contextPath%>/js/sockjs-0.3.min.js"></script>
-<script type="text/javascript" src="<%=contextPath%>/pages/js/jquery.als-1.7.js"></script>
+<%-- <script type="text/javascript" src="<%=contextPath%>/pages/js/jquery.als-1.7.js"></script> --%>
 
 <script type="text/javascript">
 	function logout(){
@@ -102,14 +102,14 @@
 // 		$.each(list, function(i,item){
 // 			$('#MenuData').val(list);
 // 		});
-		$("#demo3").als({
-			visible_items: 4,
-			scrolling_items: 2,
-			orientation: "horizontal",
-			circular: "yes",
-			autoscroll: "yes",
-			interval: 4000
-		});
+// 		$("#demo3").als({
+// 			visible_items: 4,
+// 			scrolling_items: 2,
+// 			orientation: "horizontal",
+// 			circular: "yes",
+// 			autoscroll: "yes",
+// 			interval: 4000
+// 		});
 	});
 </script>  
 </head>
@@ -139,36 +139,6 @@
 					</div>
 				</div>
 			</div>
-<!-- 			<ul id="menu_button_css" class="top_menu_css"> -->
-<!-- 			<input type="checkbox" id="css3menu-switcher" class="switch_box_css"> -->
-<!-- 				<label onclick="" class="switch" for="css3menu-switcher"></label>	 -->
-<!-- 				<li class="top_menu_css"><a href="#" style="height:16px;line-height:16px;">主 页</a></li> -->
-<!-- 				<li class="top_menu_css"><a href="#" style="height:16px;line-height:16px;"><span>系统管理</span></a> -->
-<!-- 				<ul> -->
-<!-- 					<li><a href="#">Item 1 0</a></li> -->
-<!-- 					<li><a href="#">Item 1 1</a></li> -->
-<!-- 					<li><a href="#">Item 1 2</a></li> -->
-<!-- 					<li><a href="#"><span>Item 1 3</span></a> -->
-<!-- 					<ul> -->
-<!-- 						<li><a href="#"><span>Item 1 3 0</span></a> -->
-<!-- 						<ul> -->
-<!-- 							<li><a href="#"><span>Item 1 3 0 0</span></a> -->
-<!-- 							<ul> -->
-<!-- 								<li><a href="#">Item 1 3 0 0 0</a></li> -->
-<!-- 							</ul></li> -->
-<!-- 						</ul></li> -->
-<!-- 					</ul></li> -->
-<!-- 				</ul></li> -->
-<!-- 				<li class="top_menu_css"><a href="#" style="height:16px;line-height:16px;"><span>报表系统</span></a> -->
-<!-- 				<ul> -->
-<!-- 					<li><a href="#">Item 2 0</a></li> -->
-<!-- 				</ul></li> -->
-<!-- 				<li class="top_menu_css"><a href="#" style="height:16px;line-height:16px;">快递管理</a></li> -->
-<!-- 				<li class="top_menu_css"><a href="#" style="height:16px;line-height:16px;">商品维护</a></li> -->
-<!-- 				<li class="top_menu_css"><a href="#" style="height:16px;line-height:16px;">用户管理</a></li> -->
-<!-- 				<li class="top_menu_css"><a href="#" style="height:16px;line-height:16px;">日志管理</a></li> -->
-<!-- 				<li class="top_menu_css"><a href="#" style="height:16px;line-height:16px;">日志管理</a></li> -->
-<!-- 			</ul> -->
 		</div>
 	</div>
 	<div style="overflow-y:auto;overflow-x:hidden;">
@@ -223,33 +193,6 @@
 				</td>
 			</tr>
 		</table>
-	</div>
-	<div>
-		<div class="als-container" id="demo3" style="background: #fff url(<%=contextPath%>/mochaui-0.9.7/themes/default/images/bg-header.gif) repeat-x;">
-<!-- 		  <span class="als-prev"><img src="images/thin_left_arrow_333.png" alt="prev" title="previous" /></span> -->
-<!-- 		  <div class="als-viewport"> -->
-<!-- 		    <ul class="als-wrapper"> -->
-<!-- 		      <li class="als-item"><img src="images/fruits/arancio.png" alt="orange" title="orange" />orange</li> -->
-<!-- 		      <li class="als-item"><img src="images/fruits/mela.png" alt="apple" title="apple" />apple</li> -->
-<!-- 		      <li class="als-item"><img src="images/fruits/banana.png" alt="banana" title="banana" />banana</li> -->
-<!-- 		      <li class="als-item"><img src="images/fruits/mirtillo.png" alt="blueberry" title="blueberry" />blueberry</li> -->
-<!-- 		      <li class="als-item"><img src="images/fruits/anguria.png" alt="watermelon" title="watermelon" />watermelon</li> -->
-<!-- 		      <li class="als-item"><img src="images/fruits/ciliegia.png" alt="cherry" title="cherry" />cherry</li> -->
-<!-- 		      <li class="als-item"><img src="images/fruits/fragola.png" alt="strawberry" title="strawberry" />strawberry</li> -->
-<!-- 		      <li class="als-item"><img src="images/fruits/avocado.png" alt="avocado" title="avocado" />avocado</li> -->
-<!-- 		      <li class="als-item"><img src="images/fruits/pera.png" alt="pear" title="pear" />pear</li> -->
-<!-- 		      <li class="als-item"><img src="images/fruits/ananas.png" alt="pineapple" title="pineapple" />pineapple</li> -->
-<!-- 		      <li class="als-item"><img src="images/fruits/papaya.png" alt="papaya" title="papaya" />papaya</li> -->
-<!-- 		      <li class="als-item"><img src="images/fruits/lampone.png" alt="raspberry" title="raspberry" />raspberry</li> -->
-<!-- 		    </ul> -->
-<!-- 		  </div> -->
-<!-- 		  <span class="als-next"><img src="images/thin_right_arrow_333.png" alt="next" title="next" /></span> -->
-		</div>
-		<div id="desktopFooterWrapper" style="background: #fff url(<%=contextPath%>/mochaui-0.9.7/themes/default/images/bg-header.gif) repeat-x;height: 30px;">
-			<div id="desktopFooter">			
-<!-- 				<p align="right" style="margin: 1px 0px;" ><a target="_blank" style="margin: 0px 205px;font-weight: 900;">Copyright 光艺软件科技. 2013-2016 All Rights Reserved.</a></p> -->
-			</div>
-		</div>
 	</div>
 	<div id="modfiyPassWordWindow">
 		<input type="hidden" name="loginName" id="loginName" value="${loginName}">

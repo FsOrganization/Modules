@@ -35,6 +35,8 @@ public interface LoginServiceInterface {
 	
 	public JSONArray getExpressServiceProviderInfo(String areaCode) throws SQLException ;
 	
+	public JSONObject initCancelSignatureTag(String configName, String shopCode) throws SQLException ;
+	
 	public JSONObject letExpressOutStorehouse(Integer eId) throws SQLException;
 	
 	public JSONObject letExpressOutStorehouse(List<Integer> eIds, String batchNumber) throws SQLException;

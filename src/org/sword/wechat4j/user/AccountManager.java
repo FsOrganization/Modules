@@ -5,21 +5,17 @@ package org.sword.wechat4j.user;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-
 import org.apache.log4j.Logger;
 import org.sword.lang.HttpUtils;
 import org.sword.wechat4j.exception.WeChatException;
 import org.sword.wechat4j.token.TokenProxy;
 import org.sword.wechat4j.util.WeChatUtil;
-
 import com.alibaba.fastjson.JSONObject;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
-/**
- * 账户管理
- * @author Zhangxs
- * @version 2015-7-5
- */
 public class AccountManager {
 	Logger logger = Logger.getLogger(AccountManager.class);
 	
@@ -31,7 +27,7 @@ public class AccountManager {
 	private static final String SHOWQRCODE_POST_URL = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=";
 	private String accessToken;
 	public AccountManager(){
-		this.accessToken = TokenProxy.accessToken();
+		this.accessToken = TokenProxy.accessTokenRealTime();
 	}
 	/**
 	 * 长链接转短链接接口
@@ -61,16 +57,16 @@ public class AccountManager {
 	 * @param scene_id 场景值ID,目前参数只支持1--100000
 	 * @return
 	 */
-	public Qrcode createQrcodePerpetual(long sceneId){
-		return createQrcodeTicket(QrcodeType.QR_LIMIT_SCENE, null, sceneId,null);
+	public Qrcode createQrcodePerpetual(long sceneId,String url){
+		return createQrcodeTicket(QrcodeType.QR_LIMIT_SCENE, null, sceneId,null,url);
 	}
 	/**
 	 * 创建永久二维码
 	 * @param scene_str 场景值ID,长度限制为1到64
 	 * @return
 	 */
-	public Qrcode createQrcodePerpetualstr(String sceneStr){
-		return createQrcodeTicket(QrcodeType.QR_LIMIT_STR_SCENE, null, null,sceneStr);
+	public Qrcode createQrcodePerpetualstr(String sceneStr,String url){
+		return createQrcodeTicket(QrcodeType.QR_LIMIT_STR_SCENE, null, null,sceneStr,url);
 	}
 	/**
 	 * 创建临时二维码
@@ -78,12 +74,15 @@ public class AccountManager {
 	 * @param expire_seconds 二维码有效时间，以秒为单位,最大不超过604800（即7天）。
 	 * @return
 	 */
-	public Qrcode createQrcodeTemporary(long sceneId,int expireSeconds){
-		return createQrcodeTicket(QrcodeType.QR_SCENE, expireSeconds, sceneId,null);
+	public Qrcode createQrcodeTemporary(long sceneId,int expireSeconds,String url){
+		return createQrcodeTicket(QrcodeType.QR_SCENE, expireSeconds, sceneId,null,url);
 	}
-	private Qrcode createQrcodeTicket(QrcodeType qrcodeType,Integer expireSeconds,Long sceneId,String sceneStr){
+	
+	
+	private Qrcode createQrcodeTicket(QrcodeType qrcodeType,Integer expireSeconds,Long sceneId,String sceneStr,String url){
 		JSONObject ticketJson = new JSONObject();
 		ticketJson.put("action_name", qrcodeType);
+//		ticketJson.put("url", url);
 		JSONObject sceneJson = new JSONObject();
 		switch (qrcodeType) {
 			case QR_SCENE:
@@ -104,7 +103,8 @@ public class AccountManager {
 		logger.info("request data "+requestData);
 		String resultStr = HttpUtils.post(QRCODE_POST_URL + this.accessToken, requestData);
 		logger.info("return data "+resultStr);
-		try {
+		try 
+		{
 			WeChatUtil.isSuccess(resultStr);
 		} catch (WeChatException e) {
 			logger.error(e.getMessage());
@@ -114,13 +114,15 @@ public class AccountManager {
 		Qrcode qrcode = JSONObject.parseObject(resultStr,Qrcode.class);
 		return qrcode;
 	}
+	
 	/**
 	 * 换取二维码
 	 * @param ticket
 	 * @param qrcodeFile 二维码存储路径
 	 */
 	public static void getQrcode(String ticket,String qrcodeFile){
-		try {
+		try 
+		{
 			byte[] b = HttpUtils.getFile(SHOWQRCODE_POST_URL+URLEncoder.encode(ticket, "UTF-8"));
 			File file = new File(qrcodeFile);
 			FileOutputStream fStream = new FileOutputStream(file);
@@ -131,4 +133,24 @@ public class AccountManager {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 换取二维码
+	 * @param ticket
+	 * @param qrcodeFile 二维码存储路径
+	 */
+	public static String getQrcodeByBASE64Encoder(String ticket){
+		try 
+		{
+			byte[] b = HttpUtils.getFile(SHOWQRCODE_POST_URL+URLEncoder.encode(ticket, "UTF-8"));
+			BASE64Encoder encoder = new BASE64Encoder();
+			String img = encoder.encode(b);// 返回Base64编码过的字节数组字符串
+			return img;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	
 }

@@ -7,9 +7,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import net.sf.json.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +21,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.fla.common.base.SuperController;
+import com.fla.common.controller.Config.ControllerSite;
 import com.fla.common.controller.Config.PropertiesConfig;
 import com.fla.common.service.interfaces.BasePayServiceInterface;
 import com.fla.common.service.interfaces.LoginServiceInterface;
@@ -33,11 +38,17 @@ public class BasePayController extends SuperController{
 	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory.getLogger(BasePayController.class);
 	
-	private static final SimpleDateFormat dateFormatStyle1= new SimpleDateFormat("yyyy-MM-dd");
-	
-	private static final SimpleDateFormat dateFormatStyle2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
-	
 	private static final String IP = PropertiesConfig.getPropertiesByKey("system.ip");
+	
+	/**
+	 * dateFormatStyle1:yyyy-MM-dd
+	 */
+	public static final SimpleDateFormat dateFormatStyle1= new SimpleDateFormat("yyyy-MM-dd");
+	
+	/**
+	 * dateFormatStyle2:yyyy-MM-dd HH:mm:ss
+	 */
+	public static final SimpleDateFormat dateFormatStyle2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	@Autowired
 	private BasePayServiceInterface basePayService;
@@ -47,13 +58,13 @@ public class BasePayController extends SuperController{
 	
 	@org.springframework.web.bind.annotation.InitBinder
 	public void InitBinder(HttpServletRequest request, ServletRequestDataBinder binder) {
-		dateFormatStyle1.setLenient(false);
-		binder.registerCustomEditor(Date.class, null, new CustomDateEditor(dateFormatStyle1, true));
+		dateFormatStyle2.setLenient(false);
+		binder.registerCustomEditor(Date.class, null, new CustomDateEditor(dateFormatStyle2, true));
 	}
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/base/getPayCodeURL.light")
-	public void getWeixinPayCodeURL(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
+	public void getPayCodeURL(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
 		PrintWriter printWriter = null;
 		String name = request.getParameter("name");
 		String fee = request.getParameter("fee");

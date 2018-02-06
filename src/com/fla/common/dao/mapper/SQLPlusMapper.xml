@@ -8,4 +8,12 @@
        ${privatesql}
     </select>
     
+    <update id="executeDML" parameterType="java.util.Map">
+       ${privatesql}
+    </update>
+    
+    <update id="executeDDL" parameterType="java.util.Map">
+       ${privatesql}
+    </update>
+    
 </mapper>

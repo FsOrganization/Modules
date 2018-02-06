@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package org.sword.wechat4j.token.timer;
 
 import java.util.TimerTask;
@@ -10,11 +8,6 @@ import org.sword.wechat4j.token.AccessToken;
 import org.sword.wechat4j.token.server.AccessTokenServer;
 import org.sword.wechat4j.token.server.CustomerServer;
 
-/**
- * access token 定时器
- * @author ChengNing
- * @date   2015年1月8日
- */
 public class AccessTokenTimer extends TimerTask{
 	
 	private static Logger logger = Logger.getLogger(AccessTokenTimer.class);

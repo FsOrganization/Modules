@@ -48,7 +48,7 @@ public class CustomerServicesManager {
 	private static final String PARAM_FILE = "media";
 	private String accessToken;
 	public CustomerServicesManager() {
-		this.accessToken = TokenProxy.accessToken();
+		this.accessToken = TokenProxy.accessTokenRealTime();
 	}
 	/**
 	 * 创建会话

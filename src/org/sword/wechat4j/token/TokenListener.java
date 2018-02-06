@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package org.sword.wechat4j.token;
 
 import java.util.Timer;
@@ -11,13 +9,6 @@ import javax.servlet.ServletContextListener;
 import org.apache.log4j.Logger;
 import org.sword.wechat4j.token.timer.AccessTokenTimer;
 import org.sword.wechat4j.token.timer.JsApiTicketTimer;
-
-
-/**
- * Access Token 监听器
- * @author ChengNing
- * @date   2015年1月8日
- */
 public class TokenListener implements ServletContextListener{
 	
     private static Logger log = Logger.getLogger(TokenListener.class);

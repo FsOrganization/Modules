@@ -3,14 +3,12 @@ package com.fla.common.controller;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -43,10 +41,12 @@ import sun.misc.BASE64Encoder;
 import com.fla.common.base.SuperController;
 import com.fla.common.entity.BarcodeExpress;
 import com.fla.common.entity.ExpressInfo;
+import com.fla.common.entity.SystemConfig;
 import com.fla.common.entity.SystemUser;
 import com.fla.common.print.MatrixToImageWriter;
 import com.fla.common.service.interfaces.BarcodeExpressServiceInterface;
 import com.fla.common.service.interfaces.LoginServiceInterface;
+import com.fla.common.service.interfaces.SystemConfigServiceInterface;
 import com.fla.payment.weixinPay.util.TenpayUtil;
 import com.fla.payment.weixinPay.util.pay.Pay;
 import com.fla.payment.weixinPay.util.pay.WxPayDto;
@@ -71,6 +71,9 @@ public class BarcodeExpressController extends SuperController{
 
 	@Autowired
 	private BarcodeExpressServiceInterface barcodeExpressService;
+	
+	@Autowired
+	private SystemConfigServiceInterface systemConfigService;
 	
 	@Autowired
 	private LoginServiceInterface loginService;
@@ -242,7 +245,7 @@ public class BarcodeExpressController extends SuperController{
 			params.put("expressService", "");
 			params.put("areaCode", s.getAreaCode());
 			params.put("serviceShopCode", s.getServiceShopCode());
-			System.out.println(params);
+			//System.out.println(params);
 			List<ExpressInfo> eList = barcodeExpressService.getExpressInfoByParams(params);
 			JSONArray jsonArray = JSONArray.fromObject(eList);
 			json.put("eList", jsonArray);
@@ -267,6 +270,12 @@ public class BarcodeExpressController extends SuperController{
 		PrintWriter printWriter = null;
 		String name = request.getParameter("name");
 		String fee = request.getParameter("fee");
+		
+		String systemIsTestingTag = getSystemIsTestingPhase(request, response);
+		if (systemIsTestingTag != null && systemIsTestingTag.trim().equals("YES")) {
+			fee = "0.01";
+		}
+		
 		JSONObject json = new JSONObject();
 		String nonceStr = Pay.getNonceStr();
 		try 
@@ -399,6 +408,103 @@ public class BarcodeExpressController extends SuperController{
 			bitMatrix.clear();
 		}
 		return bufferedImage;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/pages/system/barcode/getExpressServiceCharge.light")
+	public void getExpressServiceCharge(String str, HttpServletRequest request,
+			HttpServletResponse response) throws SQLException, IOException {
+		SystemUser s = getSystemUser(request, response);
+		PrintWriter printWriter = null;
+		JSONObject json = new JSONObject();
+		if (s != null) {
+			try 
+			{
+				String serviceShopCode = request.getParameter("serviceShopCode");
+				Map<String,Object> params = new HashMap<String,Object>();
+				params.put("configCode", "expressServiceCharge");
+				params.put("status", "1");
+				SystemConfig config = systemConfigService.getSystemConfigByCode(params);
+				String val = null;
+				if (config != null) {
+					val = config.getValue();
+				} else {
+					val = "1";
+				}
+				json.put("val", val);
+				printWriter = response.getWriter();
+				printWriter.write(json.toString());
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				printWriter.flush();
+				printWriter.close();
+				json = null;
+			}
+		}
+
+	}
+	
+	@ResponseBody
+	@RequestMapping("/pages/system/barcode/getSystemIsTestingTag.light")
+	public void getSystemIsTestingTag(HttpServletRequest request,
+			HttpServletResponse response) throws SQLException, IOException {
+		SystemUser s = getSystemUser(request, response);
+		PrintWriter printWriter = null;
+		JSONObject json = new JSONObject();
+		if (s != null) {
+			try 
+			{
+				Map<String,Object> params = new HashMap<String,Object>();
+				params.put("configCode", "systemIsTestingPhase");
+				params.put("status", "1");
+				SystemConfig config = systemConfigService.getSystemConfigByCode(params);
+				String val = null;
+				if (config != null) {
+					val = config.getValue();
+				} else {
+					val = "NO";
+				}
+				json.put("systemIsTestingTag", val);
+				printWriter = response.getWriter();
+				printWriter.write(json.toString());
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				printWriter.flush();
+				printWriter.close();
+				json = null;
+			}
+		}
+
+	}
+	
+	public String getSystemIsTestingPhase(HttpServletRequest request,
+			HttpServletResponse response) throws SQLException, IOException {
+		String retVal = null;
+		String val = null;
+		Object obj = request.getSession().getAttribute("systemIsTestingTag");
+		try 
+		{
+			if (obj == null) {
+				Map<String, Object> params = new HashMap<String, Object>();
+				params.put("configCode", "systemIsTestingPhase");
+				params.put("status", "1");
+				SystemConfig config = systemConfigService.getSystemConfigByCode(params);
+				if (config != null) {
+					val = config.getValue();
+				} else {
+					val = "NO";
+				}
+				request.getSession().setAttribute("systemIsTestingTag", val);
+				retVal = val;
+			} else {
+				retVal =  obj.toString();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return retVal;
 	}
 	
 }

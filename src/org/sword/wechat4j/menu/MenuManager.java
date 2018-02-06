@@ -24,7 +24,7 @@ public class MenuManager {
 
 	private String accessToken;
 	public MenuManager() {
-		this.accessToken = TokenProxy.accessToken();
+		this.accessToken = TokenProxy.accessTokenRealTime();
 	}
 	/**
 	 * 创建菜单

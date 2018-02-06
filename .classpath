@@ -1,20 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v8.0">
-		<attributes>
-			<attribute name="owner.project.facets" value="jst.web"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
-	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/commons-json-jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/barbecue-1.5-beta1-jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_79"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/spring-ibatis-jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/javabase64-1.3.1"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/pinyin4j-2.5.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/poi-3.11"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/baiduMap-jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/freemarker-jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/dom4j-jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/json-jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/httpclient-4.5.1-jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Google-Gson"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/alibaba-json-jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/wechat-toolLib-jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/tinyos-core-rxtx-jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/api.sms.cn-jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jacob-1.18-jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/websocket-jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/servlet-jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Perst-jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/commons-io-2.5-jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mybatis-3.4.1-jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/zxing-jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/javabase64-1.3.1-jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_80"/>
+	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v9.0"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/freemarker-2.3.27-jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/perst-jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

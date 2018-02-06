@@ -101,5 +101,16 @@ public class SystemWebSocketHandler implements WebSocketHandler {
 //			}
 //		}
 //	}
+	
+	public void sendMessageToUser(String userName, TextMessage message, WebSocketSession user) {
+		try 
+		{
+			if (user.isOpen()) {
+				user.sendMessage(message);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

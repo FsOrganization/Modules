@@ -43,7 +43,7 @@ public class UserManager {
 	private static final String GROUP_DELETE_POST_URL="https://api.weixin.qq.com/cgi-bin/groups/delete?access_token=";
 	
 	public UserManager() {
-		this.accessToken = TokenProxy.accessToken();
+		this.accessToken = TokenProxy.accessTokenRealTime();
 	}
 	/**
 	 * 获取所有的关注者列表

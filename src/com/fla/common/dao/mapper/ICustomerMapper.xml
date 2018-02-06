@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fla.common.dao.interfaces.ICustomerDao">
+    
+    <select id="getCustomerInfoList" parameterType="java.util.Map" resultType="com.fla.common.entity.CustomerInfo">
+      	SELECT
+            ID id,
+			NAME name,
+			PHONE_NUMBER phoneNumber,
+			lANDLINE_NUMBER landlineNumber,
+			WEIXIN_ID weixinId,
+			IDENTITY_CARD identityCard,
+			GENDER gender,
+			ADDRESS address,
+			AREA_CODE areaCode,
+			EMAIL email,
+			QQ qq,
+			INITIALS_CODE initialsCode,
+			SPELLING_CODE spellingCode,
+			SERVICE_SHOP_CODE serviceShopCode,
+			AGE age,
+			AGE_SECTION ageSection,
+			WHETHER_HAVE_CAR whetherHaveCar,
+			IS_INTEREST isInterest
+		FROM TF_CUSTOMER_INFO
+       <where>
+       	<if test="areaCode != null and areaCode != '' ">
+	         AREA_CODE = #{areaCode}
+	    </if>
+       	<if test="serviceShopCode != null and serviceShopCode != '' ">
+	         AND SERVICE_SHOP_CODE = #{serviceShopCode}
+	    </if>
+	    <if test="phoneNumber != null and phoneNumber != '' ">
+	         AND PHONE_NUMBER like '%${phoneNumber}%'
+	    </if>
+	  </where>
+    </select>
+    
+</mapper>

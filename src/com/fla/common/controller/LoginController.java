@@ -148,18 +148,18 @@ public class LoginController extends SuperController{
 				}else {
 					request.getSession().setAttribute("msgTag", false);
 				}
+//				model = new ModelAndView(iv);
+				String lateFeeLimitUpper = (String) request.getSession().getAttribute("lateFeeLimitUpper");
+				if (lateFeeLimitUpper == null || lateFeeLimitUpper.trim().equals("")) {
+					Map<String,Object> params = new HashMap<String,Object>();
+					params.put("configCode", "lateFeeLimitUpper");
+					params.put("status", "1");
+					lateFeeLimitUpper =systemConfigDao.getLateFeeLimitUpper(params);
+					request.getSession().setAttribute("lateFeeLimitUpper", lateFeeLimitUpper);
+				}
+				model.addObject("lateFeeLimitUpper", lateFeeLimitUpper);
 				if (name.lastIndexOf("_C_A_F") != -1) {
 					iv = serviceViewApp();
-					model = new ModelAndView(iv);
-					String lateFeeLimitUpper = (String) request.getSession().getAttribute("lateFeeLimitUpper");
-					if (lateFeeLimitUpper == null || lateFeeLimitUpper.trim().equals("")) {
-						Map<String,Object> params = new HashMap<String,Object>();
-						params.put("configCode", "lateFeeLimitUpper");
-						params.put("status", "1");
-						lateFeeLimitUpper =systemConfigDao.getLateFeeLimitUpper(params);
-						request.getSession().setAttribute("lateFeeLimitUpper", lateFeeLimitUpper);
-					}
-					model.addObject("lateFeeLimitUpper", lateFeeLimitUpper);
 //					request.getSession();
 				} else {
 					List<SysMenu> mList = getMenu(request);
@@ -214,18 +214,18 @@ public class LoginController extends SuperController{
 				}else {
 					request.getSession().setAttribute("msgTag", false);
 				}
+				model = new ModelAndView(iv);
+				String lateFeeLimitUpper = (String) request.getSession().getAttribute("lateFeeLimitUpper");
+				if (lateFeeLimitUpper == null || lateFeeLimitUpper.trim().equals("")) {
+					Map<String,Object> params = new HashMap<String,Object>();
+					params.put("configCode", "lateFeeLimitUpper");
+					params.put("status", "1");
+					lateFeeLimitUpper =systemConfigDao.getLateFeeLimitUpper(params);
+					request.getSession().setAttribute("lateFeeLimitUpper", lateFeeLimitUpper);
+				}
+				model.addObject("lateFeeLimitUpper", lateFeeLimitUpper);
 				if (name.lastIndexOf("_C_A_F") != -1) {
 					iv = serviceViewApp();
-					model = new ModelAndView(iv);
-					String lateFeeLimitUpper = (String) request.getSession().getAttribute("lateFeeLimitUpper");
-					if (lateFeeLimitUpper == null || lateFeeLimitUpper.trim().equals("")) {
-						Map<String,Object> params = new HashMap<String,Object>();
-						params.put("configCode", "lateFeeLimitUpper");
-						params.put("status", "1");
-						lateFeeLimitUpper =systemConfigDao.getLateFeeLimitUpper(params);
-						request.getSession().setAttribute("lateFeeLimitUpper", lateFeeLimitUpper);
-					}
-					model.addObject("lateFeeLimitUpper", lateFeeLimitUpper);
 //					request.getSession();
 				} else {
 					List<SysMenu> mList = getMenu(request);
@@ -442,6 +442,25 @@ public class LoginController extends SuperController{
 			}
 		} 
 		
+	}
+	
+	@ResponseBody
+	@RequestMapping("/pages/system/getLateFeeLimitUpper.light")
+	public void getLateFeeLimitUpper(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		String lateFeeLimitUpper = (String) request.getSession().getAttribute("lateFeeLimitUpper");
+		if (lateFeeLimitUpper == null || lateFeeLimitUpper.trim().equals("")) {
+			Map<String,Object> params = new HashMap<String,Object>();
+			params.put("configCode", "lateFeeLimitUpper");
+			params.put("status", "1");
+			lateFeeLimitUpper =systemConfigDao.getLateFeeLimitUpper(params);
+			request.getSession().setAttribute("lateFeeLimitUpper", lateFeeLimitUpper);
+		}
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html; charset=utf-8");
+		 PrintWriter printWriter = response.getWriter();
+		printWriter.write(lateFeeLimitUpper);
+        printWriter.flush(); 
+        printWriter.close();
 	}
 	
 }

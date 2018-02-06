@@ -51,16 +51,18 @@ $(document).ready(function() {
 					addConfigOption();
 				}
 			},
-			{
-	            text: 
-	            	'&nbsp;&nbsp;参数名称：<input id="queryParams" name="queryParams" style="width: 150px;height:22px;" placeholder="请输入...">'
-	        },{
-				text:'查询',
-				iconCls: 'icon-search',
-				handler: function(){
-					searchExpressInfo();
-				}
-			}],
+//			{
+//	            text: 
+//	            	'&nbsp;&nbsp;参数名称：<input id="queryParams" name="queryParams" style="width: 150px;height:22px;" placeholder="请输入...">'
+//	        },
+//	        {
+//				text:'查询',
+//				iconCls: 'icon-search',
+//				handler: function(){
+//					searchExpressInfo();
+//				}
+//			}
+			],
 			columns : [ [ {
 				field : 'configId',
 				title : 'configId',

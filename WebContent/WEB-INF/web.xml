@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
-	<display-name>Spring MVC Web Application</display-name>
+	<display-name>Express Web Application</display-name>
+	<welcome-file-list>
+		 <welcome-file>/pages/system/welcome.light</welcome-file>
+	</welcome-file-list>
 	<context-param>
 		<param-name>log4jConfigLocation</param-name>
 		<param-value>/WEB-INF/classes/log4j.properties</param-value>
@@ -33,6 +36,26 @@
 	<listener>
 		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
 	</listener>
+	
+	<!-- WebService Spring Listener -->
+	<servlet>
+	   <servlet-name>LocalWebService</servlet-name>
+	   <servlet-class>com.fla.common.webService.LocalWebService</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	   <servlet-name>LocalWebService</servlet-name> 
+	   <url-pattern>/LocalWebService</url-pattern> 
+	</servlet-mapping>
+	
+	<!-- WebService Spring Listener -->
+	<servlet>
+	   <servlet-name>CustomerInformationWebService</servlet-name>
+	   <servlet-class>com.fla.common.webService.customer.service.CustomerInformationWebService</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	   <servlet-name>CustomerInformationWebService</servlet-name> 
+	   <url-pattern>/CustomerInformationWebService</url-pattern> 
+	</servlet-mapping>
   
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
@@ -40,11 +63,20 @@
 					/WEB-INF/mvc-dispatcher-servlet.xml
     			 	/WEB-INF/applicationContext.xml
     				/WEB-INF/springSecurity.xml
+    				/WEB-INF/springAOP.xml
 		</param-value>
 	</context-param>
+	
+	<jsp-config>
+        <taglib>
+            <taglib-uri>http://www.la-ad.com/tags/form</taglib-uri>
+            <taglib-location>/WEB-INF/flaForm.tld</taglib-location>
+        </taglib>
+    </jsp-config>
+	
 	<!-- session过期时间设置 -->
 	<session-config>
-		<session-timeout>45</session-timeout>
+		<session-timeout>-1</session-timeout>
 	</session-config>
 	
 </web-app>

@@ -32,7 +32,7 @@ public class Ticket extends Token {
 	 */
 	@Override
 	protected String accessTokenUrl() {
-		String access_token = TokenProxy.accessToken();
+		String access_token = TokenProxy.accessTokenRealTime();
 		String url = TICKET_URL + "access_token=" + access_token + "&type=" + this.type;
 		logger.info("获取ticket,ticket类型" + this.type);
 		return url;

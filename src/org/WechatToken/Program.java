@@ -15,14 +15,10 @@ import org.xml.sax.InputSource;
 public class Program {
 
 	public static void main(String[] args) throws Exception {
-
-		//
 		// 第三方回复公众平台
-		//
-
 		// 需要加密的明文
 		String encodingAesKey = "3LCyVM2RHKlslGa4ADv1KJilR640Ajl3eCqriXt8hgy";
-		String token = "CkjycTk3Zd6ZqFT5g3BXE42f";
+		String token = "CkjycTk3Zd5g3g6ZqFT5gdg3BXE42f5g";
 		String timestamp = "1409304348";
 		String nonce = "me2rb36o7n53yh32dg9bn";
 		String appId = "wxc016c959d3870b52";

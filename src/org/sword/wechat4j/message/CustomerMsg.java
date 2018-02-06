@@ -56,7 +56,7 @@ public class CustomerMsg {
 	 * @param msgBody
 	 */
 	private void send(){
-		String accessToken = TokenProxy.accessToken();
+		String accessToken = TokenProxy.accessTokenRealTime();
 		if(StringUtils.isBlank(this.toUserOpenId))
 			return;
 		//token不存在则重新刷新token

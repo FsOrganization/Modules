@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<excelMap>
+    <importTemplate>myProjectTemplate2007.xlsx</importTemplate>
+    <exportTemplate>myProjectTemplate2007.xlsx</exportTemplate>
+    <callbackBean>com.sinoprof.pms.myEngineering.myProject.service.impl.MyProjectServiceImpl</callbackBean>
+
+    <!--按顺序定义Excel的Sheet-->
+    <sheetDef index="1" sheetMapRef="sheetmap1" exportTemplateSheetIndex="1"/>
+    <sheetDef index="2" sheetMapRef="null" exportTemplateSheetIndex="2"/>
+    <sheetMap id="sheetmap1" type="com.sinoprof.pms.myEngineering.myProject.entity.MyProject">
+        <collection  property="linesList" type="com.sinoprof.pms.myEngineering.myProject.entity.MyProject" startrow="2">
+            <result property="projectNumber" column="A" />
+            <result property="projectName" column="B"/>
+            <result property="stationCount" column="C"/>
+            <result property="completedCount" column="D"/>
+            <result property="openedCount" column="E"/>
+            <result property="acceptanceCount" column="F" />
+            <result property="prjApprovalInvestment" column="G" />
+            <result property="designApprovalInvestment" column="H"/>
+            <result property="capitalAmout" column="I"/>
+        </collection>
+    </sheetMap>
+</excelMap>
