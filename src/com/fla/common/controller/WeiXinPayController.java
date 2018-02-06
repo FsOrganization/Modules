@@ -88,7 +88,11 @@ public class WeiXinPayController extends SuperController{
 		        out = new BufferedOutputStream(response.getOutputStream());
 		        out.write(resXml.getBytes());
 			} catch (Exception e) {
+<<<<<<< HEAD
 				log.setContent(e.getMessage());
+=======
+				log.setContent(result);
+>>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 				payLogService.insert(log);
 			} finally {
 				try 

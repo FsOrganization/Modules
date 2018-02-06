@@ -4,8 +4,11 @@ var tempIds;
 var expressServiceMap = {};
 var shopNameMap = {};
 var tempSpeDate = '2016-3-31';
+<<<<<<< HEAD
 var cancelSignatureTag = null;//cancelSignatureTag
 
+=======
+>>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 function queryData() {
 	searchExpressInfo();
 }
@@ -155,11 +158,16 @@ function getDays(strDateStart, strDateEnd) {
 	return days;
 }
 var lateFeeLimitUpper=null;
+<<<<<<< HEAD
 
 $(document).ready(function(){
 //		lateFeeLimitUpper = getUrlParam("lateFeeLimitUpper");
 		getLateFeeLimitUpper();
 		initCancelSignatureTag();
+=======
+$(document).ready(function(){
+		lateFeeLimitUpper = getUrlParam("lateFeeLimitUpper");
+>>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 		initExpressServiceProviders();
 		//输入框按回车
 		$("#queryParams").bind("keydown",function(e){
@@ -263,7 +271,11 @@ $(document).ready(function(){
 				var count = getDays(expressDate[0],getCurrDateFormat());
 				var tag = checkSpeDate(tempSpeDate, expressDate[0]);
 				var delayDays = parseInt(count);
+<<<<<<< HEAD
 				var finalDays = delayDays;
+=======
+				var finalDays = delayDays-2;
+>>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 				if (tag) {
 					finalDays = 0;
 				}
@@ -376,7 +388,11 @@ $(document).ready(function(){
 //					var tag = checkSpeDate(tempSpeDate, expressDate[0]);
 					if (getDays(tempDate,getCurrDateFormat())>0){
 						var delayDays = getDays(tempDate,getCurrDateFormat());
+<<<<<<< HEAD
 						var finalDays = delayDays;
+=======
+						var finalDays = delayDays-2;
+>>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 						if (finalDays <=0) {
 							return value;
 						} else {
@@ -453,8 +469,12 @@ $(document).ready(function(){
 					var tempDate = expressDate[0];
 					var msgTemp = '延期';
 					var delayDays = parseInt(getDays(tempDate,getCurrDateFormat()));
+<<<<<<< HEAD
 					var finalDays = delayDays;
 //					alert(finalDays);
+=======
+					var finalDays = delayDays-2;
+>>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 					var isInterest = row.IS_INTEREST;
 					if (isInterest == 'Y') {
 						finalDays = finalDays -1;
@@ -469,7 +489,10 @@ $(document).ready(function(){
 						finalDays = 0;
 					}
 					row['delayDay'] = finalDays;
+<<<<<<< HEAD
 					
+=======
+>>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 					if (finalDays >0 ) {
 						return '延期';//+'('+finalDays+'天)';
 					} else {
@@ -1027,6 +1050,7 @@ $(document).ready(function(){
 		$(paper).pagination('refresh',{ pageNumber: 1 });
 //		$('.datagrid-body').focus();
 	}
+<<<<<<< HEAD
 	
 	function getLateFeeLimitUpper() {
 		$.ajax({
@@ -1043,5 +1067,7 @@ $(document).ready(function(){
 			}
 		});
 	}
+=======
+>>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 	
 	

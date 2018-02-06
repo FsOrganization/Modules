@@ -7,12 +7,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+<<<<<<< HEAD
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONObject;
 
+=======
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import net.sf.json.JSONObject;
+>>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +27,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+<<<<<<< HEAD
 
 import com.fla.common.base.SuperController;
 import com.fla.common.controller.Config.ControllerSite;
+=======
+import com.fla.common.base.SuperController;
+>>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 import com.fla.common.controller.Config.PropertiesConfig;
 import com.fla.common.service.interfaces.BasePayServiceInterface;
 import com.fla.common.service.interfaces.LoginServiceInterface;
@@ -38,6 +48,7 @@ public class BasePayController extends SuperController{
 	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory.getLogger(BasePayController.class);
 	
+<<<<<<< HEAD
 	private static final String IP = PropertiesConfig.getPropertiesByKey("system.ip");
 	
 	/**
@@ -49,6 +60,13 @@ public class BasePayController extends SuperController{
 	 * dateFormatStyle2:yyyy-MM-dd HH:mm:ss
 	 */
 	public static final SimpleDateFormat dateFormatStyle2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+=======
+	private static final SimpleDateFormat dateFormatStyle1= new SimpleDateFormat("yyyy-MM-dd");
+	
+	private static final SimpleDateFormat dateFormatStyle2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+	
+	private static final String IP = PropertiesConfig.getPropertiesByKey("system.ip");
+>>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 
 	@Autowired
 	private BasePayServiceInterface basePayService;
@@ -58,13 +76,22 @@ public class BasePayController extends SuperController{
 	
 	@org.springframework.web.bind.annotation.InitBinder
 	public void InitBinder(HttpServletRequest request, ServletRequestDataBinder binder) {
+<<<<<<< HEAD
 		dateFormatStyle2.setLenient(false);
 		binder.registerCustomEditor(Date.class, null, new CustomDateEditor(dateFormatStyle2, true));
+=======
+		dateFormatStyle1.setLenient(false);
+		binder.registerCustomEditor(Date.class, null, new CustomDateEditor(dateFormatStyle1, true));
+>>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 	}
 	
 	@ResponseBody
 	@RequestMapping("/pages/system/base/getPayCodeURL.light")
+<<<<<<< HEAD
 	public void getPayCodeURL(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
+=======
+	public void getWeixinPayCodeURL(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
+>>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 		PrintWriter printWriter = null;
 		String name = request.getParameter("name");
 		String fee = request.getParameter("fee");
