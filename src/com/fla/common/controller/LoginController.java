@@ -148,7 +148,6 @@ public class LoginController extends SuperController{
 				}else {
 					request.getSession().setAttribute("msgTag", false);
 				}
-<<<<<<< HEAD
 //				model = new ModelAndView(iv);
 				String lateFeeLimitUpper = (String) request.getSession().getAttribute("lateFeeLimitUpper");
 				if (lateFeeLimitUpper == null || lateFeeLimitUpper.trim().equals("")) {
@@ -161,20 +160,6 @@ public class LoginController extends SuperController{
 				model.addObject("lateFeeLimitUpper", lateFeeLimitUpper);
 				if (name.lastIndexOf("_C_A_F") != -1) {
 					iv = serviceViewApp();
-=======
-				if (name.lastIndexOf("_C_A_F") != -1) {
-					iv = serviceViewApp();
-					model = new ModelAndView(iv);
-					String lateFeeLimitUpper = (String) request.getSession().getAttribute("lateFeeLimitUpper");
-					if (lateFeeLimitUpper == null || lateFeeLimitUpper.trim().equals("")) {
-						Map<String,Object> params = new HashMap<String,Object>();
-						params.put("configCode", "lateFeeLimitUpper");
-						params.put("status", "1");
-						lateFeeLimitUpper =systemConfigDao.getLateFeeLimitUpper(params);
-						request.getSession().setAttribute("lateFeeLimitUpper", lateFeeLimitUpper);
-					}
-					model.addObject("lateFeeLimitUpper", lateFeeLimitUpper);
->>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 //					request.getSession();
 				} else {
 					List<SysMenu> mList = getMenu(request);
@@ -229,7 +214,6 @@ public class LoginController extends SuperController{
 				}else {
 					request.getSession().setAttribute("msgTag", false);
 				}
-<<<<<<< HEAD
 				model = new ModelAndView(iv);
 				String lateFeeLimitUpper = (String) request.getSession().getAttribute("lateFeeLimitUpper");
 				if (lateFeeLimitUpper == null || lateFeeLimitUpper.trim().equals("")) {
@@ -242,20 +226,6 @@ public class LoginController extends SuperController{
 				model.addObject("lateFeeLimitUpper", lateFeeLimitUpper);
 				if (name.lastIndexOf("_C_A_F") != -1) {
 					iv = serviceViewApp();
-=======
-				if (name.lastIndexOf("_C_A_F") != -1) {
-					iv = serviceViewApp();
-					model = new ModelAndView(iv);
-					String lateFeeLimitUpper = (String) request.getSession().getAttribute("lateFeeLimitUpper");
-					if (lateFeeLimitUpper == null || lateFeeLimitUpper.trim().equals("")) {
-						Map<String,Object> params = new HashMap<String,Object>();
-						params.put("configCode", "lateFeeLimitUpper");
-						params.put("status", "1");
-						lateFeeLimitUpper =systemConfigDao.getLateFeeLimitUpper(params);
-						request.getSession().setAttribute("lateFeeLimitUpper", lateFeeLimitUpper);
-					}
-					model.addObject("lateFeeLimitUpper", lateFeeLimitUpper);
->>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 //					request.getSession();
 				} else {
 					List<SysMenu> mList = getMenu(request);

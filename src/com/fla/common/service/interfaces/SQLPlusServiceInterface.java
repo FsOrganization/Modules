@@ -9,12 +9,9 @@ import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 
 public interface SQLPlusServiceInterface extends SuperService<SQLPlusDaoInterface> {
 	public List<Map<String,Object>> execute(Map<String,Object> params,PageBounds pageBounds); 
-<<<<<<< HEAD
 	public void executeDML(Map<String,Object> params);
 	public void executeDDL(Map<String,Object> params);
 	public void executeDCL(Map<String,Object> params);
 	public void executeTCL(Map<String,Object> params);
 	
-=======
->>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 }

@@ -15,10 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
-<<<<<<< HEAD
 import net.sf.json.JSONObject;
-=======
->>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +51,6 @@ public class SQLPlusController extends SuperController{
 
 	@ResponseBody
 	@RequestMapping("/pages/system/sql/execute.light")
-<<<<<<< HEAD
 	public void  execute(String queryParams, String dynamicPassword, Integer page, Integer rows,
 			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 		PageBounds pageBounds = new PageBounds(page, rows);
@@ -63,13 +59,6 @@ public class SQLPlusController extends SuperController{
 		if (queryParams != null) {
 			exeSql = Base64.decode(queryParams.trim());
 		}
-=======
-	public void  execute(String queryParams,Integer page, Integer rows,
-			HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
-		PageBounds pageBounds = new PageBounds(page, rows);
-		Map<String,Object> params = new HashMap<String,Object>();
-		String exeSql = Base64.decode(queryParams);
->>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 		if (exeSql.startsWith("select") || exeSql.startsWith("SELECT")) {
 			params.put("privatesql", Base64.decode(queryParams));
 			List<Map<String,Object>> list = SQLPlusService.execute(params, pageBounds);
@@ -80,7 +69,6 @@ public class SQLPlusController extends SuperController{
 			printWriter.write(jsonArray.toString());
 	        printWriter.flush(); 
 	        printWriter.close();
-<<<<<<< HEAD
 		} else if(exeSql.startsWith("update") || exeSql.startsWith("UPDATE")){
 			JSONObject json = new JSONObject();
 			if (dynamicPassword == null || !dynamicPassword.equals("n48gj3")) {
@@ -111,8 +99,6 @@ public class SQLPlusController extends SuperController{
 			printWriter.write(json.toString());
 	        printWriter.flush(); 
 	        printWriter.close();
-=======
->>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 		} else {
 			response.setCharacterEncoding("utf-8");
 			response.setContentType("text/html; charset=utf-8");

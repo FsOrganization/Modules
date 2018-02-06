@@ -30,7 +30,6 @@ public class SQLPlusService extends SuperServiceAdapter<SQLPlusDaoInterface> imp
 		return mapper.execute(params, pageBounds);
 	}
 
-<<<<<<< HEAD
 	@Override
 	public void executeDML(Map<String, Object> params) {
 		mapper.executeDML(params);
@@ -51,6 +50,4 @@ public class SQLPlusService extends SuperServiceAdapter<SQLPlusDaoInterface> imp
 		mapper.executeTCL(params);
 	}
 
-=======
->>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 }
