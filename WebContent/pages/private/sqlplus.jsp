@@ -10,7 +10,6 @@
 <link href="<%=contextPath%>/pages/business/QRCode/css/toggle-checkbox.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="<%=contextPath%>/js/base64.min.js"></script>
 <style type="text/css">
-<<<<<<< HEAD
 #queryParams{
  	width: 100%;
  	height: 220px;
@@ -19,8 +18,6 @@
 	border: 1px solid #dedcdc;
 	font-size: 18px;
  } 
-=======
->>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 </style>
 <script type="text/javascript">
 </script>
@@ -28,12 +25,8 @@
 </head>
 <body style="overflow: hidden;background: #f2f2f2;">
 	<div style="margin: 0px;background: #f2f2f2;">
-<<<<<<< HEAD
 <!-- 		<input id="queryParams" name="queryParams" class="inputQueryEle" style="width: 100%;height: 75px;font-size: 2.5em;" /> -->
 		<textarea id="queryParams" name="queryParams" placeholder="www.sasit.cc"></textarea>
-=======
-		<input id="queryParams" name="queryParams" class="inputQueryEle" style="width: 100%;height: 75px;font-size: 2.5em;" />
->>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 	</div>
 	<table id="sqldata" style="height: auto;"></table>
 </body>

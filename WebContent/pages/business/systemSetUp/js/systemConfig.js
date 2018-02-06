@@ -51,7 +51,6 @@ $(document).ready(function() {
 					addConfigOption();
 				}
 			},
-<<<<<<< HEAD
 //			{
 //	            text: 
 //	            	'&nbsp;&nbsp;参数名称：<input id="queryParams" name="queryParams" style="width: 150px;height:22px;" placeholder="请输入...">'
@@ -64,18 +63,6 @@ $(document).ready(function() {
 //				}
 //			}
 			],
-=======
-			{
-	            text: 
-	            	'&nbsp;&nbsp;参数名称：<input id="queryParams" name="queryParams" style="width: 150px;height:22px;" placeholder="请输入...">'
-	        },{
-				text:'查询',
-				iconCls: 'icon-search',
-				handler: function(){
-					searchExpressInfo();
-				}
-			}],
->>>>>>> d0b5484a9bee2dc897836974fbc92e4f813785b1
 			columns : [ [ {
 				field : 'configId',
 				title : 'configId',
