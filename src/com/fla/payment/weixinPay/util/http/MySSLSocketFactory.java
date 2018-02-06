@@ -1,11 +1,7 @@
 package com.fla.payment.weixinPay.util.http;
 
-
-
-
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 

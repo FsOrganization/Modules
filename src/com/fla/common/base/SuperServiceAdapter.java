@@ -1,7 +1,6 @@
 package com.fla.common.base;
 
 import java.util.List;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.transaction.annotation.Transactional;
 import com.fla.common.base.exception.CoreQueryException;

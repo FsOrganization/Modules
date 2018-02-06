@@ -7,10 +7,6 @@ import java.io.Serializable;
 
 import com.fla.common.base.PrimaryKey;
 
-/**
- * @author Administrator
- *
- */
 public class ExpressInfo implements Serializable{
 	
 	private static final long serialVersionUID = 2555443494570955651L;

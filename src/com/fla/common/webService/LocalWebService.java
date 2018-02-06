@@ -3,13 +3,13 @@ package com.fla.common.webService;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
-import net.sf.json.JSONArray;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.fla.common.entity.CustomerInfo;
 import com.fla.common.service.interfaces.ExpressWebServiceInterface;
+
+import net.sf.json.JSONArray;
 
 @WebService(serviceName = "LocalWebService")
 public class LocalWebService extends SpringBeanAutowiringSupport {

@@ -1,17 +1,13 @@
 package com.fla.payment.weixinPay.util.http;
 
 
-
-
 import java.io.IOException;
-
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
-
 
 public class HttpConnect { 
 	 private static HttpConnect httpConnect = new HttpConnect();

@@ -1,8 +1,5 @@
 package com.fla.payment.weixinPay.util;
 
-
-
-
 import java.security.MessageDigest;
 import java.util.Iterator;
 import java.util.Map;
@@ -11,11 +8,9 @@ import java.util.Set;
 import java.util.SortedMap;
 
 /*
-'============================================================================
 'api说明：
 'createSHA1Sign创建签名SHA1
 'getSha1()Sha1签名
-'============================================================================
 '*/
 public class Sha1Util {
 	public static String getNonceStr() {

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <excelMap>
-    <importTemplate>myProjectTemplate2007.xlsx</importTemplate>
-    <exportTemplate>myProjectTemplate2007.xlsx</exportTemplate>
-    <callbackBean>com.sinoprof.pms.myEngineering.myProject.service.impl.MyProjectServiceImpl</callbackBean>
+    <importTemplate>planProject.xlsx.xlsx</importTemplate>
+    <exportTemplate>planProject.xlsx.xlsx</exportTemplate>
+    <callbackBean>com.MyProjectServiceImpl</callbackBean>
 
     <!--按顺序定义Excel的Sheet-->
     <sheetDef index="1" sheetMapRef="sheetmap1" exportTemplateSheetIndex="1"/>

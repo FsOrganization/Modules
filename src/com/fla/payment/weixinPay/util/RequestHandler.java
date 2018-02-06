@@ -1,8 +1,5 @@
 package com.fla.payment.weixinPay.util;
 
-
-
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Iterator;
@@ -13,8 +10,6 @@ import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-
 
 /*
  '微信支付服务器签名支付请求请求类
@@ -31,7 +26,6 @@ import javax.servlet.http.HttpServletResponse;
  'createSHA1Sign(signParams);创建签名SHA1
  'sendPrepay(packageParams);提交预支付
  'getDebugInfo(),获取debug信息
- '============================================================================
  '*/
 public class RequestHandler {
 	/** Token获取网关地址地址 */

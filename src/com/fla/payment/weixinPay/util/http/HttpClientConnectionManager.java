@@ -1,8 +1,5 @@
 package com.fla.payment.weixinPay.util.http;
 
-
-
-
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;

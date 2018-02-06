@@ -7,8 +7,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
-import net.sf.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -16,8 +14,9 @@ import org.springframework.stereotype.Service;
 import com.fla.common.dao.interfaces.MerchandiseDaoInterface;
 import com.fla.common.util.DateUtil;
 import com.fla.common.util.Pagination;
-import com.fla.common.util.SequenceManager;
 import com.fla.common.util.connection.ConnectionManager;
+
+import net.sf.json.JSONObject;
 
 @Service
 public class MerchandiseDao implements MerchandiseDaoInterface {

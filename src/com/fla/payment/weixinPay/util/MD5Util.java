@@ -1,8 +1,5 @@
 package com.fla.payment.weixinPay.util;
 
-
-
-
 import java.security.MessageDigest;
 
 public class MD5Util {

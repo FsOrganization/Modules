@@ -1,6 +1,5 @@
 package com.fla.common.controller.Config;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 

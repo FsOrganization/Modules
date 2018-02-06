@@ -12,9 +12,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -31,6 +28,9 @@ import com.fla.common.entity.SystemShop;
 import com.fla.common.entity.SystemUser;
 import com.fla.common.service.interfaces.SystemServiceInterface;
 import com.fla.common.util.MD5Utils;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Controller
 public class SystemController extends SuperController {

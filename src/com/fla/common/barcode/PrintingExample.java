@@ -1,18 +1,10 @@
 package com.fla.common.barcode;
 
 import java.io.File;
-
 import net.sourceforge.barbecue.Barcode;
 import net.sourceforge.barbecue.BarcodeFactory;
 import net.sourceforge.barbecue.BarcodeImageHandler;
 
-/**
- * 
- * Print a barcode using Java's print API
- *  
- * @author Sean C. Sullivan
- *
- */
 public class PrintingExample
 {
 
