@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fla.common.base.ServiceSaveDelegate;
 import com.fla.common.base.SuperServiceAdapter;
 import com.fla.common.dao.interfaces.MenuDaoInterface;
 import com.fla.common.entity.SysMenu;
@@ -57,7 +58,7 @@ public class MenuService extends SuperServiceAdapter<MenuDaoInterface> implement
 
 	@Override
 	public void update(SysMenu sysMenu) {
-		mapper.delete(sysMenu);
+		mapper.update(sysMenu);
 	}
 
 	@Override
@@ -85,6 +86,11 @@ public class MenuService extends SuperServiceAdapter<MenuDaoInterface> implement
 	public List<SysMenu> getMenuListByParentId(Map<String, Object> params,
 			PageBounds pageBounds) {
 		return mapper.getMenuListByParentId(params, pageBounds);
+	}
+
+	@Override
+	public <A> void saveEntity(A entity, ServiceSaveDelegate... delegate) {
+		super.saveEntity(entity, delegate);
 	}
 	
 }

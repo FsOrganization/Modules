@@ -106,36 +106,36 @@ public class ExpressDao implements ExpressDaoInterface {
 		Integer id = sm.getSequenceByName("seq_sent_express_info_id",con);
 		String insertSQL =
 				"INSERT INTO TF_SENT_EXPRESS_INFO("+
-				 "ID,LOGISTICS,CODE,RECIPIENT_NAME,PHONE_NUMBER,LANDLINE_NUMBER,"+
+				 "LOGISTICS,CODE,RECIPIENT_NAME,PHONE_NUMBER,LANDLINE_NUMBER,"+
 				 "SENDER_NAME,SENDER_NUMBER,SENDER_LANDLINE_NUMBER,EXPRESS_SERVICE_ID,"+
 				 "ADDRESS,DESTINATION,OPERA_TIME,AREA_CODE,SERVICE_SHOP_CODE,OPERATOR,"+
 				 "EXPRESS_lOCATION,WEIGHT,DIMENSIONS,REMARK,RES,TYPE,PRICE,ID_NUMBER)"+
-			"VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			"VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         st=con.prepareStatement(insertSQL);
-		st.setLong(1, id);
-		st.setString(2, ei.getLogistics());
-		st.setString(3, ei.getCode());
-		st.setString(4, ei.getRecipientName());
-		st.setString(5, ei.getPhoneNumber());
-		st.setString(6, ei.getLandlineNumber());
-		st.setString(7, ei.getSenderName());
-		st.setString(8, ei.getSenderNumber());
-		st.setString(9, ei.getSenderLandlineNumber());
-		st.setInt(10, ei.getExpressServiceId());
-		st.setString(11, ei.getAddress());
-		st.setString(12, ei.getDestination());
-		st.setString(13, DateUtil.formatDateToString(new Date()));
-		st.setString(14, ei.getAreaCode());
-		st.setString(15, ei.getServiceShopCode());
-		st.setString(16, ei.getOperator());
-		st.setString(17, ei.getExpressLocation());
-		st.setString(18, ei.getWeight());
-		st.setString(19, ei.getDimensions());
-		st.setString(20, ei.getRemark());
-		st.setString(21, ei.getRes());
-		st.setString(22, ei.isType()==false?"1":"0");
-		st.setFloat(23, ei.getPrice());
-		st.setString(24, ei.getIdNumber());
+//		st.setLong(1, id);
+		st.setString(1, ei.getLogistics());
+		st.setString(2, ei.getCode());
+		st.setString(3, ei.getRecipientName());
+		st.setString(4, ei.getPhoneNumber());
+		st.setString(5, ei.getLandlineNumber());
+		st.setString(6, ei.getSenderName());
+		st.setString(7, ei.getSenderNumber());
+		st.setString(8, ei.getSenderLandlineNumber());
+		st.setInt(9, ei.getExpressServiceId());
+		st.setString(10, ei.getAddress());
+		st.setString(11, ei.getDestination());
+		st.setString(12, DateUtil.formatDateToString(new Date()));
+		st.setString(13, ei.getAreaCode());
+		st.setString(14, ei.getServiceShopCode());
+		st.setString(15, ei.getOperator());
+		st.setString(16, ei.getExpressLocation());
+		st.setString(17, ei.getWeight());
+		st.setString(18, ei.getDimensions());
+		st.setString(19, ei.getRemark());
+		st.setString(20, ei.getRes());
+		st.setString(21, ei.isType()==false?"1":"0");
+		st.setFloat(22, ei.getPrice());
+		st.setString(23, ei.getIdNumber());
 		try 
 		{
 			st.execute();

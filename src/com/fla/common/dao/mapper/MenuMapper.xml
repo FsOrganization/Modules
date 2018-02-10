@@ -120,6 +120,7 @@
 	         AND STATUS = #{status}
 	    </if>
 	  </where>
+	  ORDER BY DISPLAY_ORDER
     </select>
     
     <select id="findEntityList" parameterType="com.fla.common.entity.SysMenu" resultType="com.fla.common.entity.SysMenu">
@@ -277,7 +278,7 @@
 			<if test="level != null and level != '' ">
         		LEVEL=#{level},
             </if>
-			<if test="displayOrder != null and displayOrder != '' ">
+			<if test="displayOrder != null">
         		DISPLAY_ORDER=#{displayOrder},
             </if>
 			<if test="url != null">

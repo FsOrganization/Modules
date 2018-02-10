@@ -67,6 +67,34 @@ public class SuperController  implements Serializable {
 		}
 	}
 	
+	public void downAppFile(HttpServletRequest request,HttpServletResponse response, File file) {
+		// 清空response
+		response.reset();
+		response.setContentType("text/html; charset=UTF-8");
+		try
+		{
+			// 设置response的Header
+			response.addHeader("Content-Disposition", "attachment;filename="+file.getName());
+			response.addHeader("Content-Length", "" + file.length());
+			// 以流的形式下载文件
+			InputStream fis = new BufferedInputStream(new FileInputStream(file));
+			byte[] buffer = new byte[fis.available()];
+			fis.read(buffer);
+			fis.close();
+
+			OutputStream os = new BufferedOutputStream(response.getOutputStream());
+			os.write(buffer);
+			os.flush();
+			os.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			file = null;
+			request = null;
+			response = null;
+		}
+	}
+	
 	public ModelAndView JumpModelAndView() {
 		InternalResourceView iv = new InternalResourceView("/pages/system/login.light");
 		ModelAndView model = new ModelAndView(iv);
