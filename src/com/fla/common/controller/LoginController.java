@@ -160,7 +160,7 @@ public class LoginController extends SuperController{
 				model.addObject("lateFeeLimitUpper", lateFeeLimitUpper);
 				if (name.lastIndexOf("_C_A_F") != -1) {
 					iv = serviceViewApp();
-//					request.getSession();
+					model = new ModelAndView(iv);
 				} else {
 					List<SysMenu> mList = getMenu(request);
 			 		model.addObject("sysMainMenuList", mList);
@@ -226,7 +226,7 @@ public class LoginController extends SuperController{
 				model.addObject("lateFeeLimitUpper", lateFeeLimitUpper);
 				if (name.lastIndexOf("_C_A_F") != -1) {
 					iv = serviceViewApp();
-//					request.getSession();
+					model = new ModelAndView(iv);
 				} else {
 					List<SysMenu> mList = getMenu(request);
 			 		model.addObject("sysMainMenuList", mList);
