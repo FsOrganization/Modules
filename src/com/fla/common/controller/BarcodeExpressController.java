@@ -177,7 +177,6 @@ public class BarcodeExpressController extends SuperController{
         printWriter.close();
 	}
 	
-	
 	public String random(Integer a) {
 		int s = (int) (Math.random()*a);
 		return s+"";

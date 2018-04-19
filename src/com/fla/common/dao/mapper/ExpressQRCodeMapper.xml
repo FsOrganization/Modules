@@ -20,7 +20,7 @@
 			<if test="barCode != null and barCode != '' ">
 	         	and a.BAR_CODE = #{barCode}
 	    	</if>
-		group by a.BAR_CODE,c.BASKET_NUMBER,a.SERVICE_SHOP_CODE
+		group by a.BAR_CODE,c.BASKET_NUMBER,a.SERVICE_SHOP_CODE,a.OPERA_TIME
 	</select>
 	
 	<select id="getExpressByBarCode" parameterType="java.util.Map" resultType="com.fla.common.entity.ExpressInfo">
