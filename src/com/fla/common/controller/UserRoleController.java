@@ -135,7 +135,7 @@ public class UserRoleController extends SuperController{
 					}
 				}
 			}
-			json.put("msg", "删除成功");
+			json.put("msg", "操作成功");
 			response.setCharacterEncoding("utf-8");
 			response.setContentType("text/html; charset=utf-8");
 			printWriter = response.getWriter();

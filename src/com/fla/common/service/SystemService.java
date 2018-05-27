@@ -470,6 +470,26 @@ public class SystemService implements SystemServiceInterface{
 		return ja;
 	}
 	
+	@Override
+	public JSONArray getShopGroupByArea(Map<String, Object> params)
+			throws SQLException {
+		JSONArray ja = new JSONArray();
+		List<Map<String, Object>> rowMap = systemDao.getShopGroupByArea(params);
+		if (rowMap != null && rowMap.size() != 0) {
+			for (Map<String, Object> map : rowMap) {
+				JSONObject json = new JSONObject();
+				json.put("id", map.get("ID"));
+				json.put("text", map.get("NAME"));
+				json.put("code", map.get("CODE"));
+				json.put("type", "A");
+				JSONArray cj = this.getAreaChildrenShops(map.get("CODE").toString());
+				json.put("children", cj);
+				ja.add(json);
+			}
+		}
+		return ja;
+	}
+	
 	public JSONArray getAreaChildrenShops(String areaCode) throws SQLException {
 		JSONArray ja = new JSONArray();
 		List<Map<String, Object>> rowMap = systemDao.getAreaChildrenShops(areaCode);

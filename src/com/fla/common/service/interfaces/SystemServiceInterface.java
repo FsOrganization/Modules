@@ -75,6 +75,8 @@ public interface SystemServiceInterface {
 	
 	public JSONArray getExpressStatisticalArea(Map<String, Object> params) throws SQLException;
 	
+	public JSONArray getShopGroupByArea(Map<String, Object> params) throws SQLException;
+	
 	public JSONArray getShopNumberOfPeopleGroupCount(String type,String code) throws SQLException;
 	
 	public JSONArray getShopInAndSendExpressGroupCount(String type,String code,String startDate,String endDate) throws SQLException ;

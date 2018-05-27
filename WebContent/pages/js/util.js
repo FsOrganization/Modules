@@ -73,7 +73,7 @@ var unblock = function(e) {
  */
 function isPhoneNmuber(phoneNumber) {
 	var str = phoneNumber;
-	var reg = /[0]([0-9]{2,3})?[0-9]{7,8}|(^[1][345678][0-9]{9}$)/;
+	var reg = /[0]([0-9]{2,3})?[0-9]{7,8}|(^[1][3456789][0-9]{9}$)/;
 	if (reg.test(str)){
 		return true;
 	} else {

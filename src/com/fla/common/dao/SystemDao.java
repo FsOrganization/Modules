@@ -908,13 +908,36 @@ public class SystemDao implements SystemDaoInterface {
 		try 
 		{
 			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
-			String sql = "select  * from tf_area_info a";
+			String sql = "select a.* from tf_area_info a";
 			String loginName = (String) params.get("loginName");
 			String appendSql = "";
 			if (!loginName.equals("admin")) {
 				appendSql = "  where a.CODE='"+params.get("areaCode")+"'";
 			} 
 			sql = sql + appendSql;
+			st = con.prepareStatement(sql);
+			rs = st.executeQuery();
+			t = checkResultSet(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			connectionManager.closeResultSet(rs);
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+		return t;
+	}
+	
+	@Override
+	public List<Map<String, Object>> getShopGroupByArea(Map<String, Object> params) {
+		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement st = null;
+		List<Map<String, Object>> t = null;
+		try 
+		{
+			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
+			String sql = "select a.* from tf_area_info a";
 			st = con.prepareStatement(sql);
 			rs = st.executeQuery();
 			t = checkResultSet(rs);
