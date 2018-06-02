@@ -69,6 +69,7 @@ public class CustomerController extends SuperController{
 			HttpServletRequest request, HttpServletResponse response) {
 		PrintWriter printWriter = null;
 		SystemUser systemUser = getSystemUser(request, response);
+		String loginName = systemUser.getLoginName();
 		Map<String, String> params = new HashMap<String, String>();
 		String queryParams = request.getParameter("queryParams");
 		String pageShopCode = request.getParameter("shopCode");
@@ -77,9 +78,13 @@ public class CustomerController extends SuperController{
 			queryParams = URLDecoder.decode(queryParams, "UTF-8");
 			params.put("queryParams", queryParams);
 			if (pageShopCode == null || pageShopCode.trim().length() == 0) {
-				params.put("shopCode", systemUser.getServiceShopCode());
+				if(!"admin".equals(loginName)) {
+					params.put("shopCode", systemUser.getServiceShopCode());
+				}
 			} else {
-				params.put("shopCode", pageShopCode);
+				if(!"admin".equals(loginName)) {
+					params.put("shopCode", pageShopCode);
+				}
 			}
 			Pagination data = customerService.getCustomerList(rows, page,params);
 			String d = PaginationUtils.getData(page, rows, data);

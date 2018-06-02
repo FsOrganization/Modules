@@ -65,10 +65,12 @@ public class APPConfigController extends SuperController {
 			Integer page, Integer rows, 
 			HttpServletRequest request,
 			HttpServletResponse response) throws SQLException, IOException {
+		SystemUser s = getSystemUser(request, response);
 		PageBounds pageBounds = new PageBounds(page, rows);
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("phoneNumber", phoneNumber);
 		params.put("shopCode", shopCode);
+		params.put("areaCode", s.getAreaCode());
 		List<CustomerInfo> list = appConfigService.getRegisteredCustomers(params, pageBounds);
 		for (CustomerInfo cusm : list) {
 			Map<String, Object> queryMap = new HashMap<String, Object>();
@@ -98,9 +100,15 @@ public class APPConfigController extends SuperController {
 	@ResponseBody
 	@RequestMapping("/pages/app/config/getShopGroupByArea.light")
 	public void getShopGroupByArea(String str, HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException {
+		SystemUser s = getSystemUser(request, response);
 		PrintWriter printWriter = null;
 		Map<String, Object> params = new HashMap<String, Object>();
-		JSONArray jsonArray = systemService.getShopGroupByArea(params);
+		if (s != null) {
+			params.put("areaCode", s.getAreaCode());
+			params.put("loginName", s.getLoginName());
+		}
+//		JSONArray jsonArray = systemService.getShopGroupByArea(params);
+		JSONArray jsonArray = systemService.getExpressStatisticalArea(params);
 		try 
 		{
 			response.setCharacterEncoding("utf-8");          

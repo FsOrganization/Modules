@@ -18,7 +18,7 @@ $(document)
 					});
 
 					$('#setConfig').window({
-						title : '新增用户',
+						title : '新增设置',
 						width : 580,
 						height : 245,
 						modal : true,

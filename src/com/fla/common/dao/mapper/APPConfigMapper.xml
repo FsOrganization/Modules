@@ -42,6 +42,9 @@
 		   <if test="shopCode != null and shopCode != '' ">
 		   		AND a.SERVICE_SHOP_CODE = #{shopCode}
 		   </if>
+		   <if test="areaCode != null and areaCode != '' ">
+		   		AND a.AREA_CODE = #{areaCode}
+		   </if>
 		</where>
     </select>
     
