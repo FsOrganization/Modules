@@ -247,7 +247,7 @@ $(document).ready(function(){
 			dataType : 'json',
 			url : contextPath + '/pages/system/getExpressInfoList.light',
 			width : $(window).width()*0.99,
-			height :($(window).height()-22)*0.99,
+			height :($(window).height()-26)*0.99,
 			singleSelect:true,
 			rownumbers : true,
 			pagination : true,

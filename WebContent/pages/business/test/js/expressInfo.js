@@ -46,11 +46,11 @@ $(document).ready(function() {
 			}
 		});
 		
-		$('#areaCodeGrid').datagrid({
+		$('#expressInfoGrid').datagrid({
 //			dataType : 'json',
 			url : contextPath + '/pages/system/getExpressInfoByFilterConditions.light',//getNotOutExpressInfoByFilterConditions
 			width : $(window).width()*0.99,
-			height :($(window).height()-22)*0.99,
+			height :($(window).height()-26)*0.99,
 			singleSelect : true,
 			rownumbers : true,
 			pagination : true,
@@ -324,7 +324,7 @@ function deleteRow(id, name) {
 }
 
 function getSelections() {
-	var rows = $('#areaCodeGrid').datagrid('getSelections');
+	var rows = $('#expressInfoGrid').datagrid('getSelections');
 	return rows;
 }
 function openWindow(rowIndex, rowData) {
@@ -345,7 +345,7 @@ function submitForm() {
 			"name" : $('#name').val()
 		},
 		success : function(data) {
-			$('#areaCodeGrid').datagrid('reload');
+			$('#expressInfoGrid').datagrid('reload');
 			$.messager.show({
 				title : '提示',
 				msg : '<div class="messager-icon messager-info"></div>'
@@ -380,17 +380,17 @@ function searchExpressInfo() {
 		"queryParams" : queryParams,
 		"expressService" : expressService
 	};
-	$('#areaCodeGrid').datagrid("loadData", []);
-	$('#areaCodeGrid').datagrid("clearSelections");
+	$('#expressInfoGrid').datagrid("loadData", []);
+	$('#expressInfoGrid').datagrid("clearSelections");
 	//		
-	$('#areaCodeGrid').datagrid({
+	$('#expressInfoGrid').datagrid({
 		url : contextPath
 				+ "/pages/system/getExpressInfoByFilterConditions.light?endDate="+ endDate 
 				+ "&startDate=" + startDate
 				+ "&queryParams=" + queryParams
 				+ "&expressService=" + expressService
 	});
-	var paper = $('#areaCodeGrid').datagrid('getPager');
+	var paper = $('#expressInfoGrid').datagrid('getPager');
 	$(paper).pagination('refresh', {
 		pageNumber : 1
 	});

@@ -114,7 +114,7 @@
 	});
 </script>  
 </head>
-<body id="indexbody" style="background: #fff;overflow: hidden;" topmargin="0">
+<body id="indexbody" style="background: #dfe8f2;;overflow: hidden;" topmargin="0">
 	<input type="hidden" id="loginTag" value="${loginName}"/>
 	<input type="hidden" id="MenuData" value="${sysMenuList}"/>
 	<input type="hidden" id="redirectTag" value="${redirect}"/>

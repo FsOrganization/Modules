@@ -245,7 +245,7 @@ $(document).ready(function(){
 			dataType : 'json',
 			url : contextPath + '/pages/system/getSentExpressInfo.light',
 			width : $(window).width()*0.99,
-			height :($(window).height()-32)*0.99,
+			height :($(window).height()-26)*0.99,
 			singleSelect:true,
 			rownumbers : true,
 			pagination : true,
