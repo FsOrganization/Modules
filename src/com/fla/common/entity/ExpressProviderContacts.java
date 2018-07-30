@@ -11,6 +11,7 @@ public class ExpressProviderContacts implements Serializable {
 	private String phoneNumber;//
 	private String areaCode;//
 	private String shopCode;//
+	private String shopName;
 	private String type;//
 	private String remark;// 备注
 	private Integer providerId;//
@@ -86,6 +87,14 @@ public class ExpressProviderContacts implements Serializable {
 
 	public void setProviderName(String providerName) {
 		this.providerName = providerName;
+	}
+
+	public String getShopName() {
+		return shopName;
+	}
+
+	public void setShopName(String shopName) {
+		this.shopName = shopName;
 	}
 
 }

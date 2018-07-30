@@ -1,6 +1,4 @@
-$(document)
-		.ready(
-				function() {
+$(document).ready(function() {
 					// 输入框按回车
 					$("#queryParams").bind("keydown", function(e) {
 						var keycode = e.which;
@@ -53,7 +51,7 @@ $(document)
 						}
 					});
 					$('#customerContainer').window({
-						title : '编辑菜单',
+						title : '信息',
 						width : 650,
 						height : 300,
 						modal : true,
@@ -63,6 +61,7 @@ $(document)
 						left : 220,
 						top : 90,
 						onBeforeClose : function() {
+							currWinName = "";
 						}
 					});
 
@@ -176,8 +175,7 @@ $(document)
 													width : 150,
 													align : 'center',
 													hidden : false,
-													formatter : function(value,
-															row, index) {
+													formatter : function(value, row, index) {
 														if (row.providerContacts.length == 0) {
 															return "<button style='width: inherit;' onclick=\"setConfig('"
 																	+ row.phoneNumber
@@ -189,13 +187,7 @@ $(document)
 																	+ row.name
 																	+ "')\">设置为快递联系人</button>";
 														} else {
-															return "<button style='width: inherit;' onclick=\"registeredCustomerWindow("
-																	+ row.phoneNumber
-																	+ ",'"
-																	+ row.shopCode
-																	+ "','"
-																	+ row.areaCode
-																	+ "')\">查看信息</button>";
+															return "<button style='width: inherit;' onclick=\'registeredCustomerWindow("+JSON.stringify(row)+")\'>查看信息</button>";
 														}
 													}
 												} ] ],
@@ -206,8 +198,7 @@ $(document)
 											parent.location.href = contextPath
 													+ '/pages/system/welcome.light';
 										},
-										onDblClickRow : function(rowIndex,
-												rowData) {
+										onDblClickRow : function(rowIndex, rowData) {
 											openWindow(rowIndex, rowData);
 										},
 										loadFilter : pagerFilter
@@ -221,14 +212,16 @@ $(document)
 				});
 
 function setConfig(phoneNumber, shopCode, areaCode, name) {
+	clearFormData();
 	$('#customerName').val(name);
 	$('#areaCode').val(areaCode);
 	$('#shopCode').val(shopCode);
 	$('#phoneNumber').val(phoneNumber);
 	$('#setConfig').window('open');
 }
-function registeredCustomerWindow(phoneNumber, shopCode, areaCode) {
-	getdata(phoneNumber, shopCode, areaCode);
+function registeredCustomerWindow(row) {
+	getdata(row.phoneNumber, row.shopCode, row.areaCode);
+	$("#customerContainer").panel({title:row.name+'的快递公司信息'});
 	$('#customerContainer').window('open');
 }
 
@@ -239,21 +232,19 @@ function getSelections() {
 
 function openWindow(rowIndex, rowData) {
 	clearFormData();
-	var id = rowData.id;
-	var name = rowData.name;
-	var displayOrder = rowData.displayOrder;
-	var status = rowData.status;
-	$('#id').val(id);
-	$('#name').val(name);
-	$('#displayOrder').val(displayOrder);
-	if (status === 'Y') {
-		$("input[id='status']").prop("checked", true);
-	}
+	$('#customerName').val(rowData.name);
+	$('#areaCode').val(rowData.areaCode);
+	$('#shopCode').val(rowData.shopCode);
+	$('#phoneNumber').val(rowData.phoneNumber);
 	$('#setConfig').window('open');
 }
 
 function clearFormData() {
 //	$('#expressServiceId').combo('setValue',null);
+	$('#customerName').val("");
+	$('#areaCode').val("");
+	$('#shopCode').val("");
+	$('#phoneNumber').val("");
 	$('#expressServiceId').combo('setValue', "").combo('setText', "请选择快递服务商");
 }
 
@@ -344,7 +335,7 @@ function searchRegisteredCustomers(type, code) {
 						if (row.providerContacts.length == 0) {
 							return "<button style='width: inherit;' onclick=\"setConfig('"+ row.phoneNumber+ "','"+ row.shopCode+ "','"+ row.areaCode+ "','"+ row.name+ "')\">设置为快递联系人</button>";
 						} else {
-							return "<button style='width: inherit;' onclick=\"registeredCustomerWindow("+ row.phoneNumber+ ",'"+ row.shopCode+ "','"+ row.areaCode+ "')\">查看信息</button>";
+							return "<button style='width: inherit;' onclick=\'registeredCustomerWindow("+JSON.stringify(row)+")\'>查看信息</button>";
 						}
 					}
 				} ] ],
@@ -374,11 +365,13 @@ function getdata(phoneNumber, shopCode, areaCode) {
 			"phoneNumber" : phoneNumber
 		},
 		success : function(data) {
-			let infolis = $("#infolis");
-			$(infolis).empty();
+			let customerContainer = $("#customerContainer");
+			$(customerContainer).empty();
 			$.each(data, function(i) {
-				let li = $("<li>"+data[i].phoneNumber+","+data[i].shopCode+","+data[i].areaCode+","+data[i].providerName+"</li>");
+				let infolis = $('<ul id="infolis" class="ul-main-cs"></ul>');
+				let li = $("<li class='ul-li-cs'>"+data[i].phoneNumber+","+data[i].shopName+","+data[i].providerName+"</li>");
 				$(infolis).append(li);
+				$(customerContainer).append(infolis);
 			});
 		},
 		error : function(data) {

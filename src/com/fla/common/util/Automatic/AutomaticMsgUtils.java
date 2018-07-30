@@ -168,7 +168,7 @@ public class AutomaticMsgUtils {
 		m.put("keyword2", logistics);
 		TemplateData limitTime= new TemplateData();
 		limitTime.setColor("#000000");
-		limitTime.setValue("请三天内领取");
+		limitTime.setValue("请尽快领取");
 		m.put("keyword3", limitTime);
 		TemplateData shopAddr = new TemplateData();
 		shopAddr.setColor("#000000");
@@ -180,7 +180,8 @@ public class AutomaticMsgUtils {
 		m.put("keyword5", contact);
 		TemplateData remark = new TemplateData();
 		remark.setColor("#000000");
-		remark.setValue("温馨提示：快递件长期存放易造成货物堆积、丢失，故暂存三日，超期按1元每件/天收取，如有不妥，请谅解！！！");
+//		remark.setValue("温馨提示：快递件长期存放易造成货物堆积、丢失，故暂存一日，超期按1元每件/天收取，如有不妥，请谅解！！！");
+		remark.setValue("温馨提示：快递件长期存放易造成货物堆积、丢失，请尽快领取！！！");
 		m.put("remark", remark);
 		temp.setData(m);
 		String jsonString = JSONObject.fromObject(temp).toString();

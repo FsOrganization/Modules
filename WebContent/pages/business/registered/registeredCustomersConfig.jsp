@@ -112,6 +112,19 @@ td.contact {
 label:hover:before {
 	border: 1px solid #4778d9 !important;
 }
+.ul-main-cs {
+	font-size: 26px;
+	background-color:#f4fbff;
+	height:90px;
+	width:100%;
+	padding: 35px 55px;
+	margin: 1px auto;
+	border-radius: 3px;
+}
+
+.ul-li-cs {
+	color: #2f2d31;
+}
 </style>
 <script type="text/javascript">
 	

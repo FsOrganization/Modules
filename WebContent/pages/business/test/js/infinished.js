@@ -129,8 +129,7 @@ function clearOneType(type){
 $(document).ready(function() {
 	$("#showBatchNumber").click(function(){
 		  $("#batchNumberDiv").toggle(50,
-				  function()
-				  {
+				  function() {
 					  if ($("#batchNumberDiv").is(":hidden")) {
 						  $("#showBatchNumber").text('*显示批次号');
 						  $('#presentSelfForm').panel('resize',{
@@ -146,6 +145,14 @@ $(document).ready(function() {
 					  }
 			  	  }
 		  );
+	});
+	
+	$("#importantNote").click(function(){
+		$.messager.prompt('备注', '快递的重要备注：', function(r){
+			if (r){
+				$("#remark").val(r);
+			}
+		});
 	});
 	
 	$("#phoneNumber").bind("keydown",function(e){
@@ -420,7 +427,7 @@ $(document).ready(function() {
 
 	$('#presentSelfForm').window({
 		title:'快件入库',
-	    width:590,
+	    width:650,
 	    height:478,
 	    modal:true,
 	    closed:true,

@@ -55,12 +55,14 @@
 		 	a.PHONE_NUMBER phoneNumber,
 		 	a.AREA_CODE areaCode,
 		 	a.SERVICE_SHOP_CODE shopCode,
-		 	a.TYPE type,
+		 	c.NAME shopName,
+		 	a.`TYPE` type,
 		 	a.REMARK remark,
 		 	a.PROVIDER_ID providerId,
 		 	b.NAME providerName
  		from tf_express_service_provider_contacts a 
  		left join tf_express_service_provider_info b on b.ID = a.PROVIDER_ID
+ 		left join tf_shop_info c on c.SHOP_CODE = a.SERVICE_SHOP_CODE
  		where a.PHONE_NUMBER = #{phoneNumber}
     </select>
     

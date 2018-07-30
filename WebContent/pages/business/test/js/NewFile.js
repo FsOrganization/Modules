@@ -367,7 +367,7 @@ $(document).ready(function(){
 			},{
 				field : 'OPERA_TIME',
 				title : '入库时间',
-				width : 200,
+				width : 140,
 				align : 'center',
 				hidden : false,
 				formatter : function(value, row, index){
@@ -393,13 +393,13 @@ $(document).ready(function(){
 				title : '入库批次号',
 				width : 85,
 				align : 'center',
-				hidden : false
+				hidden : true
 			},{
 				field : 'REMARK',
 				title : '备注',
 				width : 200,
 				align : 'center',
-				hidden : true
+				hidden : false
 			},{
 				field : 'SERVICE_SHOP_CODE',
 				title : '网点',

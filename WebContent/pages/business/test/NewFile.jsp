@@ -160,39 +160,45 @@ td.contact {
        	
 	</div>
 	<table id="areaCodeGrid" style="height: auto;"></table>
-	<div id="detail" class="easyui-dialog" title="修改快件信息" style="width:460px;height:350px;padding:10px;overflow: hidden;"
+	<div id="detail" class="easyui-dialog" title="修改快件信息" style="width:460px;height:375px;padding:10px;overflow: hidden;"
 	            data-options="iconCls: 'icon-save',toolbar: '#dlg-toolbar',buttons: '#dlg-buttons',closed: true">
 		    <form id="ff" action="<%=contextPath%>/pages/system/editDataById.light" method="post" class="af-form" style="height: inherit;">
 				<div class="af-outer">
-							<div class="af-inner">
-								<label for="input-title">快件运单号:</label>
-								<input type="text" name="modify_logistics" id="modify_logistics" style="width: 220px;margin:-10px 0px;" readonly="readonly">
-								<input type="hidden" id="id" />
-							</div>
+					<div class="af-inner">
+						<label for="input-title">快件运单号:</label>
+						<input type="text" name="modify_logistics" id="modify_logistics" style="width: 220px;margin:-10px 0px;" readonly="readonly">
+						<input type="hidden" id="id" />
+					</div>
 				</div>
 				<div class="af-outer">
-							<div class="af-inner">
-								<label for="input-title">收件人姓名                 :</label>
-								<input type="text" name="modify_recipientName" id="modify_recipientName" style="width: 220px;margin:-10px 0px;">
-							</div>
+					<div class="af-inner">
+						<label for="input-title">收件人姓名                 :</label>
+						<input type="text" name="modify_recipientName" id="modify_recipientName" style="width: 220px;margin:-10px 0px;">
+					</div>
 				</div>
 				<div class="af-outer">
-							<div class="af-inner">
-								<label for="input-title">手机号码:</label>
-								<input type="text" name="modify_phoneNumber" id="modify_phoneNumber" style="width: 220px;margin:-10px 0px;">
-							</div>
+					<div class="af-inner">
+						<label for="input-title">手机号码:</label>
+						<input type="text" name="modify_phoneNumber" id="modify_phoneNumber" readonly="readonly" style="width: 220px;margin:-10px 0px;">
+					</div>
 				</div>
 				<div class="af-outer">
-							<div class="af-inner">
-								<label for="input-title">货位:</label>
-								<input type="text" name="modify_expressLocation" id="modify_expressLocation" style="width: 220px;margin:-10px 0px;">
-							</div>
+					<div class="af-inner">
+						<label for="input-title">货位:</label>
+						<input type="text" name="modify_expressLocation" id="modify_expressLocation" readonly="readonly" style="width: 220px;margin:-10px 0px;">
+					</div>
+				</div>
+				<div class="af-outer">
+					<div class="af-inner">
+						<label for="input-title">备注:</label>
+						<input type="text" name="modify_remark" id="modify_remark" style="width: 220px;margin:-10px 0px;">
+					</div>
 				</div>
 			</form>
 	</div>
     <div id="dlg-buttons">
-        <a id="modifyBtn" class="easyui-linkbutton">Save</a>
-        <a id="close" class="easyui-linkbutton" onclick="javascript:$('#detail').dialog('close')">Close</a>
+        <a id="modifyBtn" class="easyui-linkbutton">保 存</a>
+        <a id="close" class="easyui-linkbutton" onclick="javascript:$('#detail').dialog('close')">取 消</a>
     </div>
     
     <div id="query" class="easyui-dialog" title="选择超时天数 " style="width:460px;height:150px;padding:10px;overflow: hidden;"

@@ -81,41 +81,43 @@ td.contact {
 	                buttons: '#dlg-buttons',closed: true">
 		    <form id="ff" action="<%=contextPath%>/pages/system/editDataById.light" method="post" class="af-form" style="height: inherit;">
 				<div class="af-outer">
-							<div class="af-inner">
-								<label for="modify_logistics">快件运单号:</label>
-								<input type="text" name="modify_logistics" id="modify_logistics" style="width: 220px;margin:-10px 0px;" readonly="readonly">
-								<input type="hidden" id="id" />
-								<span style="color:red;"> (*必填项)</span>
-							</div>
+					<div class="af-inner">
+						<label for="modify_logistics">快件运单号:</label>
+						<input type="text" name="modify_logistics" id="modify_logistics" style="width: 220px;margin:-10px 0px;" readonly="readonly">
+						<input type="hidden" id="id" />
+						<span style="color:red;"> (*必填项)</span>
+					</div>
 				</div>
 				<div class="af-outer">
-							<div class="af-inner">
-								<label for="modify_recipientName">收件人姓名:</label>
-								<input type="text" name="modify_recipientName" id="modify_recipientName" style="width: 220px;margin:-10px 0px;">
-								<span style="color:red;"> (*必填项)</span>
-							</div>
+					<div class="af-inner">
+						<label for="modify_recipientName">收件人姓名:</label>
+						<input type="text" name="modify_recipientName" id="modify_recipientName" style="width: 220px;margin:-10px 0px;">
+						<span style="color:red;"> (*必填项)</span>
+					</div>
 				</div>
 				<div class="af-outer">
-							<div class="af-inner">
-								<label for="modify_phoneNumber">手机号码:</label>
-								<input type="text" name="modify_phoneNumber" id="modify_phoneNumber" style="width: 220px;margin:-10px 0px;">
-								<span style="color:red;"> (*必填项)</span>
-							</div>
+					<div class="af-inner">
+						<label for="modify_phoneNumber">手机号码:</label>
+						<input type="text" name="modify_phoneNumber" id="modify_phoneNumber" style="width: 220px;margin:-10px 0px;">
+						<span style="color:red;"> (*必填项)</span>
+					</div>
 				</div>
+				
 				<div class="af-outer">
-							<div class="af-inner">
-								<label for="modify_expressLocation">货位:</label>
-								<input type="text" name="modify_expressLocation" id="modify_expressLocation" style="width: 220px;margin:-10px 0px;">
-								<span style="color:red;"> (*必填项)</span>
-							</div>
+					<div class="af-inner">
+						<label for="modify_expressLocation">货位:</label>
+						<input type="text" name="modify_expressLocation" id="modify_expressLocation" style="width: 220px;margin:-10px 0px;">
+						<span style="color:red;"> (*必填项)</span>
+					</div>
 				</div>
 			</form>
 	    </div>
     </div>
     <div id="presentSelfForm" class="container" style="overflow:auto;">
 			<section class="af-wrapper">
-				<label id='showBatchNumber' class="af-show" style="margin: -14px 152px;width: 100px;">*显示批次号</label>
-	            <label for="af-showreq" class="af-show" style="margin:-15px -45px;">*突出必填项</label>
+				<label id='importantNote' class="af-show" style="margin: -14px 215px;width: 65px;">备注</label>
+				<label id='showBatchNumber' class="af-show" style="margin: -14px 105px;width: 100px;">*显示批次号</label>
+	            <label for="af-showreq" class="af-show" style="margin:-15px -45px;width: 140px;">*突出必填项</label>
 				<input id="af-showreq" class="af-show-input" type="checkbox" name="showreq"/>
 				<form class="af-form" id="af-form" novalidate style="margin: 16px -15px;">
 					<div class="af-outer af-required">
@@ -132,14 +134,6 @@ td.contact {
 							<span style="color:red;"> (*必填项)</span>
 						</div>
 					</div>
-				
-<!-- 					<div class="af-outer af-required"> -->
-<!-- 						<div class="af-inner"> -->
-<!-- 							<label for="phoneNumber">收件人手机号码:</label> -->
-<!-- 							<input type="text" name="phoneNumber" id="phoneNumber" style="width: 279px;"> -->
-<!-- 							<span style="color:red;"> (*必填项)</span> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
 					<div class="af-outer af-required">
 						<div class="af-inner">
 							<label for="phoneNumber">收件人手机号码:</label>
@@ -157,7 +151,9 @@ td.contact {
 							<span style="color:red;"> (*必填项)</span>
 						</div>
 					</div>
-					
+					<div style="display: none;" class="af-outer">
+						<input type="text" name="remark" id="remark" style="width: 279px;" style="display: none;"/>
+					</div>
 					<div class="af-outer af-required" id="expressLocationDiv" style="height: 120px;">
 						<div class="af-inner">
 							<label for="expressType">货位:</label>

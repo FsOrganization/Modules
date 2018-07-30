@@ -522,8 +522,8 @@ function initExpressServiceProviders() {
 	}
 	
 	function formatPhoneNumber(value){
-		if (value === undefined) {
-			return;
+		if (value === undefined || value == '' || value == null) {
+			return value;
 		}
 		var t=value.substring(0,3);
 		var firstTemp = value.substring(3,7);
