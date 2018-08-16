@@ -929,6 +929,35 @@ public class SystemDao implements SystemDaoInterface {
 	}
 	
 	@Override
+	public List<Map<String, Object>> getExpressStatisticalAreaSpe(Map<String, Object> params) {
+		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement st = null;
+		List<Map<String, Object>> t = null;
+		try 
+		{
+			con = connectionManager.getConnection();//jdbcTemplate.getDataSource().getConnection();
+			String sql = "select a.* from tf_area_info a";
+			String loginName = (String) params.get("loginName");
+			String appendSql = "";
+			if (!loginName.equals("admin")) {
+				appendSql = "  where a.CODE='"+params.get("areaCode")+"'";
+			} 
+			sql = sql + appendSql;
+			st = con.prepareStatement(sql);
+			rs = st.executeQuery();
+			t = checkResultSet(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			connectionManager.closeResultSet(rs);
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+		return t;
+	}
+	
+	@Override
 	public List<Map<String, Object>> getShopGroupByArea(Map<String, Object> params) {
 		ResultSet rs = null;
 		Connection con = null;
@@ -962,6 +991,30 @@ public class SystemDao implements SystemDaoInterface {
 			con = connectionManager.getConnection();
 			st = con.prepareStatement("select  * from tf_shop_info a where a.AREA_CODE = ?");
 			st.setString(1, areaCode);
+			rs = st.executeQuery();
+			t = checkResultSet(rs);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			connectionManager.closeResultSet(rs);
+			connectionManager.closeStatement(st);
+			connectionManager.closeConnection(con);
+		}
+		return t;
+	}
+	
+	@Override
+	public List<Map<String, Object>> getAreaChildrenShopSpe(String areaCode, String shopCode) throws SQLException {
+		ResultSet rs = null;
+		Connection con = null;
+		PreparedStatement st = null;
+		List<Map<String, Object>> t = null;
+		try 
+		{
+			con = connectionManager.getConnection();
+			st = con.prepareStatement("select * from tf_shop_info a where a.AREA_CODE = ? and SHOP_CODE = ?");
+			st.setString(1, areaCode);
+			st.setString(2, shopCode);
 			rs = st.executeQuery();
 			t = checkResultSet(rs);
 		} catch (SQLException e) {

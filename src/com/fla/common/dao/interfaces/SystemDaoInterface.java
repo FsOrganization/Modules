@@ -73,9 +73,13 @@ public interface SystemDaoInterface {
 	
 	public List<Map<String, Object>> getExpressStatisticalArea(Map<String, Object> params) throws SQLException;
 	
+	public List<Map<String, Object>> getExpressStatisticalAreaSpe(Map<String, Object> params) throws SQLException;
+	
 	public List<Map<String, Object>> getShopGroupByArea(Map<String, Object> params) throws SQLException;
 	
 	public List<Map<String, Object>> getAreaChildrenShops(String areaCode) throws SQLException;
+	
+	public List<Map<String, Object>> getAreaChildrenShopSpe(String areaCode, String shopCode) throws SQLException;
 	
 	public List<Map<String, Object>> getShopNumberOfPeopleGroupCount(String type,String areaCode) throws SQLException;
 	

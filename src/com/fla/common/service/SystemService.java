@@ -471,6 +471,28 @@ public class SystemService implements SystemServiceInterface{
 	}
 	
 	@Override
+	public JSONArray getExpressStatisticalAreaSpe(Map<String, Object> params)
+			throws SQLException {
+		JSONArray ja = new JSONArray();
+		List<Map<String, Object>> rowMap = systemDao.getExpressStatisticalAreaSpe(params);
+		if (rowMap != null && rowMap.size() != 0) {
+			for (Map<String, Object> map : rowMap) {
+				JSONObject json = new JSONObject();
+				json.put("id", map.get("ID"));
+				json.put("text", map.get("NAME"));
+				json.put("code", map.get("CODE"));
+				json.put("type", "A");
+				String areaCode = map.get("CODE").toString();
+				String shopCode = params.get("shopCode").toString();
+				JSONArray cj = this.getAreaChildrenShopSpe(areaCode, shopCode);
+				json.put("children", cj);
+				ja.add(json);
+			}
+		}
+		return ja;
+	}
+	
+	@Override
 	public JSONArray getShopGroupByArea(Map<String, Object> params)
 			throws SQLException {
 		JSONArray ja = new JSONArray();
@@ -493,6 +515,23 @@ public class SystemService implements SystemServiceInterface{
 	public JSONArray getAreaChildrenShops(String areaCode) throws SQLException {
 		JSONArray ja = new JSONArray();
 		List<Map<String, Object>> rowMap = systemDao.getAreaChildrenShops(areaCode);
+		if (rowMap != null && rowMap.size() != 0) {
+			for (Map<String, Object> map : rowMap) {
+				JSONObject json = new JSONObject();
+				json.put("id", map.get("ID"));
+				json.put("text", map.get("NAME"));
+				json.put("code", map.get("SHOP_CODE"));
+				json.put("type", "S");
+				ja.add(json);
+			}
+		}
+		return ja;
+	}
+	
+	public JSONArray getAreaChildrenShopSpe(String areaCode, String shopCode) throws SQLException {
+		JSONArray ja = new JSONArray();
+		
+		List<Map<String, Object>> rowMap = systemDao.getAreaChildrenShopSpe(areaCode, shopCode);
 		if (rowMap != null && rowMap.size() != 0) {
 			for (Map<String, Object> map : rowMap) {
 				JSONObject json = new JSONObject();
