@@ -12,15 +12,18 @@ import com.fla.common.base.SuperServiceAdapter;
 import com.fla.common.dao.interfaces.PayLogDaoInterface;
 import com.fla.common.entity.PayLog;
 import com.fla.common.service.interfaces.PayLogServiceInterface;
+import com.fla.common.util.BaseUtil;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
+
+import net.sf.json.JSONArray;
 
 @Service
 @Transactional
-public class PayLogService extends SuperServiceAdapter<PayLogDaoInterface> implements PayLogServiceInterface{
+public class PayLogService extends SuperServiceAdapter<PayLogDaoInterface> implements PayLogServiceInterface {
 
 	@Autowired
-    private ApplicationContext applicationContext;
-	
+	private ApplicationContext applicationContext;
+
 	@Autowired
 	@Override
 	public void setMapper(PayLogDaoInterface mapper) {
@@ -44,5 +47,12 @@ public class PayLogService extends SuperServiceAdapter<PayLogDaoInterface> imple
 	public List<PayLog> getPayLogs(Map<String, Object> params, PageBounds pageBounds) {
 		return mapper.getPayLogs(params, pageBounds);
 	}
-	
+
+	@Override
+	public JSONArray getPayDetail(Map<String, Object> params, PageBounds pageBounds) {
+		List<PayLog> payLogs = mapper.getPayLogs(params, pageBounds);
+//		System.out.println("payLogs:"+payLogs);
+		return BaseUtil.ListToJSONArray(payLogs);
+	}
+
 }

@@ -61,6 +61,7 @@
 			CONTENT content,
 			REMARK remark
 		FROM TD_PAY_LOG
+		WHERE CONVERT(substring(ORDER_ID,1,6),SIGNED) = #{limitTime}
     </select>
 
 </mapper>

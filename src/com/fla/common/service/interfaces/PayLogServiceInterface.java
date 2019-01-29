@@ -8,8 +8,14 @@ import com.fla.common.dao.interfaces.PayLogDaoInterface;
 import com.fla.common.entity.PayLog;
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 
+import net.sf.json.JSONArray;
+
 public interface PayLogServiceInterface extends SuperService<PayLogDaoInterface> {
-	public PayLog getPayLogByOrderId(Map<String,Object> params);
-	public List<PayLog> getPayLogs(Map<String,Object> params,PageBounds pageBounds);
+	public PayLog getPayLogByOrderId(Map<String, Object> params);
+
+	public List<PayLog> getPayLogs(Map<String, Object> params, PageBounds pageBounds);
+
 	public void insert(PayLog payLog);
+
+	public JSONArray getPayDetail(Map<String, Object> params, PageBounds pageBounds);
 }

@@ -26,6 +26,13 @@ function geCurrYear() {
     return nowYear;
 }
 
+function geCurrMonth() {
+	return nowMonth;
+}
+function geCurrYear() {
+	return nowYear;
+}
+
 function geCurrDate() {
     return nowYear+  '-' + nowMonth + '-' + nowDay;
 }

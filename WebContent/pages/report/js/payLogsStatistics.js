@@ -45,10 +45,13 @@ $(document).ready(function() {
 	    	if (tempCode == null) {
 				return;
 			} else {
-//				var year = geCurrYear();
+				var currYear = geCurrYear();
 				var year = $('#limitYear').val();
+				if(year == '' || year.length ==0){
+					year =  currYear;
+				}
 				var limitTime = $('#limitTime').val();
-				var paramDate = year + "-" + limitTime;
+				var paramDate = year + "" + limitTime;
 				if (limitTime == '' || limitTime.length ==0) {
 					$.messager.show({
 						title : '提示',
@@ -63,7 +66,20 @@ $(document).ready(function() {
 			}
 			
 		});
-		
+		$("#exportQueryExcelBtu").click(function(){
+			var action =contextPath + "/pages/system/pay/downPayDetail.light";
+			var currYear = geCurrYear();
+			var year = $('#limitYear').val();
+			if(year == '' || year.length ==0){
+				year =  currYear;
+			}
+			var limitTime = $('#limitTime').val();
+			var paramDate = year + "" + limitTime;
+			
+			$('#down_shopCode').val(tempCode);
+			$('#down_limitTime').val(paramDate);
+		    $('#downFile').attr("action", action).submit();;  
+		});
 		$("#exportQueryExcelBtu").click(function(){
 //			var year = geCurrYear();
 			var year = $('#limitYear').val();
@@ -117,6 +133,7 @@ $(document).ready(function() {
 			},
 			onSelect: function(row){
 				$('#limitYear').val(row.desc);
+				$('#down_limitYear').val(row.desc);
 	        }
 			
 		});
@@ -130,51 +147,62 @@ $(document).ready(function() {
 		    data: [{
 		    	"id":1,
 		    	"text":"1月",
+		    	"selected": isCurrMonth(1),
 		    	"desc":"01"
 		    },{
 		    	"id":2,
 		    	"text":"2月",
+		    	"selected": isCurrMonth(2),
 		    	"desc":"02"
 		    },{
 		    	"id":3,
 		    	"text":"3月",
-//		    	"selected":true,
+		    	"selected": isCurrMonth(3),
 		    	"desc":"03"
 		    },{
 		    	"id":4,
 		    	"text":"4月",
+		    	"selected": isCurrMonth(4),
 		    	"desc":"04"
 		    },{
 		    	"id":5,
 		    	"text":"5月",
+		    	"selected": isCurrMonth(5),
 		    	"desc":"05"
 		    },{
 		    	"id":6,
 		    	"text":"6月",
+		    	"selected": isCurrMonth(6),
 		    	"desc":"06"
 		    },{
 		    	"id":7,
 		    	"text":"7月",
+		    	"selected": isCurrMonth(7),
 		    	"desc":"07"
 		    },{
 		    	"id":8,
 		    	"text":"8月",
+		    	"selected": isCurrMonth(8),
 		    	"desc":"08"
 		    },{
 		    	"id":9,
 		    	"text":"9月",
+		    	"selected": isCurrMonth(9),
 		    	"desc":"09"
 		    },{
 		    	"id":10,
 		    	"text":"10月",
+		    	"selected": isCurrMonth(10),
 		    	"desc":"10"
 		    },{
 		    	"id":11,
 		    	"text":"11月",
+		    	"selected": isCurrMonth(11),
 		    	"desc":"11"
 		    },{
 		    	"id":12,
 		    	"text":"12月",
+		    	"selected": isCurrMonth(12),
 		    	"desc":"12"
 		    }],
 		    formatter :  function(row){
@@ -189,6 +217,8 @@ $(document).ready(function() {
 			},
 			onSelect: function(row){
 				$('#limitTime').val(row.desc);
+				$('#down_limitTime').val(row.desc);
+				
 	        }
 			
 		});
@@ -213,7 +243,7 @@ $(document).ready(function() {
 			height : 30,
 		    required: true,
 		    onClick: function(node){
-		    	alert(node.type);
+//		    	alert(node.type);
 		    	if (node.type == 'A') {
 		    		$('#statisticalArea').combotree('clear');
 		    		tempCode = null;
@@ -238,6 +268,10 @@ function getSelections() {
 	return rows;
 }
 
+function isCurrMonth(curr){
+	return geCurrMonth() == curr-1;
+}
+
 function searchExpressInfo(shopCode,limitTime) {
 	$('#shopNumberOfPeopleStatisticsGrid').datagrid("loadData",[]);
 	$('#shopNumberOfPeopleStatisticsGrid').datagrid("clearSelections");
@@ -256,48 +290,42 @@ function searchExpressInfo(shopCode,limitTime) {
 			shopCode: shopCode,
 			limitTime: limitTime
 		},
-		pageSize : 20,
+		pageSize : 600,
+		pageList: [100, 200, 400, 600, 800, 1200, 2000, 5000],
 		showFooter: true,
 		columns : [ [ {
 			field : 'TT',
-			title : '日期',
-			width : 150,
+			title : '类型',
+			width : 180,
 			align : 'center',
 			formatter: function(value,row,index){
 				if (row.TT != '<span style="color:red;" class="subtotal">合计</span>'){
-//					var year = geCurrYear();
-					var year = $('#limitYear').val();
-					var limitTime = $('#limitTime').val();
-					var paramDate = year + "-" + limitTime;
-					return paramDate + '-' +row.TT;
+					return row.serviceName;
 				} else {
 					return '<span style="color:red;" class="subtotal">合计</span>';
 				}
 			}
 		},{
-			field : 'OUTCOUNT',
-			title : '取件人数',
-			width : 120,
+			field : 'fee',
+			title : '金额(单位:分)',
+			width : 180,
+			sum: 'true',
+			align : 'center',
+			hidden : false,
+			formatter: function(value,row,index){
+				return value;
+			}
+		},{
+			field : 'title',
+			title : '支付银行',
+			width : 140,
 			sum: 'true',
 			align : 'center',
 			hidden : false
 		},{
-			field : 'SENDCOUNT',
-			title : '寄件人数',
-			width : 120,
-			align : 'center',
-			hidden : false,
-			formatter: function(value,row,index){
-				if (row.SENDCOUNT){
-					return row.SENDCOUNT;
-				} else {
-					return 0;
-				}
-			}
-		},{
-			field : 'TOTAL',
-			title : '总数',
-			width : 120,
+			field : 'orderId',
+			title : '流水号',
+			width : 220,
 			align : 'center',
 			hidden : false
 		}] ],
@@ -319,9 +347,7 @@ function searchExpressInfo(shopCode,limitTime) {
 function totalPrice(){
 	$('#shopNumberOfPeopleStatisticsGrid').datagrid('appendRow', {
 		TT: '<span style="color:red;" class="subtotal">合计</span>',
-		OUTCOUNT: '<span style="color:red;" class="subtotal">' + compute("OUTCOUNT") + '</span>',
-		SENDCOUNT: '<span style="color:red;" class="subtotal">' + compute("SENDCOUNT") + '</span>',
-        TOTAL: '<span style="color:red;" class="subtotal">' + compute("TOTAL") + '</span>'
+		fee: '<span style="color:red;" class="subtotal">' + compute("fee") + '</span>'
     });
 }
 
@@ -333,7 +359,6 @@ function compute(colName) {
     		total += parseFloat(rows[i][colName]);
 		}
     	continue;
-        
     }
     return total;
 }
@@ -352,6 +377,5 @@ function exportQueryDataWithExcel(shopCode,paramDate,dateDesc,shopName) {
 	$("#down_paramDate").val(paramDate);
 	$("#down_dateDesc").val(dateDesc);
 	$("#down_shopName").val(encodeURI(shopName));
-	
 	$("#downFile").submit();
 }

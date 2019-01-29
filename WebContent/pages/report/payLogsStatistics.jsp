@@ -24,17 +24,15 @@
        		&nbsp;&nbsp;<input id="dateStyle" name="dateStyle" value="">
        	</span>
 		<span id="speQueryBtu" style="display: none;">
-		<input type="hidden" id="limitYear"/>
-		<input type="hidden" id="limitTime"/>
+		<input type="hidden" id="limitYear" value="" />
+		<input type="hidden" id="limitTime" value="01" />
 			<input id="queryBtu" name="queryBtu" value="查询" type="button" style="margin: 0px 5px;height: 30px;width: 40px;">
 		</span>
 		<span id="exportQueryExcel" style="display: none;">
 			<input id="exportQueryExcelBtu" name="exportQueryExcelBtu" value="导出Excel" type="button" style="margin: 0px 5px;height: 30px;width: 80px;">
-			<form id="downFile" action="<%=contextPath%>/pages/system/downOutAndSendExpressGroupCount.light" method="post" style="height: inherit;display: none;">
-		    	<input type="hidden" id="down_shop_code" name="down_shop_code"/>
-		    	<input type="hidden" id="down_paramDate" name="down_paramDate"/>
-		    	<input type="hidden" id="down_dateDesc" name="down_dateDesc"/>
-		    	<input type="hidden" id="down_shopName" name="down_shopName"/>
+			<form id="downFile" action="" method="post" style="height: inherit;display: none;">
+		    	<input type="hidden" id="down_shopCode" name="down_shopCode" />
+				<input type="hidden" id="down_limitTime" name="down_limitTime" value="01" />
     		</form>
 		</span>
 	</div>
