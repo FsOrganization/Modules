@@ -18,3 +18,4 @@ MANIFEST.MF
 /bin/*
 /build/*
 /WebContent/WEB-INF/lib/*
+sonar-project.properties
